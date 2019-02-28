@@ -1,0 +1,6 @@
+{
+    "navigationBarTitleText": "系统公告",
+    "usingComponents": {
+      "loading": "/components/loading"
+    }
+}

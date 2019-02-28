@@ -1,0 +1,286 @@
+@import '/static/css/order.wxss';
+/* @import "/pages/index/openauth.wxss"; */
+/*商品列表*/
+.cartlist{
+    margin-top: -2rpx;
+}
+.price{
+    text-align: right;
+    display: inline-block;
+    width: 100%;
+    color: #999;
+    font-size: 26rpx;
+    
+}
+.left{
+    left: -100
+}
+checkbox{
+    padding-right:20rpx
+}
+.empty{
+    padding:260rpx 150rpx;
+}
+.empty .btn{
+    margin: 0;
+    border-radius: 100rpx;
+    height: 76rpx;
+    line-height:76rpx;
+    width:  280rpx;
+    font-size: 30rpx;
+    padding:0
+}
+.light{
+    height: 240rpx;
+    width: 240rpx
+}
+.text-cancel{
+    padding:10rpx;
+    margin-bottom:30rpx;
+    margin-top:25rpx;
+    font-size: 30rpx;
+}
+.fui-list-inner .car_subtitle {
+position:relative;
+font-size:26rpx;
+color:#444;
+}
+.fui-list-angle {
+margin-right:0;
+
+}
+.fui-list{
+  align-items: flex-start
+}
+.fui-list radio{
+  align-self: center;
+  margin-right: 20rpx
+}
+.fui-list-inner{
+    min-height: 190rpx;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.fui-list-inner .price{
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+   
+    justify-content: space-between;
+}
+.fui-list-inner .bigprice{
+  display: flex;
+  align-items: center
+}
+.fui-list-inner .price .productprice {
+    padding-left: 10rpx;
+    text-decoration: line-through;
+    color: #999;
+    font-size: 24rpx;
+}
+
+.fui-list-inner .subtitle.cart-option{
+    color: #999;
+}
+.btns .btn{
+    border-radius: 0;
+    height: 98rpx;
+    line-height: 98rpx;
+    color: #fff;
+    margin: 0;
+    margin-left: .05rem;
+    text-align: center;
+    width: 160rpx;
+}
+.fui-footer{
+  height: 98rpx
+}
+.fui-footer .tool {
+    padding-right: 0;
+    height: 98rpx
+}
+.fui-footer .tool label{
+    display: flex;
+    align-items: center
+}
+.fui-footer .tool .text {
+    text-align: right
+}
+.fui-cell-group .fui-cell.edit{
+align-items:flex-end;
+background:#f8f8f8;
+flex-direction:column;
+font-size:28rpx;
+
+}
+.page .fui-cell-group:nth-of-type(2){
+  margin-top: 0
+}
+
+/*授权弹窗*/
+.model{
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.5);
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1009;
+}
+.model .inner{
+	width: 624rpx;
+	height: 600rpx;
+	background: #fff;
+	border-radius: 8rpx;
+	margin: 260rpx auto;
+	overflow: hidden;
+}
+.model .inner .title{
+	font-size: 36rpx;
+	color: #000;
+	line-height: 100rpx;
+	text-align: center;
+	font-weight: 600;
+    margin-top: 20rpx;
+}
+.model .inner .image{
+  text-align: center;
+  margin-top: 20rpx;
+}
+.model .inner image{
+	width: 342rpx;
+	height: 202rpx
+}
+.model .inner .subtitle{
+	margin-top: 50rpx;
+	padding: 0 80rpx;
+	color: #888;
+	font-size: 26rpx;
+	line-height: 40rpx;
+}
+.model-btns{
+	border-top: 1rpx solid #ebebeb;
+	height: 100rpx;
+	margin-top: 28rpx;
+	display: flex;
+	text-align: center;
+	font-size: 30rpx;
+	color: #000;
+	line-height: 100rpx;
+}
+.model-btns .cancel{
+	width: 50%;
+	position: relative;
+}
+.model-btns .cancel:after{
+	content: " ";
+	position: absolute;
+	top: -1rpx;
+	right: 0;
+	width: 1px;
+	height: 210rpx;
+	border-right: 1px solid #ebebeb;
+	color: #ebebeb;
+	transform-origin: 0 0;
+	transform: scaleY(0.5);
+}
+.model-btns .confirm{
+	width: 50%;
+	color: #50b33c;
+}
+
+.radiosel{
+  /* display: inline-block; *//* flex: 1; */
+  width: 32rpx;
+  height: 32rpx;
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
+  position: relative;
+  background: #fff;
+  border: 2rpx solid #979797;
+  border-radius: 4rpx;
+  
+}
+/* .radiosel:before {
+  position: absolute;
+  content: '';
+  width: 100%;
+  height: 100%;
+  top:0px;
+  left:0px;
+  background: #fff;
+  border: 2rpx solid #979797;
+  border-radius: 4rpx;
+} */
+
+/* .checked:after {
+  position: absolute;
+  content: '';
+  width: 60%;
+  height: 60%;
+  top:50%;
+  left:50%;
+  margin-top:-30%;
+  margin-left:-30%;
+  background: #000;
+  border: none;
+  border-radius: 4rpx;
+} */
+/* 选中后的 对勾样式 （白色对勾 可根据UI需求自己修改） */
+
+
+.checked::after{
+  position: absolute;
+  content: '';
+   border-radius: 50%;/* 圆角 */
+   width:60%; /* 选中后对勾大小，不要超过背景的尺寸 */
+   height: 60%; /* 选中后对勾大小，不要超过背景的尺寸 */
+   /* line-height: 40rpx; */
+   text-align: center;
+   font-size:30rpx; /* 对勾大小 30rpx */
+   color:#000; /* 对勾颜色 白色 */
+   background: red;
+   transform:translate(-50%, -50%) scale(1);
+   -webkit-transform:translate(-50%, -50%) scale(1);
+}
+
+
+.checked {
+display: inline-block;
+position: relative;
+width: 15px;
+height: 15px;
+
+background-color: #fff;
+}
+
+
+.checked::before, .checked::after {
+content: '';
+pointer-events: none;
+position: absolute;
+color: #000;
+border: 1px solid;
+background-color: white;
+}
+
+
+.checked::before {
+width: 1px;
+height: 1px;
+left: 25%;
+top: 50%;
+transform: skew(0deg,50deg);
+}
+
+
+.checked::after {
+width: 3px;
+height: 1px;
+left: 45%;
+top: 42%;
+transform: skew(0deg,-50deg);
+}

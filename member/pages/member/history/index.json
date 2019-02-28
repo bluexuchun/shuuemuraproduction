@@ -1,0 +1,8 @@
+{
+    "navigationBarTitleText": "我的足迹",
+    "enablePullDownRefresh":true,
+    "backgroundTextStyle": "dark",
+    "usingComponents": {
+      "loading": "/components/loading"
+    }
+}

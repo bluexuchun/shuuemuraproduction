@@ -1,0 +1,187 @@
+/**
+ *
+ * order/index.js
+ *
+ * @create 2017-1-15
+ * @author Young
+ *
+ * @update  Young 2017-02-04
+ *
+ */
+var app = getApp(), 
+core = app.requirejs('core'),
+order = app.requirejs('biz/order');
+var util = require('../../utils/util.js')
+Page({
+    data: {
+        icons: app.requirejs('icons'),
+        status: '',
+        list:[],
+        page:1,
+        code: false,
+        cancel:order.cancelArray,
+        cancelindex:0
+    },
+    onLoad: function (options) {
+       let $this = this
+        app.checkAuth();
+        // 页面初始化 options为页面跳转所带来的参数
+        this.setData({
+            options: options,
+            status: options.status || ''
+        });
+        app.url(options);
+        $this.get_list();
+    },
+    get_list: function () {
+        var $this = this;
+        $this.setData({loading: true});
+        core.get('auth/get_token', {
+          sessionid: wx.getStorageSync("sessionid")
+        }, function (data) {
+          wx.setStorageSync("tokenId", data.token)
+          let useropenid = wx.getStorageSync('tokenId') + app.getCache('userinfo_openid')
+          core.get('order/get_list', { page: $this.data.page, status: $this.data.status, merchid: 0, sessionid: wx.getStorageSync('sessionid'), token: useropenid}, function (list) {
+              console.log(list);
+                if (list.error==0){
+                    list.list.map((v,i) =>{
+                      v.price = parseInt(v.price)
+                    })
+                    $this.setData({loading:false,show:true,total:list.total,empty:true});
+                    if(list.list.length>0){
+                        $this.setData({
+                            page: $this.data.page+1,
+                            list: $this.data.list.concat(list.list)
+                        });
+                    }
+                    if(list.list.length<list.pagesize) {
+                        $this.setData({
+                            loaded: true
+                        });
+                    }
+                }else{
+                    core.toast(list.message,'loading')
+                }
+            },$this.data.show);
+        })
+    },
+
+  get_updata_list: function () {
+    var $this = this;
+    $this.setData({ loading: true });
+    core.get('auth/get_token', {
+      sessionid: wx.getStorageSync("sessionid")
+    }, function (data) {
+      wx.setStorageSync("tokenId", data.token)
+      let useropenid = wx.getStorageSync('tokenId') + app.getCache('userinfo_openid')
+      core.get('order/get_list', { page: 1, status: $this.data.status, merchid: 0, sessionid: wx.getStorageSync('sessionid'), token: useropenid}, function (list) {
+        console.log(list);
+        if (list.error == 0) {
+          $this.setData({ loading: false, show: true, total: list.total, empty: true });
+          if (list.list.length > 0) {
+            $this.setData({
+              list: list.list
+            });
+          }
+        }
+      });
+    })
+  },
+    selected: function (e) {
+        var status = core.data(e).type;
+        this.setData({
+            list:[],
+            page:1,
+            status: status,
+            empty: false
+        });
+        this.get_list();
+    },
+    onReachBottom:function(){
+        if (this.data.loaded || this.data.list.length==this.data.total) {
+            return;
+        }
+        this.get_list();
+    },
+    code: function (e) {
+        var $this=this,orderid=core.data(e).orderid;
+        core.post('verify/qrcode',{id:orderid},function (json) {
+            if (json.error==0){
+                $this.setData({
+                    code: true,
+                    qrcode: json.url
+                })
+            }else{
+                core.alert(json.message);
+            }
+        },true);
+    },
+    close: function () {
+        this.setData({
+            code: false
+        })
+    },
+    cancel:function (e) {
+        var orderid = core.data(e).orderid;
+        order.cancel(orderid,e.detail.value,'/pages/order/index?status='+this.data.status);
+    },
+  delete: function (e) {
+    var type = core.data(e).type, orderid = core.data(e).orderid;
+    console.log(type,orderid);
+    order.delete(orderid, type, '/pages/order/index', this);
+  },
+    finish:function (e) {
+        var type = core.data(e).type,orderid = core.data(e).orderid;;
+        order.finish(orderid,'/pages/order/index');
+    },
+    onShareAppMessage: function () {
+        return core.onShareAppMessage();
+    },
+  payOrder:function(e){
+    console.log(this.data.list);
+    var list=this.data.list;
+    var type = core.pdata(e).type;
+    console.log(e, type);
+    var id=e.target.dataset.id;
+    var did=e.target.dataset.did;
+    var $this=this;
+
+    var payinfo=list[did].payinfo.payinfo;
+    core.post('order/pay/checkstock', { id: id }, function (check_json) {
+      if (check_json.error != 0) {
+        foxui.toast($this, check_json.message);
+        return;
+      }
+      console.log(payinfo)
+      core.pay(payinfo, function (res) {
+        if (res.errMsg == "requestPayment:ok") {
+          $this.get_updata_list(); //刷新页面
+          core.get('auth/get_token', {
+            sessionid: wx.getStorageSync("sessionid")
+          }, function (data) {
+            wx.setStorageSync("tokenId", data.token)
+            let useropenid = wx.getStorageSync('tokenId') + app.getCache('userinfo_openid')
+            core.get('order/detail',
+              { id:id, sessionid: wx.getStorageSync("sessionid"), token: useropenid }
+              , function (list) {
+                if (list.error == '-7') {
+                  core.toast(list.message, 'none');
+                }
+                if (list.error > 0) {
+                  if (list.error != 50000) {
+                    core.toast(list.message, 'loading');
+                  }
+                }
+            })
+          })
+        }
+      });
+    }, true, true)
+  },
+  checkexpress: function (e) {
+    let expressid = e.currentTarget.dataset.id
+    wx.navigateTo({
+      url: '/pages/order/express/index?id='+expressid,
+    })
+  }
+});

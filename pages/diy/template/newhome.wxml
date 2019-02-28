@@ -1,0 +1,44 @@
+<view class='newhome'>
+       <view class='newhome_title'>
+         <image src='/static/images/index1.jpg' widthFix></image>
+       </view>
+       <view class='newhome_gif'>
+         <image src='/static/images/index4.gif' widthFix></image>
+       </view>
+       <view class='newhome_title'>
+         <image src='/static/images/index2.jpg' mode='widthFix'></image>
+       </view>
+
+       <view class='newhome_tk'>
+         <image src='/static/images/index3.jpg' widthFix></image>
+       </view>
+
+
+  <view class='newhome_banner'>
+    <swiper  class="" indicator-dots="{{true}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}"
+      indicator-color="#CCCCCC" circular='true' indicator-active-color="#000000" style="height:656rpx;margin:0 auto;width:673rpx;">
+       
+        <swiper-item style='background:#fff;'>
+          <view  bindtap='navigate' class="advimg1">
+            <image src='/static/images/banner/banner1.png'  bindload="imagesHeight"  mode="widthFix"  />
+          </view>
+        </swiper-item>
+
+ <swiper-item style='background:#fff;'>
+          <view  bindtap='navigate' class="advimg1">
+            <image src='/static/images/banner/banner1.png'  bindload="imagesHeight"  mode="widthFix"  />
+          </view>
+        </swiper-item>
+
+         <swiper-item style='background:#fff;'>
+          <view  bindtap='navigate' class="advimg1">
+            <image src='/static/images/banner/banner1.png'  bindload="imagesHeight"  mode="widthFix"  />
+          </view>
+        </swiper-item>
+
+    </swiper>
+  </view>
+
+
+
+</view>

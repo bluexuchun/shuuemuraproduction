@@ -1,0 +1,57 @@
+<loading wx:if="{{ !show }}">加载中...</loading>
+<view class="page" wx:if="{{ show }}">
+
+    <view class='profile-info' style="background:url('https://arvato.widiazine.cn/attachment/images/2/2019/01/n3OdWIPt33Oui6g3WOOhOtWI4ZIuHT.png')no-repeat;background-size:cover;">
+      <view class="fui-cell-group">
+        <view class="fui-cell must">
+            <image src='/static/images/icon_shoujihao.png' style='width:30rpx;height:30rpx;margin-right:10rpx;'></image> 
+            <view class="fui-cell-info"><input style='font-size:24rpx;' type="number" class="fui-input" maxlength="11" placeholder="请输入手机号码" value="{{ postData.mobile }}" bindinput="inputChange" data-type="mobile" /></view>
+        </view>
+        <view class="fui-cell must" wx:if="{{ smsimgcode==1 }}">
+            <view class="fui-cell-label">图形验证码</view>
+            <view class="fui-cell-info"><input  style='font-size:24rpx;' type="number"  class="fui-input" maxlength="5" placeholder="请输入图形验证码" value="{{ postData.verifyImg }}" bindinput="inputChange" data-type="verifyImg" /></view>
+            <view class="fui-cell-remark noremark">
+                <image src="{{ verifycode_img }}" bindtap="imageChange"></image>
+            </view>
+        </view>
+        <view class="" style='display:flex;align-items:center;justify-content: space-between;margin-bottom:20rpx'>
+            <view style='height:100%;;;display:flex;align-items: center;padding:10rpx 0;border-bottom:1px solid #dbdbdb;flex:1'>
+              <image src='/static/images/icon_yanzhengma.png' style='width:30rpx;height:30rpx;margin-right:10rpx;'></image>
+            <view class="fui-cell-info"><input type="number" class="fui-input" maxlength="5" placeholder="请输入验证码" value="{{ postData.code }}" bindinput="inputChange" data-type="code" /></view>
+            </view>
+            <view class="fui-cell-remark noremark" style='margin-left:60rpx'>
+                <text style='background-color:#000000;color:#fff;border:none;width:190rpx;height:60rpx;line-height: 60rpx;font-size:28rpx' class="btn btn-default btn-default-o btn-sm {{ endtime>0?'disabled':'' }}" bindtap="getCode">{{ endtime>0?endtime:'发送验证码' }}</text>
+            </view>
+        </view>
+
+              <view class="h_col2 chk_h_col2">
+        <view class="checkbox">
+          <checkbox-group bindchange="checkboxChange">
+            <checkbox value="bind" checked=""/>￼
+          </checkbox-group>
+        </view>
+        <view class="flex1">
+          <view>我同意依照本<text class="line-txt" style='text-decoration:underline;' bindtap="linkRule">使用条款</text>和<text class="line-txt"  style='text-decoration:underline;' bindtap="linkPrivate">隐私政策</text>对我的个人信息进行收集和使用;</view>  
+          <view><text>我已阅读并确认已被给予充分机会理解该使用条款和隐私政策的内容</text></view>
+        </view>
+      </view>
+        <!-- <view class="fui-cell must">
+            <view class="fui-cell-label">登录密码</view>
+            <view class="fui-cell-info">
+                <input type="password" class="fui-input" placeholder="请输入您的登录密码" value="{{ postData.password }}" bindinput="inputChange" data-type="password" />
+            </view>
+        </view> -->
+        <!-- <view class="fui-cell must">
+            <view class="fui-cell-label">确认密码</view>
+            <view class="fui-cell-info">
+                <input type="password" class="fui-input" placeholder="请输入确认登录密码" value="{{ postData.password1 }}" bindinput="inputChange" data-type="password1" />
+            </view>
+        </view> -->
+    </view>
+    </view>
+
+    <view class="btn btn-danger block" style='background:#000;border:none;height:100rpx;line-height:100rpx;position: absolute;top:55%;width:90%;margin-left:5%;height:50px;line-height:50px;' bindtap="submit">{{ subtext }}</view>
+
+    <view class="fui-toast {{FoxUIToast.show?'in':'out'}}"><view class="text">{{FoxUIToast.text}}</view></view>
+
+</view>

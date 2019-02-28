@@ -1,0 +1,20 @@
+<view class='desc1'>
+  定制YSL个性礼盒套装
+</view>
+<view class='desc2'>
+  为TA选择高定礼盒包装
+</view>
+
+<view>
+  <view class='giftList {{active==item.id?"active":""}}' wx:for="{{boxList}}" wx:key="{{item.id}}" data-id="{{item.id}}" data-goodsBoxCode="{{item.boxCode}}" data-url="{{item.img}}" bindtap='selectBox'>
+    <image src='{{item.img}}' style='width:100%' mode='widthFix'></image>
+    {{item.name}}
+  </view>
+</view>
+<view class='clearfix'></view>
+<view class="fixed-btns">
+    <block>
+      <button class="btn-common black-btn golden" bindtap="cancel">取消</button>
+      <button class="btn-common dark-grey-btn golden borderL" bindtap="saveData">保存</button>
+    </block>
+  </view>

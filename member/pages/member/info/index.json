@@ -1,0 +1,6 @@
+{
+    "navigationBarTitleText": "会员资料",
+    "usingComponents": {
+      "loading": "/components/loading"
+    }
+}

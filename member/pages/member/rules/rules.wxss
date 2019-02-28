@@ -1,0 +1,27 @@
+/* pages/ucenter/rules/rules.wxss */
+.strong{
+  font-weight: bold;
+}
+.txt-wrap{
+  padding:30rpx 16rpx;
+font-size:28rpx;
+
+}
+.txt-wrap .headline{
+  display:block;
+padding-bottom:30rpx;
+font-size:36rpx;
+text-align:center;
+
+}
+.txt-wrap view{
+  margin-bottom:20rpx;
+
+}
+.txt-wrap view.h2{
+  margin-bottom:0;
+padding:50rpx 0;
+font-weight:bold;
+font-size:36rpx;
+
+}

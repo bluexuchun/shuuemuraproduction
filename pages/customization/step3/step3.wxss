@@ -1,0 +1,36 @@
+/* pages/customization/step3/step3.wxss */
+@import "../base.wxss";
+page{
+  padding: 20rpx 0  100rpx 20rpx;
+  box-sizing: border-box;
+}
+img{
+  width:100%;
+}
+.golden{
+  background: #000;
+  color: #c39a6c;
+}
+.borderL{
+  border-left: 1px solid #c39a6c;
+}
+.giftList{
+  border: 1px solid #ccc;
+  width: 47%;
+  float: left;
+  margin-right: 2%;
+  text-align: center;
+  padding-bottom: 20rpx;
+  margin-bottom: 20rpx;
+}
+.active{
+  border: 1px solid #000;
+}
+.desc1{
+  margin: 20rpx 0;
+}
+.desc2{
+  margin-bottom: 40rpx;
+  color: #999; 
+}
+

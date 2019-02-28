@@ -1,0 +1,23 @@
+<!--pages/christmas/christmas.wxml-->
+<view class='title'>
+  <image src='{{page1}}' mode='widthFix'></image>
+</view>
+<swiper  
+  indicator-dots="{{indicatorDots}}" autoplay="" indicator-dots="{{true}}" interval="{{time}}" duration="500" circular="true" indicator-color="rgba(255, 255, 255, .5)" indicator-active-color="#c39a6c">
+    <block wx:for="{{christmas.banner}}" wx:key="{{index}}">
+      <swiper-item style="display: flex;flex-direction: column;align-items: center">
+          <image  src="{{item}}" style='width:100%;height:100%' class="slide-image" mode='widthFix' lazy-load='{{lazyLoad}}' />
+          <!-- <image wx:if="{{item.type==1}}" src="{{item.stepUrl}}" class="slide-image" mode='widthFix' lazy-load='{{lazyLoad}}' /> -->
+          <!-- <video wx:if="{{item.type==2}}" src='{{item.url}}' autoplay="{{play}}" loop="true" controls='{{false}}' enable-progress-gesture="{{false}}" id="myVideo"></video> -->
+          <!-- <image src="{{item.stepUrl}}" class="slide-image" mode='widthFix' lazy-load='{{lazyLoad}}' /> -->
+      </swiper-item>
+    </block>
+  </swiper>
+  
+  <navigator url='/pages/customCard/customCard' class='card'>
+    <image src='/static/images/sheng.jpg' style='width:100%;height:100%' mode='widthFix' class='goCard'></image>
+    
+     <!-- <image src='https://yslvday.blob.core.chinacloudapi.cn/yslvday/圣诞活动/小程序圣诞活动图1018/2%20LP/2.LP_文字1-step1.png' mode='widthFix' class='goCard'></image>
+     <image src='https://yslvday.blob.core.chinacloudapi.cn/yslvday/圣诞活动/小程序圣诞活动图1018/2%20LP/2.LP_文字2-step%202.png' mode='widthFix' class='goCard'></image>
+     <image src='https://yslvday.blob.core.chinacloudapi.cn/yslvday/圣诞活动/小程序圣诞活动图1018/2%20LP/2.LP_文字3-step3.png' mode='widthFix' class='goCard'></image> -->
+  </navigator>

@@ -1,0 +1,6 @@
+<view class="fui-menu-group" style='background:{{diyitem.style.background}};display:flex;background:#000;padding:30rpx;margin-top:{{diyitem.style.margintop==0?0:diyitem.style.margintop + "rpx"}}'>
+    <navigator style='border:1px solid #ddb775;width:auto;flex:1;width:50%;margin:0 20rpx;padding:0;height:43.7143px;line-height:43.7143px;position: static' class='fui-menu-item' wx:for="{{diyitem.data}}" wx:for-index="childid" wx:for-item="childitem" data-url='{{childitem.linkurl}}' data-phone='{{childitem.phone}}' bindtap='navigate'>
+        <i class="icox {{childitem.iconclass}}" style="color:{{childitem.iconcolor}};"> </i> 
+        <text style="color:{{childitem.textcolor}};">{{childitem.text}}</text>
+    </navigator>
+</view>

@@ -1,0 +1,202 @@
+@import "static/css/foxui.wxss";
+
+/* @import "static/css/base.wxss"; */
+@import "static/css/icon.wxss";
+@import "static/css/iconfont.wxss";
+
+@font-face {
+  font-family: "iconfont";
+  src: url('iconfont.eot?t=1547720445754'); /* IE9 */
+  src: url('iconfont.eot?t=1547720445754#iefix') format('embedded-opentype'),
+         /* IE6-IE8 */ url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAALwAAsAAAAABmwAAAKiAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCCcAp4gRMBNgIkAwgLBgAEIAWEbQcwG7kFERWMPbKvMG7hhSCSjt3VgTxjVVvuehDiS6J40DZQBQkAAAAAEM/T79fOfSuarAlMJ9FFm2g0ywyJRmibqGGnIyFR2p/lAf7e37njz2nNSeGYgH9gIIHXxywtg/INFkgCb/83rUthVIRiyT4PvmMqRgI7vPzQIacRrTH1p08O4c6eu17IyfzXDOH19qbOLXE3mnqkeJRlge18PCuRjyXxfJ7L6U2gA7mrvjec1hy0+F4UYGBpgHthtJ4HWEDYMHbBC7xO0LXsULgNDi9VZfa8IPfF671qISvLrFEVlBu2ZuFZQzU+xS/Mo9/n33raFKXE7jqlgyeXf6YjTz8Wn67GCzkC7m6ghjXUyaSxejxIAuOSejVb51jtgf/Nf+CXo/55Uma39sEEap9J5+kftbWAejK8io1Jn0oZ8rH6vWeonYBzKnw7176WeQoxnkM4BWCC0AUcv314Hbe/xH1mjVlasnRpysgXx3M61u/tYfVSv4vX8Aw/i3JG6iW8BO+zPWBZ/ZBDWgjC+ef7ccef1iaDP/KqyDgsTnvvsfCXLJNFiMJoGGxvyZq3qFC8WJ0ULkA1T1iykwN/U53jW2pG1ejG4hVLGWqqNsk6e4iGhhM0VV3AWHcg3N0wIMZCvYZ9D4Cg642o7R1J1zeZ2V+UjP2jrJsx6mYZHNmwncK6EYwUU4jPUCTckhtQK26fYdbXkeQNEb9CMUUBPNstN0JsUZZYYQ6Zr0pAwg0E4Dasa4ZOuMRE7Vy1mzoONT3ITrgZWG4IFFEoBWJnoJBgLQoGK6vy/RmU6dUi0iGqq64gYRSjA4/NHUCG1naQ6FHuMQ4yPqUIIII1QAAmoVqNga55UgkllC2fUO5MOU4/Gmq1t7c3P1DDerBdMc64pPzOvel5MAAAAAA=') format('woff2'),
+         url('iconfont.woff?t=1547720445754') format('woff'),
+         url('iconfont.ttf?t=1547720445754') format('truetype'),
+         /* chrome,
+         firefox,
+         opera,
+         Safari,
+         Android,
+         iOS 4.2+ */ url('iconfont.svg?t=1547720445754#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-sousuo:before {
+  content: "\e658";
+}
+
+.profile-info {
+  background-size: 100%;
+  color: #fff;
+}
+
+page {
+  background-color: #f3f3f3;
+  font-size: 16px;
+  height: 100%;
+  font-family: -apple-system-font, Helvetica Neue, Helvetica, sans-serif;
+}
+
+.page {
+  overflow-x: hidden;
+  height: auto;
+  min-height: 100%;
+  overflow-y: scroll;
+}
+
+.page.navbar, .page.footer {
+  padding-bottom: 120rpx;
+}
+
+.page.navbar-footer, .page.footer-navbar {
+  padding-bottom: 200rpx;
+}
+
+/* .page.navbar-footer .fui-navbar,
+.page.footer-navbar .fui-footer {
+    bottom: 100rpx;
+}  */
+
+.page.navbar-footer .fui-footer, .page.footer-navbar .fui-navbar {
+  bottom: 0;
+}
+
+.page.header {
+  padding-top: 88rpx;
+}
+
+.page.header-sort {
+  padding-top: 65rpx;
+}
+
+.show {
+  display: block !important;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.center {
+  text-align: center !important;
+}
+
+.right {
+  text-align: right !important;
+}
+
+.inline {
+  display: inline-block;
+}
+
+.fui-iphonex-button {
+  width: 100%;
+  z-index: 9999;
+  height: 68rpx;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  background: #fff;
+}
+
+/*ipone X*/
+
+.fui-navbar.bottom-buttons.fui-iphonex-navbar {
+  bottom: 68rpx;
+}
+
+.detailbtn-group.fui-iphonex-navbar {
+  bottom: 68rpx;
+}
+
+.fui-navbar.fui-iphonex-navbar {
+  bottom: 68rpx;
+}
+
+.bottom-buttons.fui-iphonex-navbar {
+  bottom: 68rpx;
+}
+
+.picker-modal.in.fui-iphonex-navbar {
+  bottom: 68rpx;
+}
+
+.fui-modal.in.fui-iphonex-navbar {
+  bottom: 68rpx;
+}
+
+.inner.in.fui-iphonex-navbar {
+  bottom: 68rpx;
+}
+
+.fui-footer.fui-iphonex-navbar {
+  bottom: 68rpx;
+}
+
+.page.footer.padding-b {
+  padding-bottom: 170rpx;
+}
+
+.page.navbar.padding-b {
+  padding-bottom: 170rpx;
+}
+
+/*优惠券顶部提示  */
+
+.coupontips {
+  height: 88rpx;
+  background: #fdfde5;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 188;
+  color: #ff8000;
+  font-size: 26rpx;
+  line-height: 88rpx;
+  padding-left: 20rpx;
+  display: flex;
+}
+
+.coupontips .text {
+  flex: 1;
+}
+
+.coupontips .close {
+  width: 80rpx;
+}
+
+/*周期购标签*/
+
+.cycle-tip {
+  font-size: 24rpx;
+  font-style: normal;
+  padding: 4rpx 8rpx 4rpx;
+  color: #fff;
+  width: 92rpx;
+  margin-right: 4rpx;
+  border-radius: 8rpx;
+  /* vertical-align: top; */
+  background: rgb(255, 22, 45);
+  background: radial-gradient(ellipse at bottom left, rgba(255, 115, 94, 1) 30%, rgba(255, 51, 51, 1) 57%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff4d81', endColorstr='#ff162d', GradientType=1);
+}
+
+.bargain_label {
+  display: inline-block;
+  width: 50rpx;
+  height: 24rpx;
+  vertical-align: middle;
+  margin-top: -5rpx;
+  margin-right: 10rpx;
+}
+
+rich-text img {
+  vertical-align: middle;
+  max-width: 100% !important;
+}

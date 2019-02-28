@@ -1,0 +1,164 @@
+{
+  "pages": [
+    "pages/authloading/authloading",
+    "pages/index/index",
+    
+    "pages/member/index/index",
+    "pages/member/cart/index",
+    "pages/friendPuzzle/friendPuzzle",
+    "pages/goods/searchlist/searchlist",
+    "pages/pefectInfo/pefectInfo",
+    "pages/customization/step2/index",
+    "pages/customization/step3/step3",
+    "pages/christmas/christmas",
+    "pages/makeCard/makeCard",
+    "pages/custom/index",
+    "pages/customCard/customCard",
+    "pages/creditshop/detail/index",
+    "pages/creditshop/comment/index",
+    "pages/creditshop/express/index",
+    "pages/customization/step1/index",
+    "pages/shop/notice/index/index",
+    "pages/shop/notice/detail/detail",
+    "pages/shop/caregory/index",
+    "pages/goods/index/index",
+    "pages/goods/region/index",
+    "pages/goods/detail/index",
+    "pages/goods/package/index",
+    "pages/goods/package/detail/index",
+    "pages/goods/poster/poster",
+    "pages/order/index",
+    "pages/order/detail/index",
+    "pages/order/express/index",
+    "pages/order/comment/index",
+    "pages/order/refund/index",
+    "pages/order/create/index",
+    "pages/order/store/index",
+    "pages/order/store/map",
+    "pages/order/pay/index",
+    "pages/verifygoods/index",
+    "pages/verifygoods/detail/index",
+    "pages/sale/coupon/index/index",
+    "pages/sale/coupon/detail/index",
+    "pages/sale/coupon/my/detail/index",
+    "pages/sale/coupon/my/index/index",
+    "pages/sale/coupon/my/showcoupons2/index",
+    "pages/public/coupon/index",
+    "pages/message/auth/index",
+    "pages/web/index",
+    "pages/map/index",
+    "pages/order/pay/share/share",
+    "pages/order/pay/coupons/coupons",
+    "pages/creditshop/log/index",
+    "pages/creditshop/log/detail/index",
+    "pages/creditshop/lists/index",
+    "pages/creditshop/creditlog/index",
+    "pages/creditshop/create/index",
+    "pages/creditshop/verify/index",
+    "pages/creditshop/index",
+    "pages/order/cycle/index",
+    "pages/order/cycle/address",
+    "pages/order/cycle/order",
+    "pages/order/express/number",
+    "pages/quickbuy/index",
+    "pages/finishPuzzle/finishPuzzle"
+    
+  ],
+  "subPackages": [
+    {
+      "root": "dividend",
+      "pages": [
+        "pages/index/index",
+        "pages/down/index",
+        "pages/withdraw/index",
+        "pages/order/index",
+        "pages/log/index",
+        "pages/log/detail/index",
+        "pages/apply/index",
+        "pages/register/index"
+      ]
+    },
+    {
+      "root": "pages/groups/",
+      "pages": [
+        "index/index",
+        "category/index",
+        "mygroups/index",
+        "goods/index",
+        "order/index",
+        "confirm/index",
+        "rules/index",
+        "groups_detail/index",
+        "join/index",
+        "jointeam/index",
+        "order_detail/index",
+        "pay/index",
+        "refund/index",
+        "express/index",
+        "express/number"
+      ]
+    },
+    {
+      "root": "member",
+      "pages": [
+        "pages/member/info/index",
+        "pages/member/favorite/index",
+        "pages/member/history/index",
+        "pages/member/recharge/index",
+        "pages/member/withdraw/index",
+        "pages/member/log/index",
+        "pages/member/tuihuo/tuihuo",
+        "pages/member/address/index",
+        "pages/member/address/post",
+        "pages/member/address/select",
+        "pages/member/membercard/index",
+        "pages/member/membercard/detail/index",
+        "pages/member/membercard/pay/index",
+        "pages/member/private/private",
+        "pages/member/rules/rules",
+        "pages/member/bind/index"
+      ]
+    }
+  ],
+  "window": {
+      "backgroundTextStyle": "dark",
+      "navigationBarBackgroundColor": "#050505",
+      "navigationBarTitleText": "植村秀官方商城",
+      "navigationBarTextStyle": "white",
+      "enablePullDownRefresh": true
+  },
+  "tabBar": {
+    "backgroundColor": "#000",
+    "borderStyle": "black",
+    "selectedColor": "#EC51B1",
+    "color": "#fff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "static/images/icon_home.png",
+        "selectedIconPath": "static/images/icon_home_golden.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/goods/index/index",
+        "iconPath": "static/images/icon_shop.png",
+        "selectedIconPath": "static/images/icon_shop_golden.png",
+        "text": "全部分类"
+      },
+      {
+        "pagePath": "pages/member/cart/index",
+        "iconPath": "static/images/icon_cart.png",
+        "selectedIconPath": "static/images/icon_cart_golden.png",
+        "text": "购物车"
+      },
+      {
+        "pagePath": "pages/member/index/index",
+        "iconPath": "static/images/icon_mine.png",
+        "selectedIconPath": "static/images/icon_mine_golden.png",
+        "text": "个人中心"
+      }
+    ]
+  },
+  "debug": false,
+  "navigateToMiniProgramAppIdList": []
+}

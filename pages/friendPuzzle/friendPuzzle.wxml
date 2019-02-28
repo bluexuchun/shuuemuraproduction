@@ -1,0 +1,17 @@
+<!--pages/friendPuzzle/friendPuzzle.wxml-->
+
+<view class='puzzleText'>
+  <image src='../../static/images/textChange.png' mode='widthFix'></image>
+  
+</view>
+<view class='text-right chu' bindtap='scan'>查看原图</view>
+<view class='clearfix'></view>
+<view class='puzzle'>
+  <block wx:for="{{christmasCardList}}" wx:key="{{item.id}}">
+    <view class='cardList'>
+      <image src='{{item.imgUrl}}' data-sortId="{{item.sortOrder}}" data-current="{{item.current}}" bindtap='puzzle'></image>
+      <view wx:if="{{item.selected}}" class='mask' data-sortId="{{item.sortOrder}}" data-current="{{item.current}}" bindtap='puzzle'></view>
+    </view>
+  </block>
+  <view class='clearfix'></view>
+</view>

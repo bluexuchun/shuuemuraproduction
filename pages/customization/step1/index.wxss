@@ -1,0 +1,198 @@
+/* pages/customization/step1/index.wxss */
+@import "../base.wxss";
+.golden{
+  background: #000;
+  color: #c39a6c;
+}
+.borderL{
+  border-left: 1px solid #c39a6c;
+}
+.swiper-boxer{
+  position: relative;
+  height: 400rpx;
+  
+}
+.swiper-boxer swiper{
+  height: 400rpx;
+}
+.swiper-boxer swiper swiper-item{
+  text-align: center;
+}
+.swiper-boxer swiper-item .media{
+  position: relative;
+  display:inline-block;
+}
+.swiper-boxer swiper-item .customize-txt{
+  position: absolute;
+  left: 42%;
+  bottom: 5%;
+  /* width: 24rpx; */
+  height: 44rpx;
+  line-height: 44rpx;
+  word-wrap:break-word; 
+  white-space:normal; 
+  word-break:break-all;
+  font-size: 13rpx;
+  transform: rotate(-90deg); 
+  transform-origin:0 0;
+  /* text-shadow: -1px -1px 0 #fff,1px 1px 0 #333,1px 1px 0 #444; */
+   /* text-shadow: 2rpx 2rpx 2rpx rgba(0,0,0,.5);*/
+  text-transform: uppercase;
+  text-align: center;
+  color: #000;
+
+}
+.swiper-boxer swiper-item .row-txt{
+  transform: translate(-50%, 0);
+  position: absolute
+}
+.swiper-boxer .customize-txt .icons{
+  /* position:relative;
+  top: -5rpx;  */
+  padding-right: 6rpx;
+  width: 44rpx;
+  height: 44rpx;
+}
+.swiper-boxer .customize-txt .icons.hide{
+  display: none;
+}
+.swiper-boxer swiper-item .customize-txt-symbol{
+  padding-left: 50rpx;
+  padding-right: 0;
+}
+.swiper-boxer .customize-txt-symbol .icons{
+  position:absolute;
+  bottom:0;
+  left:0;
+}
+.slide-image{
+  width: 400rpx;
+  height: 400rpx;
+}
+.swiper-btns{
+  position: absolute;
+  top: 50%;
+  margin-top: -25rpx;
+  width: 100%;
+  height: 50rpx;
+}
+.swiper-btns .sbtns{
+  position: absolute;
+  top: 0;
+  width: 50rpx;
+  height: 50rpx;
+  line-height: 50rpx;
+  border: 1px solid #4A4A4A;
+}
+.swiper-btns .sbtns:before{
+  content: '';
+  position: absolute;
+  top: 14rpx;
+  right: 10rpx;
+  width: 14rpx;
+  height: 14rpx;
+  border: 1px solid #4A4A4A;
+  border-top: none;
+  border-right: none;
+  transform: rotate(45deg); 
+}
+.swiper-btns .btn-prev{
+  left: 50rpx;
+}
+.swiper-btns .btn-next{
+  right: 50rpx;
+}
+.swiper-btns .btn-next:before{
+  right: 16rpx;
+  transform: rotate(-135deg); 
+}
+
+.customize{
+  margin: 30rpx 55rpx;
+  color: #000;
+}
+.customize .title{
+  margin-bottom: 34rpx;
+  font-size: 36rpx;
+  text-align: center;
+  
+}
+.ipt-wrap{
+  padding: 10rpx 26rpx;
+  border: 1rpx solid #979797;
+}
+.ipt-wrap input{
+  font-size: 30rpx;
+}
+.eg_letters{
+  padding: 14rpx 0;
+  border-bottom: 1rpx solid #E3E3E3;
+}
+.eg_letters image{
+  width: 400rpx;
+  height: 48rpx;
+}
+.eg_letters .font-s{
+  font-size: 18rpx;
+  white-space:nowrap;
+}
+.letter-icon{
+  margin: 18rpx 0;
+}
+.letter-icon text{
+  font-weight: bold;
+}
+.letter-icon .icon-wrap{
+  display: inline-block;
+  margin-left: 24rpx;
+  width: 56rpx;
+  height: 56rpx;
+  background: #D8D8D8;
+  font-size: 0;
+  line-height:50rpx;
+  text-align:center;
+  vertical-align: middle;
+}
+.letter-icon .icon-wrap.cur{
+  background: #000000;
+}
+.letter-icon .icon-wrap image{
+  width: 44rpx;
+  height: 44rpx;
+}
+.customize .tips{
+  padding-bottom: 20rpx;
+  font-size: 20rpx;
+}
+.customize .tips text{
+  display: block;
+}
+.customize .h_col2 .ipt-wrap{
+  padding: 0;
+  box-sizing: border-box;
+}
+.customize textarea{
+  padding: 10rpx;
+  width: auto;
+  height: 109rpx;  
+}
+.customize .area-btn{
+  width: 104rpx;
+  line-height: 132rpx;
+  font-size: 20rpx;
+  background: #000;
+  border-radius: 0;
+  color: #fff;
+}
+
+.custom-reminds.white-wrap .reminds .r-content {
+  padding-left: 0;
+  text-align: justify;
+}
+
+.customize-price {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin-bottom: 4px;
+}

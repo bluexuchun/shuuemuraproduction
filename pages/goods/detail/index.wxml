@@ -1,0 +1,778 @@
+<!-- <view class="{{isIpx?'fui-iphonex-button':''}}"></view> -->
+<import src="/utils/wxParse/wxParse.wxml" />
+<loading wx:if="{{ !show }}">加载中...</loading>
+<!-- <view wx:else>
+
+</view> -->
+<!--分享弹窗  -->
+<view class="page-shade" wx:if="{{ show && closeBtn}}" bindtap="closeBtn">></view>  
+<!--分享内容  -->
+<view class="fui-share {{isIpx?'fui-iphonex-share':''}}" wx:if="{{ show && closeBtn}}">
+  <view class="share-choose">
+    <button style="border: none;background:none;padding-left: 0;line-height: 1;margin: 0;" open-type="share">
+      <view class="share-wechat">
+        <image src="{{imgUrl + 'plugin/app/static/images/wxapp/share/wechat.png'}}" />
+        <view class="text-explain">分享给朋友</view>
+      </view>
+    </button>
+    <view class="share-poster" bindtap="sharePoster">
+      <image src="{{imgUrl + 'plugin/app/static/images/wxapp/share/post.png'}}" />
+      <view class="text-explain">生成商品图片</view>
+    </view>
+  </view>
+  <view class="close-btn" bindtap="closeBtn">关闭</view>
+</view>
+<view class="hint" wx:if="{{show && !limits}}" bindtap="hintclick">您还未授权无法查看商品完整信息，点击可重新获取授权喔~</view>
+<!-- <button class="hint" wx:if="{{show && !limits}}" open-type='getUserInfo'>您还未授权无法查看商品完整信息，点击可重新获取授权喔~</button> -->
+<view class="page comment-block" wx:if="{{show}}" style="background:#fff;padding-bottom:120rpx;">
+  <!--商品start-->
+  <view class="goods-detail-goods" wx:if="{{showgoods}}">
+    <!-- 店铺装修start -->
+    <view wx:if='{{ usediypage != false }}'>
+      <block>
+        <include src="/pages/diy/index.wxml" />
+      </block>
+    </view>
+    <!-- 店铺装修end -->
+    <view wx:if="{{ usediypage == false }}">
+      <!--轮播start-->
+      <view style='height:{{advHeight}}rpx;position:relative;display:{{showvideo?"block":"none"}}' wx:if='{{goods.video}}'>
+        <view wx:if='{{cover}}'>
+          <image class='bg' src='{{goods.thumb}}' style='height:100%;width:100%' mode='aspectFit'></image>
+          <image class='play' src='{{play}}' style='width:150rpx;height:140rpx' bindtap='startplay'></image>
+          <view class='mc'>
+            <view class='video_btn active' bindtap='showvideo'>视频</view>
+            <view class='pic_btn' bindtap='showpic'>图片</view>
+          </view>
+        </view>
+        <video id="myVideo" src="{{goods.video}}" bindpause='bindpause' controls style="width:100%;height:{{advHeight}}rpx;" class="video {{showpic||cover?'none':'block'}}" muted='{{soundpic}}' bindfullscreenchange='bindfullscreenchange'>
+          <cover-image src='{{sound?voice:mute}}' class='voice' bindtap='changevoice'></cover-image>
+          <cover-view class='mc' wx:if='{{success}}'>
+            <cover-view class='video_btn active'>视频</cover-view>
+            <cover-view class='pic_btn' bindtap='showpic'>图片</cover-view>
+          </cover-view>
+        </video>
+      </view>
+      <view class="goods-advs {{showpic || goods.video == ''?'block':'none'}}" style="width:100%;height:auto;position:relative">
+        <swiper class="index-adcs-sqiper" autoplay='true' current="{{current}}" interval="{{interval}}" duration="{{duration}}"  indicator-color="#aaaaaa"
+  indicator-active-color="#000"
+indicator-dots="{{true}}" circular="{{circular}}" style="width:100%;height:{{advHeight}}rpx;">
+          <block wx:for="{{goods.thumbs}}" wx:for-index="idx" wx:for-item="item" wx:key='index'>
+            <swiper-item>
+              <image data-banner="banner" bindload="{{idx == 0 ? 'imageLoad' : ''}}" src="{{item}}" class="goodsadvimg"></image>
+            </swiper-item>
+          </block>
+        </swiper>
+        <view class='mc'>
+          <view class='video_btn' bindtap='showvideo' wx:if='{{goods.video}}'>视频</view>
+          <view class='pic_btn active' bindtap='showpic' wx:if='{{goods.video}}'>图片</view>
+        </view>
+
+        <view class="fui-cell-remark showshade"  style="margin-left: 60rpx;display: inline-block;flex-direction: column;align-items: center;justify-content: center;position: absolute;  top:30rpx;right:30rpx;z-index:10;font-size:18rpx;text-align:center;line-height:2.4;">
+          
+              <button style="border: none;background:none;padding-left: 0;line-height: 1;margin: 0;" open-type="share">
+<image src='../../../static/images/icon_fenxiang.png' style='width:30rpx;height:30rpx;margin:0 auto'></image>
+          <view style="font-size: 20rpx;color: #666;margin-top:6rpx;">分享</view>
+              </button>
+        </view>
+      </view>
+      <!--轮播end-->
+
+      <!--秒杀start-->
+      <view class="seckill-container " wx:if="{{ goods.seckillinfo }}">
+        <view class="fui-list seckill-list" style="">
+          <view class="fui-list-media seckill-price">
+            ¥
+            <span>{{ goods.seckillinfo.price }}</span>
+          </view>
+          <view class="fui-list-inner">
+            <!-- <view class="text">
+                <span class="stitle" style="white-space:nowrap; overflow:hidden; max-width:2.6rem;">
+                  4.27活动
+                </span>
+              </view> -->
+            <view class="text">
+              <span class="oldprice">{{ goods.marketprice }}</span>
+            </view>
+          </view>
+        </view>
+        <view class="fui-list seckill-list1">
+          <view class="fui-list-inner">
+            <view class="text ">已出售 {{ goods.seckillinfo.percent }}%</view>
+            <view class="text ">
+              <span class="process">
+                <view class="process-inner" style="width: {{ goods.seckillinfo.percent }}%">
+                </view>
+              </span>
+            </view>
+          </view>
+        </view>
+        <view class="fui-list seckill-list2" style="">
+          <view class="fui-list-inner">
+            <view class="text ">{{ goods.seckillinfo.status==1?'距开始':'距结束' }}还有</view>
+            <view class="text timer">
+              <span class="time-hour">{{ hour }}</span>
+              :
+              <span class="time-min">{{ min }}</span>
+              :
+              <span class="time-sec">{{ sec }}</span>
+            </view>
+          </view>
+        </view>
+      </view>
+      <!--秒杀end-->
+
+      <!--详情start-->
+      <view class="fui-cell-group fui-detail-group" style="height:187rpx;">
+        <view class="fui-cell">
+          <view class="fui-cell-text name" style='text-align: center;padding:17rpx 0 0;font-weight:0'>
+            <text wx:if="{{goods.ispresell==1 && goods.ispresellshow == 1}}" class="fui-tag fui-tag-danger">预</text>
+            <text class="cycle-tip" wx:if="{{ goods.type == 9 }}">周期购</text>
+            <text selectable="true" style='font-size:30rpx;font-weight:400;color:#000;line-height:30rpx;'>{{goods.title}}</text>
+            <view selectable="true" style='font-size:20rpx;font-weight:400;color:#666;margin-top:15rpx;line-height:20rpx;'>{{goods.subtitle}}</view>
+          </view>
+        </view>
+        <!-- <block wx:if="{{goods.subtitle}}">
+          <view class="fui-cell goods-subtitle">
+            <text class='text-danger' selectable="true">{{goods.subtitle}}</text>
+          </view>
+        </block> -->
+        <block wx:if="{{!goods.seckillinfo}}">
+          <view class="fui-cell">
+            <view class="fui-cell-text price" style="line-height:0;padding:0rpx;">
+              <view class="text-danger" style='font-size:36rpx;color:#000;text-align:center;margin-top:45rpx;line-height:36rpx;'>
+                ¥
+                <block wx:if="{{goods.ispresell> 0 && (preselltimeend==0) || preselltimeend>now}}">
+                  <text wx:if="{{ goods.hasoption == 1 }}">
+                    <text wx:if="{{ goods.minpresellprice != goods.maxpresellprice}}">{{ goods.minpresellprice }}~{{ goods.maxpresellprice }}</text>
+                  <text wx:else>{{ goods.minpresellprice }}</text>
+                  </text>
+                  <text wx:else>{{goods.presellprice}}</text>
+                </block>
+                <block wx:else>
+                  <!-- <block wx:if="{{minprice==goods.maxprice }}"> -->
+                    {{goods.marketprice}}
+                  <!-- </block> -->
+                  <!-- <block wx:else>
+                     {{minprice}} ~ {{maxprice}}
+                  </block> -->
+                </block>
+                <block wx:if="{{goods.isdiscount!=0 && goods.isdiscount_time >= now}}">
+                  <text class="original">¥{{goods.productprice}}</text>
+                </block>
+                <block wx:else>
+                  <!-- <text wx:if="{{goods.productprice > goods.marketprice}}" class="original">¥{{goods.productprice}}</text> -->
+                </block>
+              </view>
+            </view>
+            <view wx:if='{{goods.cansee>0 && goods.seecommission>0}}' class='detail-Commission flex' style="padding-bottom: 0">
+              <view class='text'>{{goods.seetitle}}</view>
+              <view class='num flex1'>￥{{goods.seecommission}}</view>
+            </view>
+          </view>
+        </block>
+        <block wx:if="{{goods.ispresell==1 && goods.preselltimeend != 0 && goods.ispresellshow == 1}}">
+          <view class="row row-time">
+            <view id='time-container'>
+              <text class='label'>{{goods.preselltitle ? goods.preselltitle:'距离预售开始'}}</text>
+              <block>
+                <span wx:for="{{time}}" wx:key='index' class="number" style="{{index==0?'margin-left:20rpx':''}}">{{item}}{{index==0?' 天 ': ''}}{{index==1?' 时 ': ''}}{{index==2?' 分 ': ''}}{{index==3?' 秒 ': ''}}</span>
+              </block>
+            </view>
+          </view>
+        </block>
+        <!--促销start-->
+        <block wx:if="{{goods.isdiscount!=0 && goods.isdiscount_time >= now}}">
+          <view class="row row-time" id="discount">
+            <view id='discount-container'>
+              <text class="icox icox-shijian1"></text>
+              <text class='label'>{{goods.isdiscount_title?goods.isdiscount_title:'促销'}}</text>
+              <block wx:if="{{discountTitle}}">{{discountTitle}}</block>
+              <block wx:else>
+                <span wx:for="{{time}}" class="number" style="{{index==0?'margin-left:20rpx':''}}">{{item}}{{index==0?' 天 ': ''}}{{index==1?' 时 ': ''}}{{index==2?' 分 ': ''}}{{index==3?' 秒 ': ''}}</span>
+              </block>
+            </view>
+          </view>
+        </block>
+        <!--促销end-->
+        <!--限时购start-->
+        <block wx:if="{{goods.istime > 0}}">
+          <view class="row row-time">
+            <view id='time-container'>
+              <text class=" icox icox-shijian1"></text>
+              <text class='label'>{{istimeTitle?istimeTitle:'限时购'}}</text>
+              <block wx:if="{{istime==0}}">活动已结束</block>
+              <block wx:else>
+                <span wx:for="{{time}}" class="number" style="{{index==0?'margin-left:20rpx':''}}">{{item}}{{index==0?' 天 ': ''}}{{index==1?' 时 ': ''}}{{index==2?' 分 ': ''}}{{index==3?' 秒 ': ''}}</span>
+              </block>
+            </view>
+          </view>
+        </block>
+        <!--限时购end-->
+        <!-- <view class="fui-cell">
+          <view class="fui-cell-text flex">
+            <block wx:if="{{dispatchpriceObj==1}}">
+              <block wx:if="{{goods.type==1}}">
+                <text>快递:{{goods.dispatchprice.min}} ~ {{goods.dispatchprice.max}}</text>
+              </block>
+            </block>
+            <block wx:else>
+              <text wx:if="{{goods.isverify!=2}}">快递:<block wx:if="{{goods.dispatchprice == 0}}">
+                      <block wx:if="{{activity.postfree.goods}}">包邮</block></block>
+                      <block wx:else>{{goods.dispatchprice}}</block>
+                        </text>
+            </block>
+            <block wx:if="{{!goods.seckillinfo || (goods.seckillinfo && goods.seckillinfo.status==1)}}">
+              <block wx:if="{{goods.showtotal==1}}">
+                <text>库存:{{goods.total}}</text>
+              </block>
+              <text wx:if="{{goods.showsales==1}}">销量:{{goods.sales}}{{goods.unit}}</text>
+            </block>
+            <block wx:if="{{goods.province != '请选择省份' && goods.city != '请选择城市'}}">
+              <text>{{goods.province}}{{goods.city}}</text>
+            </block>
+          </view>
+        </view> -->
+      </view>
+      <!--详情end-->
+      <!--预售发货 start-->
+      <block wx:if="{{goods.ispresell==1 && (preselltimeend > now || preselltimeend == 0)}}">
+        <view class='fui-cell-group fui-cell-click fui-sale-group' style='margin-top:0'>
+          <view class="fui-list">
+            <view class="fui-list-media">
+              <view class='fui-cell-text'>
+                <span class="fui-label fui-label-safety">预售</span>
+              </view>
+            </view>
+            <view class="fui-list-inner" style="font-size:26rpx;color:#666;">
+              <view wx:if="{{preselltimeend > 0}}">结束时间：{{goods.preselldateend}}</view>
+              预计发货：
+              <block wx:if="{{goods.presellsendtype>0}}">
+                购买后{{goods.presellsendtime}}天发货
+              </block>
+              <block wx:else>
+                {{goods.presellsendstatrttime}}
+              </block>
+            </view>
+          </view>
+        </view>
+      </block>
+      <!--预售发货 end-->
+      <!--wx:if="{{goods.seckillinfo==false}}"  -->
+      <view class='favourable' style='margin-top:0' wx:if="{{ !goods.seckillinfo }}">
+        <!-- <block wx:if="{{goods.buyagain >0}}">
+          <view class="fui-cell-group fui-sale-group" style="margin-top:0">
+            <view class="fui-cell">
+              <view class="fui-cell-text" style="white-space:normal;">此商品二次购买 可享受
+                <span class="text-danger">{{goods.buyagain}}</span>折优惠
+                <block wx:if="{{!goods.buyagain_sale}}">
+                  <view>二次购买的时候 不与其他优惠共享</view>
+                </block>
+              </view>
+            </view>
+          </view>
+        </block> -->
+
+        <view class="fui-cell-group fui-cell-click fui-sale-group noborder" bindtap='couponPicker' wx:if='{{coupon.length>0}}'>
+          <view class="fui-cell">
+            <view class="fui-cell-text coupon-selector">
+              <span style="margin-right: 0.25rem">优惠券</span>
+              <span class="coupon-mini" wx:for='{{coupon}}' wx:if='{{index<5}}' wx:key='index'>
+                <span wx:if='{{item.backpre}}' class="subtitle">￥</span>{{item.backmoney}}
+                <span class="subtitle" wx:if='{{item.backtype==1}}'>折</span>
+              </span>
+            </view>
+            <view class="fui-cell-remark">
+              <text wx:if='{{coupon_l>5}}'>更多</text>
+            </view>
+          </view>
+        </view>
+        <block wx:if="{{limits}}">
+          <block wx:if="{{goods.isdiscount==0 || (goods.isdiscount!=0 && goods.isdiscount_time < now)}}">
+            <block wx:if="{{!goods.memberprice=='' && goods.memberprice!=minprice && !goods.levelbuy==0}}">
+              <view class="fui-cell-group fui-sale-group">
+                <view class="fui-cell">
+                  <view class="fui-cell-label" style='color:#000;width:86rpx'>会员</view>
+                  <view class='fui-cell-text'>
+                    <view class="sale-line">
+                      <span class="sale-tip">{{goods.memberprice.levelname}}</span> 可享受
+                      <span class="text-danger">¥{{goods.memberprice.price}}</span> 的价格</view>
+                  </view>
+                </view>
+              </view>
+            </block>
+          </block>
+        </block>
+        <!--赠品start-->
+        <block wx:if="{{limits}}">
+          <block wx:if="{{goods.isgift==1}}">
+            <view class="fui-cell-group fui-sale-group" bindtap='giftPicker'>
+              <view class="fui-cell">
+                <view class="fui-cell-label" style='color:#000;width:98rpx'>赠品</view>
+                <view class="fui-cell-info" wx:if="{{goods.gifts.length==1}}">{{goods.gifts[0].title}}</view>
+                <view class="fui-cell-info" wx:else style='{{gift_title?"":"color:#666;"}}'>{{gift_title?gift_title:'请选择赠品'}}</view>
+                <view class="fui-cell-remark"></view>
+              </view>
+            </view>
+          </block>
+        </block>
+        <!--赠品end-->
+        <!--营销start-->
+        <block wx:if="{{limits && activity != '' }}">
+
+        </block>
+        <!--营销end-->
+
+        <!--同城配送start-->
+        <block wx:if="{{goods.city_express_state}}">
+          <view class="fui-cell-group fui-sale-group" style="margin-top: 1rpx;" bindtap="sendclick">
+            <view class="fui-cell">
+              <view class="fui-cell-label" style='color:#000;width:86rpx'>配送</view>
+              <view class="fui-cell-label sale-line" style="flex: 1;font-size: 24rpx;">
+                <span class="sale-tip">同城</span> 查看商家位置
+              </view>
+              <view class="fui-cell-remark"></view>
+            </view>
+          </view>
+        </block>
+        <!--同城配送end-->
+      </view>
+      <!--不配送区域start-->
+      <block wx:if="{{goods.citys.citys.length>0}}">
+        <view class='fui-cell-group fui-cell-click  fui-sale-group' style='margin-top:0' id="city-picker" bindtap="cityPicker" data-class="city-picker" data-tap="{{active}}">
+          <view class='fui-cell'>
+            <view class='fui-cell-text'>{{ goods.citys.onlysent == 0 ? '不':'只' }}配送区域:
+              <block wx:for="{{goods.citys.citys}}" wx:for-index="idx" wx:for-item="item" wx:key='index'>{{item}}</block>
+            </view>
+            <view class='fui-cell-remark'></view>
+          </view>
+        </view>
+      </block>
+      <!--不配送区域end-->
+      <!--标签start-->
+      <block wx:if="{{goods.hasServices || goods.labelname}}">
+        <view class="fui-cell-group fui-option-group" style='margin-top:0'>
+          <view class="goods-label-demo">
+            <view class="goods-label-list goods-label-style{{labels.style+1}}" style="background:#fafafa">
+              <block wx:for="{{labels.list}}" wx:key='index'>
+                <span>
+                  <icon class='icox icox-duihao1' wx:if="{{labels.style<2}}"></icon>
+                  <text>{{item}}</text>
+                </span>
+              </block>
+              <view style="clear: both;"></view>
+            </view>
+          </view>
+        </view>
+      </block>
+      <!--标签end-->
+      <!--购买数量start-->
+      <!-- <block wx:if="{{goods.canbuy}}">
+        <view class="fui-cell-group fui-cell-click" bindtap="selectPicker" data-id="{{goods.id}}" data-class="select-picker" data-tap="{{active}}" data-buytype="select">
+          <view class="fui-cell" wx:if="{{!isSelected}}">
+            <view class="fui-cell-text option-selector">请选择
+              <block wx:if="{{goods.spec_titles}}">{{goods.spec_titles}}等</block>
+              <block wx:else>数量</block>
+            </view>
+            <view class="fui-cell-remark"></view>
+          </view>
+          <view class="fui-cell" wx:else>
+            <view class="fui-cell-info">已选：数量x{{total}} {{specsTitle}}</view>
+          </view>
+        </view>
+      </block>
+      <block wx:else>
+        <view class="fui-cell-group fui-cell-click">
+          <view class="fui-cell">
+            <view class="fui-cell-text">
+              <block wx:if="{{goods.userbuy==0}}">您已经超出最大{{goods.usermaxbuy}}件购买量</block>
+              <block wx:elif="{{goods.levelbuy==0}}">您当前会员等级没有购买权限</block>
+              <block wx:elif="{{goods.groupbuy==0}}">您所在的用户组没有购买权限</block>
+              <block wx:elif="{{goods.timebuy==-1}}">未到开始抢购时间!</block>
+              <block wx:elif="{{goods.timebuy==1}}">抢购时间已经结束!</block>
+              <block wx:elif="{{goods.total<=0}}">商品已经售罄!</block>
+            </view>
+          </view>
+        </view>
+      </block> -->
+      <!--购买数量end-->
+      <include src="/pages/common/goods-picker.wxml" />
+      <!--选择 end-->
+       <!-- 规格样式 -->
+           <!-- <view class='select_guige'>选择规格：450ml</view>
+           <view class='select_guige_item'>
+                    
+               <view class='select_guige_item_new'>150ml</view>
+                <view class='select_guige_item_new guige_active'>150ml</view>
+           </view> -->
+       <!-- 规格样式结束 -->
+      <!--套餐start-->
+      <view class="fui-cell-group fui-comment-group" wx:if="{{packagegoods}}">
+        <navigator url='/pages/goods/package/index?id={{packagegoodsid}}'>
+          <view class="fui-cell fui-cell-click">
+            <view class="fui-cell-text desc">{{packageList.title}}</view>
+            <text class="fui-cell-text desc label" url='/pages/goods/package/index?id={{packagegoodsid}}'>更多套餐</text>
+            <view class="fui-cell-remark"></view>
+          </view>
+        </navigator>
+        <view id="package">
+          <navigator id="package_list" hover-class='none' style='width:{{packageList.goods.length*220-20}}rpx' url='/pages/goods/package/detail/index?id={{packageList.id}}'>
+            <view class="package-goods package-goods3" wx:for="{{packageList.goods}}" wx:key='index'>
+              <image class="package-goods-img" src="{{item.thumb}}" />
+              <p>{{item.title}}</p>
+              <text class='icox icox-tianjiazhuanhuan'></text>
+            </view>
+          </navigator>
+        </view>
+      </view>
+      <!--套餐end-->
+      <!--全部商品start-->
+      <!-- <view class="fui-cell-group fui-shop-group">
+        <navigator class='fui-list' open-type="switchTab" url="/pages/index/index">
+          <view class='fui-list-media'>
+            <image src="{{goods.shopdetail.logo}}"></image>
+          </view>
+          <view class='fui-list-inner'>
+            <view class='title'>{{goods.shopdetail.shopname}}<text class='title-wel'>进店逛逛</text></view>
+            <block wx:if="{{goods.shopdetail.description}}">
+              <view class='subtitle'>{{goods.shopdetail.description}}</view>
+            </block>
+          </view>
+        </navigator>
+      </view> -->
+      <!--全部商品end-->
+      <!--购买后可见-->
+      <view class="fui-cell-group" wx:if="{{goods.buycontentshow>0}}">
+        <view class="fui-cell" style="display: block;">
+          <template is="wxParse" data="{{wxParseData:wxParseData_buycontent.nodes}}" />
+        </view>
+      </view>
+      <!--购买后可见-->
+    </view>
+
+    <!--头部tab start-->
+    <!-- <view class="fui-cell-group" wx:if="{{goods.params.length > 0 || (goods.getComments && commentObj.list.length > 0) }}">
+      <view class="title">
+        <view id="tab" class="fui-tab fui-tab-danger">
+          <view class="item {{info}}" bindtap="goodsTab" data-tap="info">商品详情</view>
+          <block wx:if="{{goods.params.length > 0}}">
+            <view class="item {{para}}" bindtap="goodsTab" data-tap="para">参数</view>
+          </block>
+          <block wx:if="{{goods.getComments && commentObj.list.length > 0}}">
+            <view class="item {{comment}}" bindtap="goodsTab" data-tap="comment">评价</view>
+          </block>
+        </view>
+      </view>
+    </view> -->
+    <!--头部tab end-->
+    <!-- <view class="fui-cell-group" wx:if="{{ goods.params.length == 0&& !(goods.getComments && commentObj.list.length > 0)}}">
+      <view class='fui-list'>
+        <view class='title'>商品详情</view>
+      </view>
+    </view> -->
+    <!-- 试色start -->
+<!-- <view class="testColorGroup" wx:if="{{goods.colorStatus == '1'}}">
+<image mode='widthFix' class="icon-testcolor" src="{{goods.colorIcon}}" bindtap='testColor'></image>
+</view> -->
+      <!-- 试色end -->
+      
+    <!--商品详情start-->
+    <view class="goods-detail-info {{ info }}" style=';box-sizing: border-box;margin-top:0'>
+      <view class="wxParse" style='overflow: hidden;'>
+        <template is="wxParse" data="{{wxParseData:wxParseData.nodes}}" />
+      </view>
+      <view class='bottom-image'>
+        <image wx:for="{{bottomFixedImageUrls}}" mode='widthFix' src='{{item}}' wx:key='index' />
+      </view>
+    </view>
+    <!--商品详情end-->
+
+    <!-- 显示口红颜色的标签切换 -->
+    <!-- <view style='width:100%' wx:if="{{table.detail_status=='1'}}">
+      <view class='toggle'>
+        <view class='' style='width:100%;flex-wrap: nowrap; display: flex;flex-direction: row;justify-content: space-around;' scroll-x="true">
+          <block wx:for="{{table.detail_title}}" wx:for-index='tid' wx:key='index'>
+            <view style="display: inline-block;padding:20rpx 0;margin:20rpx 0;font-size:34rpx;margin-bottom:5rpx;" class='{{tid==tabCurrent?"tabCurrent":""}}' data-value="item" data-id="{{tid}}" bindtap="selKouhong">{{item}}</view>
+          </block>
+        </view>
+      </view>
+      <view style='width:100%'>
+          <image  bindload="imageLoad" data-type="kouhong" style='width:100%' mode="widthFix" src='{{khUrl}}' bindload="imageLoad"></image>
+      </view>
+    </view> -->
+    <!-- 植村秀的推荐图 -->
+    <view style='width:100%' wx:if="{{table.detail_status=='1'}}">
+      <navigator style='width:100%' wx:for="{{table.detail_pic}}" wx:key='index' url="{{table.detail_title[index]}}">
+        <image data-type="kouhong" mode="widthFix" src='{{item}}' style="display:block;width:100%;"></image>
+      </navigator>
+    </view>
+
+    <!-- 植村秀推荐 -->
+     <view class='zcx_list' wx:if="{{goods.detail_dp}}">
+        <view  wx:for='{{goods.detail_dp}}' wx:key='index' data-link='{{goods.detail_xcxlink[index]}}' bindtap='linkTo' style="flex:1;">
+          <image class='zcx_list_item' src='{{item}}' data-id='{{index}}' data-parent="dpimg" mode='widthFix' style="width:100%;display:block;"></image>
+        </view>
+   </view>
+     <!-- 植村秀推荐 -->
+      
+  <!-- 最后的富文本 -->
+        <view class="goods-detail-info {{ info }}" style=';box-sizing: border-box;margin-top:0'>
+      <view class="wxParse" style='overflow: hidden;'>
+        <template is="wxParse" data="{{wxParseData:wxParseData_contentsecond.nodes}}" />
+      </view>
+      <view class='bottom-image'>
+        <image wx:for="{{bottomFixedImageUrls}}" mode='widthFix' src='{{item}}' wx:key='index' />
+      </view>
+    </view>
+    <!-- 详情页可能喜欢 -->
+    <view style='background:#fff;margin-bottom:34rpx'>
+      <view style='height:127rpx;line-height:127rpx;font-size:30rpx;font-weight:400;background:#fff;text-align:center'>您可能会喜欢</view>
+      <scroll-view scroll-x="true" style='width:100%;white-space:nowrap;box-sizing:border-box;overflow:hidden;overflow-x:scroll;'>
+        <navigator url='./index?id={{item.id}}&specification_id={{item.specificationId}}' class='productList' style='width:262rpx' wx:for="{{recom}}" wx:key="{{item.id}}">
+          <image style='width:250rpx;height:250rpx;margin-top:6rpx;' mode='aspectFit' src='{{item.thumb}}'></image>
+          <view style='width:90%;margin:20rpx auto 0;font-size:22rpx;white-space:nowrap;overflow: hidden;text-overflow:ellipsis;'>{{item.title}}</view>
+          <view style='width:100%;font-weight:400;margin:16rpx auto 0;font-size:24rpx;text-align:center;'>¥{{item.productprice}}</view>
+        </navigator>
+      </scroll-view>
+    </view>
+
+ 
+
+    <view class="goods-detail-comment {{comment}}">
+      <view class="fui-icon-group col-5 ">
+        <view wx:for="{{stararr}}" class="fui-icon-col" data-level="item" bindtap="comentTap" data-type="{{index+1}}" wx:key='index'>
+          <view class="{{commentObjTab==index+1?'text-danger':''}}">{{index==0?'全部':''}}{{index==1?'好评':''}}{{index==2?'中评':''}}{{index==3?'差评':''}}{{index==4?'晒图':''}}
+            <view class="count {{commentObjTab==index+1?'text-danger':''}}">{{commentObj.count[item]}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="fui-loading" wx:if="{{loading}}">
+        <view class="icon"></view>
+        <view class="text">正在加载</view>
+      </view>
+      <view class="container" id="comments-all">
+        <view class="fui-cell-group fui-comment-group">
+          <block wx:for="{{commentList}}" wx:for-index="idx" wx:for-item="item" wx:key='index'>
+            <view class="fui-cell">
+              <view class="fui-cell-text comment ">
+                <view class="info head">
+                  <view class="img">
+                    <image style="width:50rpx;height:50rpx" src="{{item.headimgurl}}"></image>
+                  </view>
+                  <view class="nickname">{{item.nickname}}</view>
+                  <view class="date">{{item.createtime}}</view>
+                  <view class="star star1">
+                    <text wx:for="{{stararr}}" wx:for-index="idx2" wx:for-item="item2" class="{{item.level>=idx2+1?'shine':''}}">★</text>
+                  </view>
+                </view>
+                <view class="remark">{{item.content}}</view>
+                <view class="remark img">
+                  <block wx:for="{{item.images}}" wx:for-index="idx" wx:for-item="image">
+                    <view class="img">
+                      <image src="{{image}}" bindtap='preview' data-src="{{image}}" data-urls="{{item.images}}"></image>
+                    </view>
+                  </block>
+                </view>
+                <block wx:if="{{item.reply_content}}">
+                  <view class="reply-content" style="background:#EDEDED;">
+                    掌柜回复：{{item.reply_content}}
+                    <view class="remark img">
+                      <block wx:for="{{item.reply_images}}" wx:for-index="idx" wx:for-item="replyImage">
+                        <view class="img">
+                          <image src="{{replyImage}}"></image>
+                        </view>
+                      </block>
+                    </view>
+                  </view>
+                </block>
+                <block wx:if="{{item.append_content && item.replychecked==0}}">
+                  <view class="remark reply-title">用户追加评价</view>
+                  <view class="remark">{{item.append_content}}</view>
+                </block>
+                <block wx:if="{{item.append_reply_content}}">
+                  <view class="reply-content" style="background:#EDEDED;">
+                    掌柜回复：{{item.append_reply_content}}
+                    <view class="remark img">
+                      <block wx:for="{{item.append_reply_images}}" wx:for-index="idx" wx:for-item="appendReplyImage">
+                        <view class="img">
+                          <image src="{{appendReplyImage}}"></image>
+                        </view>
+                      </block>
+                    </view>
+                  </view>
+                </block>
+              </view>
+            </view>
+          </block>
+        </view>
+        <view class="fui-cell-group fui-comment-group"></view>
+      </view>
+      <view class="content-empty" style="{{commentEmpty?'display:block':'display:none'}}">暂时没有任何评价</view>
+    </view>
+
+
+    <!--版权  店铺装修 -->
+    <include wx:if="{{copyright}}" src="/pages/diy/template/tpl_copyright.wxml" />
+
+    <!--参数start-->
+    <view class="goods-detail-para {{para}}">
+      <view class="fui-cell-group">
+        <block wx:for="{{goods.params}}" wx:for-index="idx" wx:for-item="item">
+          <view class="fui-cell">
+            <view class="fui-cell-label">{{item.title}}</view>
+            <view class="fui-cell-info overflow">{{item.value}}</view>
+          </view>
+        </block>
+      </view>
+    </view>
+    <!--参数end-->
+    <!-- <view class="fui-mask {{active}}" bindtap="emptyActive"></view> -->
+    <!--配送区域 start-->
+    <block wx:if="{{tempname=='city-picker'}}">
+      <view class="fui-modal picker-modal {{slider}} {{iphonexnavbar}}">
+        <view class='city-picker'>
+          <view class="fui-cell-group fui-sale-group" style='margin-top:0;'>
+            <view class="fui-cell">
+              <view class="fui-cell-text dispatching">
+                不配送区域:
+                <view class="dispatching-info">
+                  <block wx:for="{{goods.citys}}" wx:for-index="idx" wx:for-item="item">
+                    <i>{{item}}</i>
+                  </block>
+                </view>
+              </view>
+            </view>
+            <view class='btn btn-danger block' bindtap="emptyActive">确定</view>
+          </view>
+        </view>
+      </view>
+    </block>
+    <!--配送区域 end-->
+
+
+  </view>
+  <!--商品end-->
+  <!--周期购日期选择  -->
+  <view style='position: fixed; bottom: 98rpx;left: 0;right: 0;z-index: 1001;'>
+    <include src="/pages/date/date.wxml" />
+  </view>
+
+  <include src="/pages/common/coupon-picker.wxml" />
+  <include src="/pages/common/gift-picker.wxml" />
+  <include src="/pages/common/city-picker.wxml" />
+  <include src="/pages/common/act-picker.wxml" />
+  <view class='empty_f'></view>
+  <view class="fui-mask {{ showPicker?'show':''}}" style="z-index: 1500"></view>
+
+
+  <!--周期购  -->
+  <block wx:if="{{cycledate}}">
+    <view class="fui-navbar bottom-buttons {{iphonexnavbar}}" style='z-index: 1001;height:87rpx;box-shadow:none'>
+      <view class="nav-item btn cartbtn" style='background: #ccc;' bindtap="syclecancle" data-tap="{{active}}" data-buytype="cart">取消</view>
+      <view class="nav-item btn buybtn" bindtap="sycleconfirm" data-tap="{{active}}" data-buytype="buy">确定</view>
+    </view>
+  </block>
+  <!--周期购  -->
+
+  <view wx:if="{{ usediypage == false }}">
+    <!--购买start-->
+    <block>
+      <view class="fui-navbar bottom-buttons {{iphonexnavbar}}" style="height:87rpx;box-shadow:none;bottom:0px;">
+        <view class='' style="width:100%;display:flex;flex-description:row;height:100%;">
+          <navigator style="width:158rpx;background:#EC51B1;height:87rpx;padding-top:0rpx;" class="nav-item cart-item" id="menucart" url="/pages/member/cart/index" open-type="switchTab">
+            <view data-cc="{{cartcount && limits}}">
+              <!-- <view class='badge {{cartount<=0?"out":"in"}}' style="background-color:#fff;min-width:30rpx;max-width:30rpx;height:30rpx;border-radius:50%;padding:0;margin-left:0;margin-top:12rpx;">{{cartcount}}</view> -->
+              <view class='badge in' style="margin-left:8rpx;margin-top:12rpx;padding:0;font-size:22rpx;width:22rpx;height:22rpx;line-height:28rpx;border-radius:50%;">{{cartcount?cartcount:''}}</view>
+            </view>
+          
+            <image wx:if="{{cartcount}}" src='../../../static/images/carts.png' mode="widthFix" style='width:56rpx;height:56rpx;display:block;vertical:middle;margin-left:57rpx;margin-top:12rpx;' ></image>
+            <image wx:else mode="widthFix" style='width:56rpx;height:56rpx;display:block;vertical:middle;margin-left:55rpx;margin-top:12rpx;' src='../../../static/images/carts0.png' ></image>
+          </navigator>
+          <view class='' style="flex:1;display:flex;flex-description:row;background:#000;display:flex;align-items:center;justify-content:center;height:100%;">
+            <!-- <view style='background:#000000;border-right:1px solid #c39a6c;color:#c39a6c;flex:1;margin:0' class="nav-item btn cartbtn" data-tap="{{active}}" bindtap='selectPicker' data-id="{{goods.id}}" data-buytype="dingzhi">定制服务</view> -->
+             
+        <button class="customer-item rightline" open-type="contact"  session-from="weapp" show-message-card="true" style='width:131rpx;text-align:center;height:87rpx;line-height:87rpx;padding-top:0rpx;display:flex;flex-direction:column;justify-content:center;align-items:center;'>
+          <image class="kefu_logo" src='/static/images/kehufuwukefu@2x.png'/>
+        </button>
+
+            <view wx:if="{{goods.canAddCart && goods.type != 9}}" style='background:#000000;color:#fff;flex:1;margin:0;;font-weight:400;padding:0;width:245rpx;height:87rpx;line-height:87rpx;font-size:24rpx;' class="nav-item btn cartbtn rightline" bindtap="selectPicker" data-tap="{{active}}" data-id="{{goods.id}}" data-buytype="cart"
+              data-hasoption="{{goods.hasoption}}" data-optionid="{{optionid}}" data-total="{{total}}">加入购物车</view>
+            <view wx:if="{{ !goods.access_time && !goods.timeout}}" style='background:#000000;color:#fff;flex:1;margin:0;;font-weight:400;height:87rpx;line-height:87rpx;font-size:24rpx;' class="nav-item btn buybtn rightline" bindtap="selectPicker" data-tap="{{active}}" data-buytype="buy" data-id="{{goods.id}}">{{canBuy==''?'直接购买':'售罄'}}</view>
+            <view wx:if="{{ goods.access_time}}" style='background:#000000;color:#fff;flex:1;margin:0;;font-weight:400;height:87rpx;line-height:87rpx;font-size:24rpx;' class="nav-item btn buybtn" bindtap="selectPicker" data-tap="{{active}}" data-buytype="buy" data-id="{{goods.id}}" data-time="access_time"
+              data-timeout="false">{{canBuy==''?'直接购买':'售罄'}}</view>
+            <view wx:if="{{ goods.timeout}}" style='background:#000000;color:#fff;flex:1;margin:0;font-weight:400;height:87rpx;line-height:87rpx;' class="nav-item btn buybtn" bindtap="selectPicker rightline" data-tap="{{active}}" data-buytype="buy" data-id="{{goods.id}}" data-time="timeout"
+              data-timeout="false">{{canBuy==''?'直接购买':'售罄'}}</view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!--购买end-->
+  </view>
+
+  <view class="fui-toast {{FoxUIToast.show?'in':'out'}}">
+    <view class="text">{{FoxUIToast.text}}</view>
+  </view>
+  <view class="nav-mask" style="{{nav_mask2?'display:block':''}}"></view>
+  <!--快捷导航start-->
+  <view class="nav-model">
+    <view class="nav-home {{nav_mask2&&navbar==1?'out2':''}} {{nav_mask&&navbar==0?'out':''}}">
+      <span>商城首页</span>
+      <navigator class="icox icox-homepage" url="/pages/index/index" open-type="switchTab"></navigator>
+    </view>
+    <view wx:if="{{limits}}" class="nav-member {{nav_mask2&&navbar==1?'out2':''}} {{nav_mask&&navbar==0?'out':''}}">
+      <span>个人中心</span>
+      <navigator class="icox icox-people" url="/pages/member/index/index" open-type="switchTab"></navigator>
+    </view>
+    <view wx:if="{{limits&&goods.customer==1}}" class="nav-collect {{nav_mask2&&navbar==1?'out2':''}} {{nav_mask&&navbar==0?'out':''}}" bindtap="favorite" data-isfavorite="{{ goods.isfavorite?1:0 }}">
+      <span>关注商品</span>
+      <navigator class="icox {{ goods.isfavorite?'icox-collection_fill':'icox-collection' }}"></navigator>
+    </view>
+
+    <!-- <button  class="nav nav2 {{nav_mask2?'icox icox-close':''}}" style='bottom:135rpx;opacity:1;background-color:black;padding:10rpx;margin-top:0;width:90rpx;height:90rpx;border-radius: 45rpx;display:flex;flex;flex-direction: row;align-items: center;justify-content: center;border:1px solid #fff'
+      open-type="contact" bindtap='contact'>
+      <image src='../../../static/images/icon_kefu.png' style='width:46rpx;height:46rpx;vertical-align:middle;'></image>
+    </button> -->
+  </view>
+  <!--快捷导航end-->
+
+  <!--活动详情弹层-->
+
+
+  <!--未授权弹窗-->
+  <view class="model" wx:if="{{modelShow}}">
+    <view class="inner1">
+      <view class="title">用户未授权</view>
+      <view class="image">
+        <image src="{{imgUrl + 'plugin/app/static/images/wxapp/shouquan.png'}}"></image>
+      </view>
+      <view class="subtitle">您需要先开启【用户信息】，才能使用此功能哦~</view>
+      <!-- <view class="subtitle">您需要先允许【用户授权】，才能进行后续操作哦~</view> -->
+      <view class="model-btns">
+        <view class="cancel" bindtap="cancelclick">取消</view>
+        <view class="confirm" bindtap="confirmclick">去设置</view>
+        <!-- <button bindgetuserinfo="userinfo" bindtap="cancelclick" open-type="getUserInfo">去授权</button> -->
+      </view>
+    </view>
+  </view>
+  <view class="phone" bindtap='phone' wx:if="{{!nav_mask&&!nav_mask2&&goods.phone}}">
+    <text class="icox icox-call"></text>
+  </view>
+</view>
+<view class="goods-layer" wx:if="{{ goods_hint_show }}">
+  <view class="inner">
+    <view class="goods-content">
+      <view class="goods-title">温馨提示</view>
+      <view class="goods-con">{{ goods.hint }}</view>
+    </view>
+    <view wx:if="{{ goods.access_time}}" class="goods-btn buybtn" data-tap="{{active}}" data-buytype="buy" data-id="{{goods.id}}" data-time="access_time" data-timeout="true" bindtap='selectPicker'>
+      确定
+    </view>
+    <view wx:if="{{ goods.timeout}}" class="goods-btn buybtn" data-tap="{{active}}" data-buytype="buy" data-id="{{goods.id}}" data-time="timeout" data-timeout="true" bindtap='selectPicker'>
+      确定
+    </view>
+    <view wx:if="{{ !goods.access_time && !goods.timeout}}" data-tap="{{active}}" data-buytype="buy" data-id="{{goods.id}}" class="goods-btn buybtn" data-time="{{ goods.access_time ? access_time : ''}}" data-timeout="true" bindtap='selectPicker'>
+      确定
+    </view>
+  </view>
+</view>

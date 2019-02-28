@@ -1,0 +1,28 @@
+<!--/member/pages/member/tuihuo/tuihuo.wxml-->
+<view class='container'>
+  <view class='detail-con'>
+    <view class='logo'>
+      <image src='/static/images/logo.png'></image>
+    </view>
+    <view class='policy-inner'>
+      <view class='title'>
+        您在植村秀小程序订购的产品，凡在收到货物后发现以下情形的，可以在签收货物之日起7日内无条件退货或者换货:
+      </view>
+      <view class='content'>
+        <view>1. 收到的产品发现有质量问题。</view>
+        <view>2. 收到产品时发现产品破损。</view>
+        <view>3. 与您在本商城订购的产品不同或有缺少。</view>
+      </view>
+      <view class='content'>凡出现上述情形，我们将退回相应的货款并承担因此而产生的运费。</view>
+      <view class='title'>您在植村秀小程序订购的产品，如因您个人的原因想退货或者换货的，可以在签收货物之日起7日内申请退货或者换货：</view>
+      <view class='content'>
+        <view>1. 退货产品须保持未拆封（包括塑封）且未使用的。 </view>
+        <view>2. 退换的产品需和订单内的发货清单保持一致。</view>
+        <view>3. 退换的产品请保持外观清洁、无破损。</view>
+      </view>
+      <view class='content'>凡出现上述情形，我们将退回相应的货款，但您需要自行承担因此而产生的运费。</view>
+      <view class='title title-s' style='font-size:22rpx'>我们只受理从本渠道销售的产品的退换货，凡是从植村秀小程序以外渠道购买的产品，请联系当时的购买渠道协商退换货。 
+      </view>
+    </view>
+  </view>
+</view>

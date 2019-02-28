@@ -1,0 +1,117 @@
+<!--pages/order/list/index.wxml-->
+<loading wx:if="{{ !show }}">加载中...</loading>
+<view class='page navbar order' wx:if="{{ show }}">
+
+
+  <view class='contain' wx:if="{{ list.length!=0 }}" style='margin-top:0'>
+    <view class='fui-list-group noclick' style='margin-top:10rpx;' wx:for="{{ list }}" wx:for-index="did">
+      <navigator url="/pages/order/detail/index?id={{ item.id }}" hover-class="none" open-type="navigate">
+        <view style='font-size:22rpx;;padding:12rpx;color:#4a4a4a;display:flex;align-items:center;align-content:center;' class='fui-list-group-title' style="color:#666;font-size:26rpx">
+          <view class="order-num">
+            <text selectable='true' style='font-size:22rpx;'>订单号：{{ item.ordersn }}</text>
+          </view>
+          <view class="{{ statuscss }}"  style='font-size:22rpx;'>订单状态：<text style='font-size:24rpx;color:#000;font-weight:bold;'>{{ item.statusstr }}</text></view>
+        </view>
+        <view class='fui-list goods-info' style='justify-content: space-between;padding:18rpx 36rpx;'>
+          <view class="fui-list-media">
+            <image style='width:182rpx;height:176rpx;background-color:#ddd;' class="goods_img" src="{{item.goods[0].images1}}" />
+          </view>
+          <!-- <view class="fui-list-inner" style="height:140rpx">
+            <view class='text text-left'>{{ val.title }}</view>
+            <view class='subtitle text-left'>{{ val.optiontitle }}</view>
+          </view> -->
+          <view class="num" style='flex-direction: column;position:relative;height:176rpx;color:#9b9b9b;font-size:22rpx;display:flex;flex-direction:column;align-items:flex-end;'>
+            <view class='text-right'>支付价格：
+              <text>{{item.price}}</text>
+            </view>
+            <view class='text-right' style=";margin-top:20rpx">合计：
+              <text>{{item.goods[0].total }}件</text>
+            </view>
+
+            <view wx:if="{{ item.canpay }}" class="btn btn-danger-o" style='border-radius: 0;margin-top:50rpx;color:#fff;background:#000;border:none' data-id="{{ item.id }}" data-did="{{did}}"  open-type="navigate" catchtap='payOrder'>
+              支付订单
+            </view>
+            <view wx:if="{{ item.candelete }}" style='border-radius: 0;margin-top:50rpx;color:#fff;background:#000;border:none' class="btn" data-type="1" catchtap="delete" data-orderid="{{ item.id }}">
+              删除订单
+            </view>
+            <view wx:if="{{ item.status == '2' }}" class="btn btn-danger-o" style='border-radius: 0;margin-top:50rpx;color:#fff;background:#000;border:none' data-id="{{ item.id }}" data-did="{{did}}"  open-type="navigate" catchtap='checkexpress'>
+              查看快递
+            </view>
+          </view>
+        </view>
+        <!--赠品显示start-->
+        <block wx:if="{{item.gift}}">
+          <view class="fui-list no-border" style="background: #f9f9f9;margin-top: 4rpx">
+            <block wx:for="{{item.gift}}" wx:for-item="val" wx:for-index="index2">
+              <view class="fui-list-media" wx:if="{{index2<5}}">
+                <image src="{{val.thumb}}" style="width:100rpx;height:100rpx;" />
+              </view>
+            </block>
+            <view class="fui-list-inner"></view>
+            <view class="row-remark">
+              <view>
+                <text>共{{item.gift.length}}件</text>
+              </view>
+            </view>
+          </view>
+        </block>
+        <!--赠品显示end-->
+      </navigator>
+      <!-- <view class='fui-list list-padding' style='padding:0 24rpx' wx:if="{{ status!=4 }}">
+        <view class='fui-list-inner text-right' style='padding:10rpx 0'>
+          <block wx:if="{{ !item.canrestore }}">
+            <view wx:if="{{ item.cancancel }}" class="btn btn-default btn-default-o">
+              <picker value="{{ cancelindex }}" range="{{ cancel }}" bindchange="cancel" data-orderid="{{ item.id }}">取消订单</picker>
+            </view>
+
+            <navigator wx:if="{{ item.canpay }}" class="btn btn-danger-o" url="/pages/order/pay/index?id={{ item.id }}" open-type="navigate">
+              支付订单
+            </navigator>
+
+            <view wx:if="{{ item.canverify && !item.isonlyverifygoods }}" class="btn btn-danger btn-danger-o" data-orderid="{{ item.id }}" bindtap="code">{{ item['dispatchtype']==1?'我要取货':'我要使用' }}</view>
+             <navigator wx:if="{{ item.canverify && item.verifygoods_id && item.isonlyverifygoods }}" class="btn btn-default btn-default-o btn-sm" url="/pages/verifygoods/detail/index?id={{ item.verifygoods_id }}">我要使用</navigator> 
+            <view wx:if="{{ item.candelete }}" class="btn btn-default btn-default-o" data-type="1" bindtap="delete" data-orderid="{{ item.id }}">
+              删除订单
+            </view>
+            <navigator wx:if="{{ item.cancomment2 }}" class="btn btn-default btn-default-o" url="/pages/order/comment/index?id={{ item.id }}" open-type="navigate">
+              追加评价
+            </navigator>
+            <navigator wx:if="{{ item.cancomment }}" class="btn btn-danger btn-danger-o" url="/pages/order/comment/index?id={{ item.id }}" open-type="navigate">
+              评价
+            </navigator>
+            <view wx:if="{{ item.cancomplete && item.iscycelbuy != 1}}" class="btn btn-danger btn-danger-o" data-orderid="{{ item.id }}" bindtap="finish">
+              确认收货 
+            </view>
+  
+
+            <navigator wx:if="{{ item.canrefund }}" class="btn btn-default" url="/pages/order/refund/index" open-type="navigate">{{ item.refundtext }}</navigator>
+            <navigator wx:if="{{ item.cancancelrefund }}" class='btn btn-default-o btn-cancel' open-type="navigate">取消申请</navigator>
+            <navigator wx:if="{{ item.hasexpress && item.iscycelbuy != 1 }}" class="btn btn-default" url="/pages/order/express/index?id={{ item.id }}" open-type="navigate">
+              查看物流
+            </navigator>
+          </block>
+          <block wx:if="{{ item.canrestore }}">
+            <view class="btn btn-default btn-default-o" data-type="2" data-orderid="{{ item.id }}" bindtap="delete">彻底删除订单</view>
+            <view class="btn btn-default btn-default-o" data-type="0" data-orderid="{{ item.id }}" bindtap="delete">恢复订单</view>
+          </block>
+        </view>
+      </view> -->
+    </view>
+  </view>
+
+
+  <view class="center" wx:if="{{ list.length==0&&empty }}">
+    <view class='empty'>
+      <image class='light' src="/static/images/icon/nolist.png"></image>
+      <view class='text-cancel'>您暂时没有任何订单哦！</view>
+      <!-- <navigator class='btn btn-danger-o' url="/pages/index/index" open-type="switchTab">去首页逛逛吧</navigator> -->
+    </view>
+  </view>
+  <!-- <navigator class="fui-dot" hover-class="none" url="/pages/member/index/index" open-type="switchTab">
+    <text class="icox icox-huiyuan1" style="color:#fff;font-size:40rpx"></text>
+  </navigator> -->
+  <!--弹出模态框-->
+  <include src="/pages/order/public/verify.wxml" />
+  <!--公用底部菜单-->
+  <include src="/pages/common/menu.wxml" />
+</view>

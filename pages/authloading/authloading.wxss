@@ -1,0 +1,20 @@
+/* pages/authloading/authloading.wxss */
+
+.loadings {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  background: #fff;
+}
+
+.loading {
+  position: absolute;
+  width: 250rpx;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  z-index: 9999;
+}

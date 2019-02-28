@@ -1,0 +1,2 @@
+<loading wx:if="{{ !show }}">加载中...</loading>
+<web-view src="{{url}}" wx:if="{{ show }}"></web-view>

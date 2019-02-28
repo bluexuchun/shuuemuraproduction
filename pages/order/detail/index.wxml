@@ -1,0 +1,98 @@
+<view class="{{isIpx?'fui-iphonex-button':''}}"></view>
+<loading wx:if="{{ !show }}">加载中...</loading>
+
+<import src="/pages/common/diyform_view.wxml" />
+
+<view class="container">
+  <view class="goods-items">
+    <view class="order-goods">
+      <view class="order-title">
+        <view>{{ order.statusstr }}{{ order.refundstate>0?'('+order.refundtext+')':''}}</view>
+
+      </view>
+      <view class="item" wx:for="{{ goods }}" wx:key="{{item.id}}">
+        <view class="img">
+          <image src="{{ item.thumb }}"></image>
+        </view>
+        <view class="info">
+          <view class="t">
+            <text class="name">{{ item.title }}</text>
+            <text class="number" wx:if="{{item.price != undefined || item.total != undefined}}">价格：{{ item.price/item.total }}元</text>
+            <!-- <text class="number" wx:else>赠品</text> -->
+          </view>
+          <!-- <view class="m" wx:if="{{item.couponDesc != undefined}}">
+            <view wx:for="{{item.couponDesc.desc}}" wx:key="{{index}}">{{item}}</view> 
+          </view> -->
+          <view class='customItem-color'>
+            <view class="color-item">
+             <!-- wx:if="{{item.isShow}}" wx:key="{{items.id}}" wx:for-item="items"  wx:for="{{item.specificationList}} -->
+              <!-- <image wx:if="{{item.spec_types.type == 3}}" class="color-num" src="{{item.spec_img}}" ></image> -->
+              <view wx:if="{{item.spec_types.type == 2}}" class="color-num" style="width:30rpx;height:30rpx;border-radius:50%;background:{{item.spec_types.typeword}}" ></view>
+              <!-- wx:for="{{item.specificationList}}" wx:for-item="items" wx:key="{{items.id}}" -->
+              <text class="color-num-text" >{{item.optionname}}</text>
+            </view>
+          </view>
+          <view class="b" wx:if="{{item.total != undefined}}">商品数量：{{ item.total }}</view>
+        </view>
+        <view>
+        </view>
+
+      </view>
+      <!-- <view class="item" wx:for="{{couponVoList}}" wx:key="{{item.id}}">
+        <template is="order" data="{{...item}}"></template>
+      </view> -->
+    </view>
+  </view>
+  <view class="order-info">
+    <view class="orderInfo-top">
+      <view>订单编号：{{ order.ordersn }}</view>
+      <view>下单时间：{{ order.createtime }}</view>
+      <!-- <block wx:if="{{orderInfo.shippingCampany}}">
+        <view>物流公司：{{orderInfo.shippingCampany}}</view>
+        <view>物流单号：{{orderInfo.shippingNo}}</view>
+      </block> -->
+    </view>
+
+    <view class="item-c normal clearfix">
+      <view class="l">运费：</view>
+      <view class="r">
+        <text class="cost">￥{{ order.dispatchprice }}</text>
+      </view>
+    </view>
+
+    <!-- <view class="item-c normal clearfix">
+      <view class="l">刻字服务费：</view>
+      <view class="r">
+        <text class="cost">￥{{sercharge?sercharge:0}}</text>
+      </view>
+    </view> -->
+    <!-- hidden='{{orderInfo.orderStatus == "待付款"}}' -->
+    <view class="item-c clearfix">
+      <view class="l">支付金额：</view>
+      <view class="r">
+        <text class="cost">￥{{ order.price }}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="handler-button-bar" style='width:100%;box-sizing:border-box;position:relative'>
+    <view style='flex:1;font-size:30rpx;text-align:center;line-height:100rpx;color:#fff;background:#000;margin:0 10rpx;letter-spacing:2rpx;border-radius:5px;' wx:if="{{ order.cancancel }}" class="">
+      <picker value="{{ cancelindex }}" range="{{ cancel }}" bindchange="cancel">取消订单</picker>
+    </view>
+
+    <view style='flex:1;font-size:30rpx;text-align:center;line-height:100rpx;color:#fff;background:#000;margin:0 10rpx;letter-spacing:2rpx;border-radius:5px;' wx:if="{{ order.canpay }}" class="" url="/pages/order/pay/index?id={{ order.id }}&order={{ getOrder }}&sercharge={{ sercharge }}" bindtap='pay' data-id='{{order.id}}'>支付订单
+    </view>
+
+    <view style='width:50%;font-size:30rpx;text-align:center;line-height:100rpx;color:#fff;background:#000;margin:0 10rpx;letter-spacing:2rpx;border-radius:5px;position:absolute;right:0px;top:0px;' wx:if="{{ order.status == '2' }}" bindtap='checkexpress' data-id='{{order.id}}'>查看快递
+    </view>
+
+  </view>
+
+</view>
+
+
+<view class='win' wx:if="{{code}}" bindtap='cancel'></view>
+<navigator url='/pages/christmas/christmas' class='mask' wx:if="{{code}}">
+  <image src='https://yslvday.blob.core.chinacloudapi.cn/yslvday/圣诞活动/小程序圣诞活动图1018/3%20完成支付界面/3.完成支付_品牌logo图300-400%26文字button.jpg' mode='widthFix'></image>
+  <view class='make'>制作电子卡片</view>
+</navigator>

@@ -1,0 +1,33 @@
+<import src="../../template/loading/loading.wxml" />
+<template is="loading" data="{{...item,loading}}"></template>
+<form bindsubmit='formSubmit'>
+
+
+
+  <view class='puzzleText'>
+    <image src='{{step1}}' mode='widthFix'></image>
+  </view>
+  <view class='card' style='box-sizing:border-box'>
+    <view class='cardList {{cid==ind?"active":""}}' data-imgurl="{{item}}" style='width:33%'  wx:for="{{cardList}}" wx:for-index="cid" data-id="{{cid}}" bindtap='selectCard'>
+      <image style='width:100%' src='{{item}}' data-imgurl="{{item}}" mode='widthFix'></image>
+    </view>
+  </view>
+  <view class='middleImg'>
+    <image src='{{step2}}' mode='widthFix'></image>
+  </view>
+  <view class='jiyuInput'>
+    <input placeholder='最多可输入25个中文...' placeholder-class='placeholder' name="jiyu" bindinput='keyText' value='{{value}}'></input>
+  </view>
+  <view class='jiyu'>
+    <image src='{{cardTemplate[0]}}' mode='widthFix'></image>
+    <view>{{value}}</view>
+  </view>
+
+
+  <view class='butt'>
+    <!-- <button wx-if="{{canGet}}" open-type='getUserInfo' bindgetuserinfo='getUserInfo' class="canGet">允许授权</button> -->
+    <button class='confirm' form-type='submit' disabled='{{able}}'>
+      <image style='width:100%' src='{{shencheng}}' mode='widthFix'></image>
+    </button>
+  </view>
+</form>

@@ -1,0 +1,21 @@
+<!--pages/makeCard/makeCard.wxml-->
+<view class='title'>您已成功解锁{{nickName}}发来的拼图</view>
+<!-- <view>
+  <video src="{{videoUrl}}" autoplay='true' controls='{{false}}' bindended="endPlay" binderror="errorPlay" bindwaiting="waitPlay" bindplay="play" wx:if="{{show}}"></video>
+</view> -->
+<view class='cardImg'>
+  <view class='demo'>
+    <text wx:for="{{shareText}}" data-index="{{index}}" data-a="{{shareText.length-1}}" animation='{{animation}}' id="{{opaci}}" class='{{index==shareText.length-1?"opac":""}}'>{{item}}</text>
+    
+  </view>
+  <image mode='widthFix' src='https://yslvday.blob.core.chinacloudapi.cn/yslvday/圣诞活动/小程序圣诞活动图1018/4%20制作电子卡片界面/4.制作_黑色卡片800-600-单独logo-2.jpg' animation="{{animation}}" id="{{ani}}"></image>
+
+  <view class='bottomImg'>
+    <image src='https://yslvday.blob.core.chinacloudapi.cn/yslvday/圣诞活动/小程序圣诞活动图1018/8%20电子卡片最终呈现背景/8.选购YSL黑金限量-button-3.jpg' mode='widthFix' bindtap='goIndex'></image>
+    <image src='https://yslvday.blob.core.chinacloudapi.cn/yslvday/圣诞活动/小程序圣诞活动图1018/8%20电子卡片最终呈现背景/8.制作我的YSL卡片-button-3.jpg' mode='widthFix' bindtap='goC'></image>
+  
+</view>
+</view>
+
+
+ <!-- wx:if="{{share}}" -->

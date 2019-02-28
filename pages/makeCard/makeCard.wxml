@@ -1,0 +1,29 @@
+<!--pages/makeCard/makeCard.wxml-->
+<view class='video {{rotate1}}' wx:if="{{ro}}">
+  <!-- <video src="{{videourl}}" autoplay='true' controls='{{false}}' bindended="endPlay" binderror="errorPlay" bindwaiting="waitPlay" bindplay="play"></video> -->
+  <image src='{{imgurl}}' mode='widthFix' wx:if="{{show}}"></image>
+  <button open-type="share" class='share' wx:if="{{show}}" bindtap='shareInfo'>
+    <image src='https://yslvday.blob.core.chinacloudapi.cn/yslvday/圣诞活动/小程序圣诞活动图1018/5%20卡片生成界面/5.分享_分享给ta-button.jpg' mode='widthFix'></image>
+  </button>
+  <button class='share' wx:if="{{show}}" bindtap='goIndex'>
+    <navigator open-type='switchTab' url="/pages/index/index">
+      <image src='https://yslvday.blob.core.chinacloudapi.cn/yslvday/圣诞活动/小程序圣诞活动图1018/8%20电子卡片最终呈现背景/8.选购YSL黑金限量-button-3.jpg' mode='widthFix'></image>
+    </navigator>
+  </button>
+</view>
+<view class='cardImg {{rotate2}}' wx:if="{{!show}}">
+  <view class='demo'>
+    <text wx:for="{{shareText}}">{{item}}</text>
+    
+  </view>
+  <image class='image' mode='widthFix' src='https://yslvday.blob.core.chinacloudapi.cn/yslvday/圣诞活动/小程序圣诞活动图1018/4%20制作电子卡片界面/4.制作_黑色卡片800-600-单独logo-2.jpg' animation="{{animation}}" id="{{ani}}"></image>
+  <button open-type="share" class='share' bindtap='shareInfo'>
+    <image src='https://yslvday.blob.core.chinacloudapi.cn/yslvday/圣诞活动/小程序圣诞活动图1018/5%20卡片生成界面/5.分享_分享给ta-button.jpg' mode='widthFix'></image>
+  </button>
+  <button class='share' bindtap='goIndex'>
+      <image src='https://yslvday.blob.core.chinacloudapi.cn/yslvday/圣诞活动/小程序圣诞活动图1018/8%20电子卡片最终呈现背景/8.选购YSL黑金限量-button-3.jpg' mode='widthFix'></image>
+  </button>
+  
+</view>
+
+ <!-- wx:if="{{share}}" -->

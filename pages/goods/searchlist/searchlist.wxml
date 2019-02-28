@@ -1,0 +1,58 @@
+<!--pages/goods/searchlist/searchlist.wxml-->
+
+  <!--未授权弹窗-->
+  <view class="model" wx:if="{{modelShow}}">
+  <view class="inner1">
+    <view class="title">用户未授权</view>
+    <view class="image">
+      <image src="{{imgUrl + 'plugin/app/static/images/wxapp/shouquan.png'}}"></image>
+    </view>
+    <view class="subtitle">您需要先开启【用户信息】，才能使用此功能哦~</view>
+    <view class="model-btns">
+      <view class="cancel" bindtap="cancelclick">取消</view>
+      <view class="confirm" bindtap="confirmclick">去设置</view>
+    </view>
+  </view>
+</view>
+<view class='fui-goods-group {{listmode}}' style='background:#fff;min-height:100vh;margin:0rpx;padding:30rpx 10rpx 0rpx;align-content:flex-start;'>
+      <block wx:for="{{list}}" wx:key="">
+        <template is="tpl_list" data="{{item}}" />
+      </block>
+</view>
+
+  <template name="tpl_list">
+    <view class="fui-goods-item">
+      <view class='' style='padding-bottom:20rpx;background:#fff;border:1rpx solid #EAEAEA;'>
+        <navigator style='position: relative' url="{{ item.bargain > 0?'/pages/bargain/detail/detail?id='+item.bargain : '/pages/goods/detail/index?id='+item.id+'&optionid='+item.optionid}}" hover-class="none" open-type="navigate">
+          <view style='padding:46rpx 0 20rpx;' class="image">
+            <image style='width:100%;height:248rpx' mode="aspectFill" src='{{item.thumb}}'></image>
+          </view>
+          <view style='position:absolute;left:0;top:10rpx;width:70rpx;height:32rpx;line-height:32rpx;background:#000;font-size:16rpx;text-align:center;color:#fff;' wx:if="{{ (item.saleout && item.cansee<=0) || (item.saleout && item.cansee>0 && item.seecommission<=0)}}">售罄</view>
+          <!--分销佣金  -->
+          <view wx:if='{{item.cansee > 0 && item.seecommission>0}}' class='goods-Commission'>{{item.seetitle}}￥{{item.seecommission}}</view>
+        </navigator>
+        <view class="detail goods_list_detail" style='padding:0'>
+          <navigator url="{{item.bargain > 0?'/pages/bargain/detail/detail?id='+item.bargain : '/pages/goods/detail/index?id='+item.id}}" hover-class="none" open-type="navigate">
+            <view class="name" style='text-align:center;'>
+              <text class="cycle-tip" wx:if="{{ item.type == 9 }}">周期购</text>
+              <text class="cycle-tip" wx:if="{{ item.bargain > 0 }}">砍价</text>
+              <text style='display:block;line-height:1.6;box-sizing:border-box;font-size:24rpx;overflow: hidden;text-overflow: ellipsis;white-space: nowrap'>{{item.title}}</text>
+              <text style='font-size:16rpx;margin-top:8rpx;padding-bottom:20rpx;display:block;line-height:1.6;box-sizing:border-box;overflow: hidden;text-overflow: ellipsis;white-space: nowrap'>{{item.subtitle}}</text>
+            </view>
+          </navigator>
+
+
+        </view>
+      </view>
+
+      <view bindtap='jiagetiaozhuan' class="price" data-url="{{ item.bargain > 0?'/pages/bargain/detail/detail?id='+item.bargain : '/pages/goods/detail/index?id='+item.id}}" style='height:66rpx;line-height:66rpx;background:#000;color:#fff;display:block;display:flex;align-items:center;justify-content:center;'>
+        <image src="../../../static/images/icon_biaoshi.png" class="icons" style='display:inline-block;width:27rpx;height:27rpx;margin-right:22rpx;vertical-align:middle;'></image>
+        ¥{{item.minprice}}
+        <view bindtap='selectPicker' data-buytype="buy" data-id='{{item.id}}' wx:if="{{ item.type != 9 && item.type != 5 && item.bargain == 0}}">
+        </view>
+        <navigator class='buy buybtnbtn buybtn-1 ' wx-if="{{item.type == 9 && item.bargain == 0}}" style='' url="/pages/goods/detail/index?id={{item.id}}?optionid={{item.optionid}}">详情</navigator>
+        <navigator class='buy buybtnbtn buybtn-1' wx-if="{{item.type == 5 && item.bargain == 0}}" style='' url="/pages/goods/detail/index?id={{item.id}}">详情</navigator>
+        <navigator class='buy buybtnbtn buybtn-1' wx-if="{{item.bargain > 0}}" style='' url="/pages/bargain/detail/detail?id={{item.bargain}}?optionid={{item.optionid}}">详情</navigator>
+      </view>
+    </view>
+  </template>

@@ -1,0 +1,118 @@
+{
+	"description": "项目配置文件。",
+	"setting": {
+		"urlCheck": false,
+		"es6": true,
+		"postcss": true,
+		"minified": true,
+		"newFeature": true,
+		"autoAudits": false
+	},
+	"compileType": "miniprogram",
+	"libVersion": "2.4.4",
+	"appid": "wxf5b847b162d8fbf8",
+	"projectname": "%E6%A4%8D%E6%9D%91%E7%A7%80%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83",
+	"isGameTourist": false,
+	"condition": {
+		"search": {
+			"current": -1,
+			"list": []
+		},
+		"conversation": {
+			"current": -1,
+			"list": []
+		},
+		"plugin": {
+			"current": -1,
+			"list": []
+		},
+		"game": {
+			"currentL": -1,
+			"list": []
+		},
+		"miniprogram": {
+			"current": 12,
+			"list": [
+				{
+					"id": -1,
+					"name": "秒杀",
+					"pathName": "seckill/pages/index/index",
+					"query": ""
+				},
+				{
+					"id": 1,
+					"name": "秒杀商品详情",
+					"pathName": "pages/goods/detail/index",
+					"query": "id=4"
+				},
+				{
+					"id": -1,
+					"name": "333",
+					"pathName": "raffle/pages/index/index",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "分红",
+					"pathName": "dividend/pages/index/index",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "分红订单",
+					"pathName": "dividend/pages/order/index",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "分红订单提现",
+					"pathName": "dividend/pages/apply/index",
+					"query": ""
+				},
+				{
+					"id": 6,
+					"name": "快速购买",
+					"pathName": "pages/quickbuy/index",
+					"query": "id=3"
+				},
+				{
+					"id": 7,
+					"name": "商品详情",
+					"pathName": "pages/goods/detail/index",
+					"query": "id=719"
+				},
+				{
+					"id": -1,
+					"name": "门店列表",
+					"pathName": "pages/order/store/index",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "门店列表",
+					"pathName": "dividend/pages/index/index",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "授权失效",
+					"pathName": "pages/message/auth/index",
+					"query": ""
+				},
+				{
+					"id": 11,
+					"name": "2",
+					"pathName": "pages/makeCard/makeCard",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "2",
+					"pathName": "pages/member/cart/index",
+					"query": "goodsid=301992",
+					"scene": null
+				}
+			]
+		}
+	}
+}

@@ -1,0 +1,100 @@
+/* pages/customCard/customCard.wxss */
+page{
+  background: #000;
+  color: #F1DCB2;
+}
+.card{
+  display: flex;
+}
+.cardList{
+  width: 33%;
+  padding: 15rpx 20rpx;
+  
+}
+.titleImg{
+  padding-bottom: 5rpx;
+  border: 1px solid #f2f2f2;
+  margin-bottom: 25rpx;
+}
+.titleImg image{
+  display: block;
+  width: 60%;
+  margin: 0 auto;
+}
+.jiyu{
+  padding-top: 40rpx;
+  /* border-top: 1px solid #F1DCB2; */
+  position: relative;
+}
+.jiyu view{
+  width: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%,-50%,0);
+  color: #F1DCB2;
+  word-wrap:break-word;
+  text-align: center;
+}
+.jiyu image{
+  display: block;
+  width: 60%;
+  margin: 0 auto;
+}
+
+.active{
+  border: 1px solid #aaa;
+}
+.jiyuInput{
+  margin-top: 30rpx;
+  padding: 15rpx;
+}
+.jiyuInput input{
+  border: 1px solid #C5A87A;
+  padding: 15rpx;
+}
+.placeholder{
+  color: #C5A87A;
+  font-size: 26rpx;
+}
+
+.puzzleText{
+  padding: 45rpx 0rpx 30rpx;
+}
+.puzzleText image{
+  display: block;
+}
+.middleImg{
+  margin-top: 50rpx;
+}
+.confirm{
+  position: relative;
+  width: 300rpx;
+  margin: 30rpx auto 0;
+  background: #000;
+  color: #F1DCB2;
+  border: 1px solid #F1DCB2;
+  border-radius: 0;
+  height: 88rpx;
+  line-height: 88rpx;
+  /* line-height: 80rpx; */
+  padding: 0;
+}
+.confirm image{
+  margin-top: 1px;
+}
+.butt{
+  position: relative;
+}
+.canGet{
+  position: absolute;
+  width:300rpx;
+  height: 88rpx;
+  left: 50%;
+  top: 0;
+  padding: 0;
+  transform: translateX(-50%);
+  background:transparent;
+  color: transparent;
+  z-index: 999;
+}

@@ -1,0 +1,96 @@
+<!--pages/customization/step1/index.wxml-->
+<import src="/utils/wxParse/wxParse.wxml" />
+<view class="container">
+  <view class="page-bottom">
+    <view class="swiper-boxer">
+      <swiper indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" current="{{currentTab}}" circular="true" bindchange="changeSwiper">
+        <block wx:for="{{kezipic}}" wx:key="*this">
+          <swiper-item>
+            <view class="media">
+              <image src="{{item.img}}" class="slide-image" />
+              <view wx:if="{{item.locate[0].mode == 'horizontal'}}" class="customize-txt" style="left:{{item.locate[0].left}}%;top:{{item.locate[0].top}}%;color:{{item.locate[0].color}};width:{{item.locate[0].width}};height:{{item.locate[0].height}};display:flex;flex-duration:column;align-items: center">
+                <image mode='widthFix' src="{{!isSelect[currentItem]?'':addsymbol.url}}" style="width:40rpx;display{{!isSelect[currentItem] ? 'none' : 'block'}}" class="icons {{!isSelect[currentItem]?'hide':''}}"></image>
+                <text>{{inputValue.letter}}</text>
+              </view>
+              <view wx:else class="row-txt" style="left:{{item.locate[0].left + 9}}%;top:{{item.locate[0].top - 11}}%;color:{{item.locate[0].color}};width:{{item.locate[0].width}};height:{{item.locate[0].height}};display:flex;flex-duration:column;align-items: center">
+                <image mode='widthFix' src="{{!isSelect[currentItem]?'':addsymbol.url}}" style="width:40rpx;display:{{!isSelect[currentItem] ? 'none' : 'block'}}" class="icons {{!isSelect[currentItem]?'hide':''}}"></image>
+                <text>{{inputValue.letter}}</text>
+              </view>
+            </view>
+          </swiper-item>
+        </block>
+      </swiper>
+      <view class="swiper-btns">
+        <view class="sbtns btn-prev" bindtap="prevSwiper"></view>
+        <view class="sbtns btn-next" bindtap="nextSwiper"></view>
+      </view>
+    </view>
+    <view class="customize">
+      <view class="title">刻字预览</view>
+      <view class="customize-price">
+        <text>我的专属定制</text>
+        <text>￥{{alldata.sercharge}}</text>
+      </view>
+      <view class="ipt-wrap">
+        <input id="letter" bindinput="bindKeyInput" placeholder="请输入您的刻字内容…" class="ipt-txt" value="{{isUpdate?inputValue.letter:''}}" />
+      </view>
+      <view class="eg_letters h_col2">
+        <view class="font-s flex1">
+          <view>可输入9个英文字符或者5个中文字</view>
+          <view>实际刻字字体如右</view>
+          <view>请了解刻字效果与预览有一定差异：</view>
+        </view>
+        <view class="flex1">
+          <image src="../../../static/images/letters.jpg"></image>
+        </view>
+      </view>
+      <view class="letter-icon">
+        <text>添加特殊符号：</text>
+        <view wx:for="{{letterIcon}}" wx:key="*this" class="icon-wrap {{currentItem==item.id && isSelect[item.id]?'cur':''}}" data-id="{{item.id}}" bindtap="switchIcon">
+          <image src="{{item.url}}"></image>
+        </view>
+      </view>
+      <view class="tips">
+        <text>如有特殊刻字要求（仅刻部分产品，分产品刻不同内容）</text>
+        <text>请给我们留言</text>
+      </view>
+      <!-- <view class="h_col2 ">
+        <view class="flex1 ipt-wrap">
+          <textarea id="msg" placeholder="请输入您的留言…" bindinput="bindKeyInput" value="{{isUpdate?inputValue.msg:''}}"></textarea>
+        </view>
+        <button class="area-btn" bindtap="sendMsg">确认</button>
+      </view> -->
+      <view class="ipt-wrap">
+        <textarea id="msg" placeholder="请输入您的留言…" bindinput="bindKeyInput" value="{{isUpdate?inputValue.msg:''}}"></textarea>
+      </view>
+    </view>
+    <view class="custom-reminds white-wrap">
+      <view class="reminds">
+        <view>刻字须知：</view>
+        <view class="r-content">
+          <!-- <view>• 刻字服务{{alldata.sercharge}}/次，如果单笔消费满{{alldata.full}}元尊享免费刻字服务。</view>
+          <view>• 请保证填写信息的正确性，一旦提交订单，则无法进行任何修改。</view>
+          <view>• 本次提供刻字服务的产品有唇膏/唇釉/气垫/部分香水；一份礼盒内含的多个刻字单品默认镌刻相同的刻字内容，如有特殊要求请注明在备注中。</view>
+          <view>• 图片预览效果仅供参考。实际限定中文字体为汉仪细等线简；英文字体为Singulier。</view>
+          <view>• 工作人员需要将包装外壳打开后进行刻字，打开痕迹不可避免。</view>
+          <view>• 刻字产品将在订单提交后5个工作日内发货，发货后2-6日送达全国。</view>
+          <view>• 除产品质量问题和破损之外，刻字产品不接受任何形式的退换货。</view>
+          <view>• 刻字内容请遵守中国法规，使用文明用语。</view> -->
+          <view class="wxParse" style='overflow: hidden;'>
+            <template is="wxParse" data="{{wxParseData:wxParseData.nodes}}" />
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="fixed-btns">
+    <block wx:if="{{!isUpdate}}">
+      <button class="btn-common black-btn golden" bindtap="nextStep">下一步</button>
+      <button class="btn-common dark-grey-btn golden borderL" bindtap="jumpStep">跳过</button>
+    </block>
+    <block wx:else>
+      <button class="btn-common black-btn golden" bindtap="cancel">取消</button>
+      <button class="btn-common dark-grey-btn golden borderL" bindtap="saveData">保存</button>
+    </block>
+  </view>
+</view>

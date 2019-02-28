@@ -1,0 +1,124 @@
+/* pages/customization/step2/index.wxss */
+@import "../base.wxss";
+.golden{
+  background: #000;
+  color: #c39a6c;
+}
+.borderL{
+  border-left: 1px solid #c39a6c;
+}
+.customer-card{
+  padding: 15rpx 12rpx;
+}
+.customer-card .card-item{
+  margin: 0 auto;
+  float: left;
+  width: 47%;
+  margin-left: 2%;
+}
+.customer-card .card-item:not(:last-child){
+  margin-bottom: 7rpx;
+}
+.card-value{
+  position: absolute;
+  left:50%;
+  bottom:45%;
+  /* width: 24rpx; */
+  height: 44rpx;
+  line-height: 20rpx;
+  word-wrap:break-word; 
+  white-space:normal; 
+  word-break:break-all;
+  font-size: 18rpx;
+  transform: rotate(-0deg) translate(-50%, -25%); 
+  transform-origin:0 0;
+  /* text-shadow: -1px -1px 0 #fff,1px 1px 0 #333,1px 1px 0 #444; */
+  text-shadow: 2rpx 2rpx 2rpx rgba(0,0,0,.5);
+  /* text-transform: uppercase;*/
+  /*text-align: center;*/
+  vertical-align:middle;
+  color: #000;
+}
+.flip-container {
+	perspective: 1000px;
+}
+.hover{
+  border: 1px solid #666;
+  padding: 10rpx;
+}
+	/* flip the pane when hovered */
+		/* .flip-container:hover .flipper, .flip-container.hover .flipper {
+		transform: rotateY(180deg);
+	} */
+  .flip-container.none .flipper {
+		transform: none;
+	}
+
+.flip-container, .front, .back {
+	width: 340rpx;
+	height: 260rpx;
+}
+.front image, .back image{
+  width: 100%;
+  height: inherit;
+}
+
+/* flip speed goes here */
+.flipper {
+	transition: 0.6s;
+	transform-style: preserve-3d;
+
+	position: relative;
+}
+
+/* hide back of pane during swap */
+.front, .back {
+
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+/* front pane, placed above back */
+.front {
+	z-index: 2;
+	/* for firefox 31 */
+	transform: rotateY(0deg);
+  border-color: transparent;
+}
+
+/* back, initially hidden pane */
+.back {
+	/*transform: rotateY(180deg);*/
+  display: table;
+  /* margin: 0 auto; */
+  text-align: center;
+  padding: 10rpx;
+}
+
+.customer-logo{
+  margin: 0 24rpx;
+  padding: 20rpx 0;
+}
+
+.card-ipt{
+  margin: 10rpx 24rpx 20rpx;
+}
+.ipt-wrap{
+  padding: 10rpx 26rpx;
+  border: 1rpx solid #979797;
+}
+.ipt-wrap input{
+  font-size: 30rpx;
+}
+
+.card-txt{
+  display: table-cell;
+  vertical-align: middle;
+  padding: 0 20rpx;
+  word-break: break-all;
+}
+
+.card-reminds.white-wrap .reminds .r-content {
+  padding: 10rpx 0;
+}

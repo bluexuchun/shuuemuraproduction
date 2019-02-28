@@ -1,0 +1,38 @@
+<!--pages/ucenter/pefectInfo/pefectInfo.wxml-->
+<view class="container">
+  <view class="profile-info">
+    <view class="info-card">
+      <form>
+      <view class="h_col2 item-border">
+        <image src="../../../static/images/icon_shoujihao.png" class="form-icon"></image>
+        <!-- <label>手机号</label> -->
+        <input placeholder="请输入手机号码" type="number" maxlength="11" name="tel" class="flex1" bindinput="bindkeyin" value="{{telInput}}" />
+      </view>
+      <view class="h_col2">
+        <view class="ipt-wrap item-border flex1">
+        <view class="h_col2">
+        <image src="../../../static/images/icon_yanzhengma.png" class="form-icon"></image>
+        <input placeholder="请输入验证码" type="number" name="code" bindinput="codeInput" /></view>
+        </view>
+        <button wx:if="{{!isSend}}" class="btn-common black-btn" bindtap="sendCode" >{{codeValue}}</button>
+        <button wx:else class="btn-common black-btn" disabled>{{codeValue}}</button>
+      </view>
+
+      <view class="h_col2 chk_h_col2">
+        <view class="checkbox">
+          <checkbox-group bindchange="checkboxChange">
+            <checkbox value="bind" checked=""/>￼
+          </checkbox-group>
+        </view>
+        <view class="flex1">
+          <view>我同意依照本<text class="line-txt" bindtap="linkRule">使用条款</text>和<text class="line-txt" bindtap="linkPrivate">隐私政策</text>对我的个人信息进行收集和使用;</view>  
+          <view><text>我已阅读并确认已被给予充分机会理解该使用条款和隐私政策的内容</text></view>
+        </view>
+      </view>
+      </form>
+    </view>
+  </view>
+  <view class="perfect-btn-wrap">
+    <button class="btn-common black-btn" formType="submit" bindtap="formSubmit">确认绑定</button>
+  </view>
+</view>

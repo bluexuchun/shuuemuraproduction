@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "卡券包",
+  "usingComponents": {
+    "loading": "/components/loading"
+  }
+}

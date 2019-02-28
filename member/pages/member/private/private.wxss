@@ -1,0 +1,28 @@
+/* pages/ucenter/private/private.wxss */
+.container{
+  font-family:PingFangSC-Light,helvetica,'Heiti SC';
+font-size:29rpx;
+color:#000;
+box-sizing: border-box;
+}
+.txt-wrap{
+  padding:30rpx 16rpx;
+font-size:28rpx;
+
+}
+.txt-wrap .headline{
+  display:block;
+padding-bottom:30rpx;
+font-size:36rpx;
+text-align:center;
+
+}
+.txt-wrap view{
+  margin-bottom:20rpx;
+
+}
+.txt-wrap view.h3{
+  font-weight:bold;
+font-size:30rpx;
+
+}

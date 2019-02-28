@@ -1,0 +1,40 @@
+<!--搜索start-->
+<!-- <view class="category-search" style="background:{{diyitem.style.background}};color:{{diyitem.style.color}}">
+  <view class="weui-flex">
+    <view class="weui-flex__item category-search-form">
+      <view class="flex-head-search" id="searchBar" style='position:relative;'> -->
+        <!-- <navigator class="weui-search-bar__form {{diyitem.style.searchstyle}}" hover-class="none" data-url='/pages/goods/index/index?fromsearch=1' bindtap='navigate' style='background:{{diyitem.style.inputbackground}};color:{{diyitem.style.color}}'>
+          <view class="weui-search-bar__box category-search-box">
+            <view class="flex-icon-search">
+              <text class='icox icox-search' style='color:{{diyitem.style.iconcolor}}'></text>
+            </view>
+            <view class="weui-search-bar__input flex-input" style='text-align:{{diyitem.style.textalign}}'>
+              {{diyitem.params.placeholder}}
+            </view>
+          </view>
+        </navigator> -->
+        <!-- <input class='searchbox' style='color:{{diyitem.style.color}};' placeholder-class="phcolor" bindinput='iChange' placeholder="{{diyitem.params.placeholder}}" style='background: {{diyitem.style.inputbackground}};border-style:{{diyitem.style.searchstyle}}'></input>
+        <view class='btn-search' bindtap='searchBtn'>
+         <text class='iconfont icon-sousuo'  style='width:48rpx;height:48rpx;color:{{diyitem.style.iconcolor}}'></text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view> -->
+<!--搜索end-->
+
+<view class="category-search" style="background:rgba(0,0,0,0);padding: 44rpx 0rpx;">
+  <view class="weui-flex">
+    <view class="weui-flex__item category-search-form">
+      <view class="flex-head-search" id="searchBar" style='padding:0 20rpx;display: flex;align-items: center;justify-content: space-between;position:relative;color:{{diyitem.style.color}};background:{{diyitem.style.background}};border-style:{{diyitem.style.searchstyle}};text-align:{{diyitem.style.textalign}};border-radius:{{diyitem.style.searchstyle =="radius"?"10rpx":(diyitem.style.searchstyle=="round"?"50rpx":"")}};border:6rpx solid {{diyitem.style.inputbackground}}'>
+       
+        <input class='searchbox'  placeholder-class="phcolor" bindinput='iChange' placeholder="{{diyitem.params.placeholder}}" placeholder-style='color:{{diyitem.style.color}}'></input>
+        <view class='btn-search' bindtap='searchBtn' data-value="{{diyitem.params.placeholder}}">
+   <text class='iconfont icon-sousuo'  style='width:48rpx;height:48rpx;color:{{diyitem.style.iconcolor}}'></text>
+
+          
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

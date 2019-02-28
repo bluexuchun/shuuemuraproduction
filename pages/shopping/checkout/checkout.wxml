@@ -1,0 +1,105 @@
+<!-- <import src="../../../template/order/order.wxml" />
+<import src="../../../template/loading/loading.wxml" /> -->
+<template is="loading" data="{{...item,loading}}"></template>
+<view class="container">
+    <view class="address-box">
+        <view class="address-item" bindtap="selectAddress"  wx:if="{{address != ''}}">
+            <view class="l">
+                <text class="name">{{address.userName}}</text>
+                <text class="default" wx:if="{{checkedAddress.is_default === 1}}">默认</text>
+            </view>
+            <view class="m">
+                <text class="mobile">{{address.telNumber}}</text>
+                <text class="address">{{address.full_region + address.detailInfo}}</text>
+            </view>
+            <view class="r">
+                <image src="/static/images/address_right.png"></image>
+            </view>
+        </view>
+        <view class="address-item address-empty" bindtap="selectAddress" wx:if="{{address == ''}}">
+            <view class="m">
+                  <view class='plus'>+</view>  添加收货地址
+            </view>
+            <!-- <view class="r">
+                <image src="/static/images/address_right.png"></image>
+            </view> -->
+        </view>
+    </view>
+    <view class="goods-items">
+        <view class="item" wx:for="{{checkedGoodsList}}" wx:key="{{item.id}}">
+            <template is="order"  data="{{...item}}"></template>
+            <!-- <text>如需修改定制服务，请返回购物车</text> -->
+        </view>
+        <view class='freeGoods' wx:if="{{freeGoodsList.length > 0}}">
+          <view class="gift-title">独家礼遇</view>
+          <view class="gifts-items" wx:for="{{freeGoodsList}}" wx:key="{{item.id}}">
+            <view class='top'>
+              <image src='{{item.imgUrl}}' mode='widthFix'></image>
+            </view>
+            <view class='bottom'>
+              {{item.name}}
+            </view>
+          </view>
+          <view class='clearfix'></view>
+        </view>
+
+        <view class='extra-gifts' wx:if="{{extraGiftList.productList.length > 0}}">
+          <view class="gift-title extraGift">
+            尊享体验礼
+            <text class="active-notice" wx:if="{{nextExtraGiftList}}">再加购{{ nextExtraGiftList.minPrice - freePrice }}，可获得{{nextExtraGiftList.limitNum}}件体验礼</text>
+          </view>
+          <scroll-view scroll-x="true" class="{{nextExtraGiftList?'scroll-extra-bg':''}}">
+            <view class="scroll-extra-gift">
+              <view class="extra-gifts-item gifts-items" wx:for="{{extraGiftList.productList}}" wx:for-index="idx" wx:key="{{item.id}}" data-list-type="extraGiftList" data-idx="{{idx}}">
+                <view wx:if="{{item.goods_number<=0}}" class="mask"></view>
+                <view data-list-type="extraGiftList" data-idx="{{idx}}" bindtap="selectPro">
+                  <view class="top checkbox {{ item.selected ? 'checked': '' }}">
+                    <icon></icon>
+                    <image src='{{item.img_url}}' mode='widthFix'></image>
+                  </view>
+                  <view class='bottom'>
+                    {{item.name}}
+                  </view>
+                </view>
+              </view>
+            </view>
+          </scroll-view>
+          <view class="gift-desc"> 购满{{minPrice}}元可获2件体验装，购满{{ maxPrice}}元可获4件体验装</view>
+          <view class="gift-desc"> 礼盒和限量商品不参与该活动</view>
+        </view>
+
+        <view class='extra-gifts {{ dzGiftList.minPrice > actualPrice ? "disabled" : "" }}' wx:if="{{dzGiftList.productList.length > 0}}">
+          <view class="gift-title extraGift">
+            限时加享
+            <text class="active-notice" wx:if="{{dzGiftList.minPrice > actualPrice}}">再加购{{ dzGiftList.minPrice - actualPrice }}，可获得{{dzGiftList.limitNum}}件限时加享礼</text>
+          </view>
+          <scroll-view scroll-x="true" class="scroll-extra-bg">
+            <view class="scroll-extra-gift">
+              <view class="extra-gifts-item gifts-items" wx:for="{{dzGiftList.productList}}" wx:for-index="idx" wx:key="{{item.id}}" data-list-type="dzGiftList" data-idx="{{idx}}" bindtap="selectPro1">
+                <view class="top checkbox {{ item.selected ? 'checked': '' }}">
+                  <icon></icon>
+                  <image src='{{item.img_url}}' mode='widthFix'></image>
+                </view>
+                <view class='bottom'>{{item.name}}</view>
+              </view>
+            </view>
+          </scroll-view>
+          <view class="gift-desc"> 购满1500元加享2件礼，礼盒和限量商品同享</view>
+        </view>
+    </view>
+    <view class="totalMoney">
+      <view>
+        商品合计： <text class='fr'>￥{{actualPrice}}</text>
+      </view>
+      <view>
+        运费： <text class='fr'>￥{{yun}}</text>
+      </view>
+      <view wx:if="{{extraPrice > 0}}">
+        刻字服务费： <text class='fr'>￥{{extraPrice}}</text>
+      </view>
+      <view class="l">应付金额： <text class='fr'>￥{{actualPrice+yun+extraPrice}}</text></view>
+    </view>
+    <view class="order-total">
+        <view class="r" bindtap="submitOrder">微信支付</view>
+    </view>
+</view>

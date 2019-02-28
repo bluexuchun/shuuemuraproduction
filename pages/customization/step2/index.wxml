@@ -1,0 +1,56 @@
+<!--pages/customization/step2/index.wxml-->
+<view class="container">
+  <view class="page-bottom">
+    <view class="logo customer-logo">
+      <image src="../../../static/images/logo.png"></image>
+    </view>
+    <view class="customer-card clearfix">
+      <view wx:for="{{cards}}" wx:key="{{item.id}}"  class="card-item ">
+        <view class="flip-container" data-id="{{item.id}}" data-url="{{item.img}}" bindtap="flipCard" data-notice='{{item.notice}}'>
+          <view class="flipper">
+          
+              <!--<view class="front">
+                <image src="{{item.mainPicUrl}}"></image>
+              </view>-->
+            <view class="back {{currentCard==item.id ?'hover':'none'}}">
+            <image src="{{item.img}}"></image>
+            <text class="card-value">{{inputValue}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="card-ipt">
+      <view class="ipt-wrap">
+        <input bindinput="bindKeyInput" placeholder="请输入您的寄语…" class="ipt-txt" value="{{isUpdate?inputValue:''}}" wx:if="{{currentCard==morencardid}}" />
+        <input placeholder="该卡片仅适于手写" class="ipt-txt" disabled='{{true}}' wx:if="{{currentCard!=morencardid}}" />
+      </view>
+    </view>
+    <view class="card-reminds white-wrap">
+      <view class="reminds">
+        <view>卡片须知：</view>
+        <view class="r-content">
+          
+          <view>可输入120个字符。</view>
+          <view>圣诞限量卡片只限空白卡随单寄出，需客人自行手写，建议使用金色笔书写。</view>
+          <view>请保证卡片文字信息的正确性，一旦提交订单，则无法进行任何修改。</view>
+          <view>卡片预览效果仅供参考。实际限定中文字体为汉仪细等线简；英文字体为Singulier。</view>
+          <view>含卡片定制礼盒在订单提交后5个工作日内发货，发货后2-6日送达全国。</view>
+          <view>卡片内容请遵守中国法规，使用文明用语。</view>
+          <view style='color:#000;font-weight:700;'>每笔订单仅可带出一张卡片，若已输入寄语则默认带出白卡。如有特殊卡片需求，请联系客服。</view>
+
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="fixed-btns">
+    <block wx:if="{{!isUpdate}}">
+      <button class="btn-common black-btn golden" bindtap="nextStep">下一步</button>
+      <button class="btn-common dark-grey-btn golden borderL" bindtap="jumpStep">跳过</button>
+    </block>
+    <block wx:else>
+      <button class="btn-common black-btn golden" bindtap="cancel">取消</button>
+      <button class="btn-common dark-grey-btn golden borderL" bindtap="saveData">保存</button>
+    </block>
+  </view>
+</view>

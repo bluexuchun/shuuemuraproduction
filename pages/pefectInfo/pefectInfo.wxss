@@ -1,0 +1,132 @@
+/* pages/ucenter/pefectInfo/pefectInfo.wxss */
+.container {
+font-family:PingFangSC-Light,helvetica,'Heiti SC';
+font-size:29rpx;
+color:#000;
+
+}
+
+.profile-info {
+position:relative;
+padding:0 20rpx;
+height:332rpx;
+background:url(http://cdn-new-shanghai.widiazine.com/images/23/2018/12/LXqngM7XoMY373yGO03tNX7zT8w1Y9.jpg) no-repeat;
+background-size:100%;
+color:#fff;
+}
+
+.info-card {
+position:absolute;
+left:25rpx;
+right:25rpx;
+top:50rpx;
+z-index:10;
+padding:20rpx 50rpx;
+border-radius:20rpx;
+background:#fff;
+box-shadow:0 4rpx 20rpx rgba(133,133,133,.15);
+font-size:28rpx;
+color:#333;
+}
+
+.h_col2 {
+display:flex;
+align-items:center;
+align-content:center;
+
+}
+
+.h_col2 .flex1 {
+flex:1;
+
+}
+
+.btn-common {
+height:100rpx;
+line-height:100rpx;
+background:#1f94a6;
+border-radius:10rpx;
+font-size:34rpx;
+color:#fff;
+
+}
+.black-btn {
+background-color:#000000;
+color:#fff;
+
+}
+
+
+
+
+.info-card .h_col2{
+  padding:10rpx 0;
+margin-bottom:20rpx;
+
+}
+
+view,image,text,navigator{
+  box-sizing:border-box;
+
+}
+
+.info-card{
+  position: absolute;
+  left: 25rpx;
+  right: 25rpx;
+  top: 50rpx;
+  z-index: 10;
+  padding: 20rpx 50rpx;
+  border-radius: 20rpx;
+  background: #fff;
+  box-shadow: 0 4rpx 20rpx rgba(133,133,133,.15);
+  font-size: 28rpx;
+  color: #333;
+}
+.item-border{
+  border-bottom: 1px solid #dbdbdb;
+}
+
+.info-card .h_col2{
+  padding: 10rpx 0; 
+  margin-bottom: 20rpx;
+}
+.info-card .h_col2 label{
+  width: 136rpx;
+}
+.info-card .h_col2 input{
+  font-size: 24rpx;
+}
+.info-card .h_col2 .h_col2{
+  margin-bottom: 0;
+}
+.info-card .h_col2 .form-icon{
+  width: 30rpx;
+  height: 30rpx;
+  margin-right: 10rpx;
+}
+.info-card .h_col2 .btn-common{
+  margin-left: 60rpx;
+  width: 190rpx;
+  padding: 0;
+  height: 60rpx;
+  line-height: 60rpx;
+  font-size: 28rpx;
+}
+.info-card .h_col2 .ipt-wrap{
+  padding: 5rpx 0;
+}
+.info-card .chk_h_col2{
+  align-items: flex-start;
+  margin-bottom: 40rpx;
+  font-size: 20rpx;
+}
+.info-card .checkbox checkbox{
+  box-shadow: none;
+  transform: scale(.6);
+}
+.perfect-btn-wrap{
+  margin: 360rpx 34rpx 0;
+}
+
+

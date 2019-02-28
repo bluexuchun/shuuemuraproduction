@@ -1,0 +1,9 @@
+<view>
+   
+        <!-- <view class='auth_main'> 
+            <image src='/static/images/auth_logo.png'></image>
+        </view> -->
+       <button class='newbtn' wx:if="{{!close}}" open-type='getUserInfo' bindgetuserinfo="bindGetUserInfo" style='background:#000;border:none'>
+         <image src='/static/images/zcx_auth.png' class='auth-logo' mode='widthFix'></image>
+       </button>
+</view>

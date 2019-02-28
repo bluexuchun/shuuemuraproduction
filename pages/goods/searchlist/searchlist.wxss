@@ -1,0 +1,3 @@
+/* pages/goods/searchlist/searchlist.wxss */
+ @import "/pages/common/city-picker.wxss";
+ @import "../index/index.wxss";

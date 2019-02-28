@@ -1,0 +1,183 @@
+<!--pages/member/cart/index.wxml-->
+<loading wx:if="{{ !show }}">加载中...</loading>
+<view class="model" wx:if="{{modelShow}}">
+  <view class="inner">
+    <view class="title">用户未授权</view>
+    <view class="image">
+      <image src="{{imgUrl + 'plugin/app/static/images/wxapp/shouquan.png'}}"></image>
+    </view>
+    <view class="subtitle">您需要先开启【用户信息】，才能使用此功能哦~</view>
+    <view class="model-btns">
+      <view class="cancel" bindtap="cancelclick">取消</view>
+      <view class="confirm" bindtap="confirmclick">去设置</view>
+    </view>
+  </view>
+</view>
+<view style='margin-top:0rpx;border:{{ empty  ?"none":""}}'>
+  <view class="page footer-navbar" wx:if="{{ show }}" style='padding-bottom:100rpx'>
+    
+    <block wx:for="{{ merch_list }}" wx:key>
+      <view class="fui-cell-group fui-cell-click">
+        <navigator class="fui-cell" hover-class="none" url="/pages/index/index?merchid={{ item.merchid }}" open-type="switchTab">
+
+          <view class="fui-cell-icon">
+            <text class="icox icox-dianpu1"></text> </view>
+          <view class="fui-cell-text">{{ item.merchname?item.merchname:'自营商品' }}</view>
+          <view class="fui-cell-remark"></view>
+        </navigator>
+      </view>
+      <view class="fui-list-group cartlist" wx:for="{{ item.list }}" wx:for-index="index" wx:for-item="val" wx:key='index'>
+        <view class="fui-list noclick">
+          <view style="width:100%">
+            <!-- <radio color="#ff5555" class="zoom-80" wx:if="{{ !edit }}" checked="{{ val.selected==1?true:'' }}" bindtap="selected" data-id="{{ val.id }}" data-select="{{ val.selected }}" /> -->
+            <image  wx:if="{{ !edit }}"  src='{{ val.selected==1?"/static/images/cart_selected.png":"/static/images/cart_slect.png" }}' checked="{{ val.selected==1?true:'' }}" bindtap="selected" data-id="{{ val.id }}" data-select="{{ val.selected }}" style='width:36rpx;height:36rpx;'></image>
+          </view>
+        
+          <view class="fui-list-media" data-url="/pages/goods/detail/index?id={{ val.goodsid }}" bindtap="url">
+            <image class="" src="{{ val.thumb }}" style="width:130rpx;height:130rpx;border-radius:50%" />
+          </view>
+          <view class="fui-list-inner">
+            <navigator data-url="/pages/goods/detail/index?id={{ val.goodsid }}" bindtap="url">
+              <view class="text">{{ val.title }}</view>
+              <view class="subtitle cart-option" wx:if="{{ val.optionid!=0 }}">
+                <view class="choose-option">{{ val.optiontitle }}</view>
+              </view>
+            </navigator>
+            <view class="price">
+              <text class="bigprice">
+                          <text class="text-danger">¥{{ val.marketprice }}</text>
+              <text class="productprice" wx:if="{{ val.productprice > val.marketprice }}">¥{{ val.productprice }}</text>
+              </text>
+              <view class="fui-number small" bindtap='number' data-min="{{ val.minbuy }}" data-value="{{ val.total }}" data-max="{{ val.totalmaxbuy }}" data-id="{{ val.id }}" data-optionid="{{ val.optionid }}" data-index='{{index}}' >
+                <view class="minus {{ val.total<=1?'disabled':'' }}" data-action="minus">-</view>
+                <input class="num shownum" type="tel" name="" value="{{ val.total }}" disabled/>
+                <view class="plus {{ val.total>=val.totalmaxbuy?'disabled':'' }}" data-action="plus">+</view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+ 
+    <view class="fui-list-group cartlist" style='line-height:1;display:flex;align-items:center;padding:0rpx;background:#fff;margin-bottom:10rpx;box-shadow:0 6rpx 3rpx #ddd;' wx:for="{{ list }}" wx:for-index="index" wx:for-item="val" wx:key='index'>
+      <view class="fui-list noclick" style='align-items:center;width:100%;'>
+        <!-- <view class='radiosel {{val.selected==1?"checked":""}}' style='margin-right:29rpx;display:block'>
+           <radio style='opacity:0;' color="#ff5555" class="zoom-80" wx:if="{{ !edit }}" checked="{{ val.selected==1?true:'' }}" bindtap="selected" data-id="{{ val.id }}" data-select="{{ val.selected }}" /> 
+
+          
+        </view> -->
+          <image  wx:if="{{ !edit }}"  src='{{ val.selected==1?"/static/images/cart_selected.png":"/static/images/cart_slect.png" }}' checked="{{ val.selected==1?true:'' }}" bindtap="selected" data-id="{{ val.id }}" data-select="{{ val.selected }}" style='width:36rpx;height:36rpx;margin-right:31rpx'></image>
+        <view class="fui-list-media" style='border:1px solid #f0f0f0;margin-right:21rpx'>
+          <image src="{{ val.thumb }}" style='width:200rpx;height:200rpx;' />
+        </view>
+        <view class="fui-list-inner" style='flex-direction:row;'>
+          <view style='color:#333;display:flex;flex-direction:column;'>
+            <view class="text" style='width:270rpx;font-size:24rpx;color:#111;font-weight:bold;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;display:block;'>{{ val.title }}</view>
+            <view class="subtitle cart-option" wx:if="{{ val.optionid!=0 && val.specslist.type ==3}}" style='display:flex;flex-direction:row;align-items:center;margin-top:19rpx;'>
+              <!-- <image src='{{val.specslist.typeword}}' style='width:30rpx;height:30rpx;margin-right:10rpx;border-radius:50%'></image> -->
+              <view class="choose-option" style='font-size:24rpx;color:#000;'>{{ val.optiontitle }}</view>
+            </view>
+
+            <view class="subtitle cart-option" wx:if="{{ val.optionid!=0 && val.specslist.type ==2}}" style='display:flex;flex-direction:row;align-items:center;margin-top:19rpx;'>
+              <view  style='width:30rpx;height:30rpx;margin-right:10rpx;border-radius:50%;background:{{val.specslist.typeword}}'></view>
+              <view class="choose-option" style='font-size:24rpx;color:#000;'>{{ val.optiontitle }}</view>
+            </view>
+
+
+
+                <!-- 另一个样式 -->
+               <view class="subtitle cart-option" wx:if="{{ val.optionid!=0 && val.specslist.type ==1}}" style='display:flex;align-items:center;margin-top:19rpx;'>
+                 <view class="choose-option" style='font-size:24rpx;color:#000;'>{{val.specslist.typeword}}</view>
+               </view>
+
+            
+
+                   <view class="fui-number small" style='border:none;margin-top:92rpx;' bindtap='number' data-min="{{ val.minbuy }}" data-value="{{ val.total }}" data-max="{{ val.totalmaxbuy }}" data-id="{{ val.id }}" data-optionid="{{ val.optionid }}" data-index="{{index}}">
+              <view style='width:28rpx;height:28rpx;border:1px solid #000;text-align:center;line-height:26rpx;color:#000' class="minus {{ val.total<=1?'disabled':'' }}"  data-action="minus">-</view>
+              <input style='color:#000;width:53rpx;height:28rpx;text-align:center;line-height:28rpx;background:#e5e5e5;margin:0 8rpx;' class="num shownum" type="tel" name=""  value="{{ val.total }}" disabled/>
+              <view style='width:28rpx;height:28rpx;border:1px solid #000;text-align:center;line-height:26rpx;color:#000' class="plus {{ val.total>=val.totalmaxbuy?'disabled':'' }}" data-action="plus" >+</view>
+            </view>
+
+
+            <!-- <view wx:if="{{val.choosekezi}}" style='display:flex;align-items:center;margin-bottom:10rpx;' >
+              <view style='width:230rpx;height:38rpx;border:1px solid #f0f0f0;font-size:16rpx;line-height:1.4;display:flex;align-items:center;font-weight:bold;color:#9b9b9b;'>
+                <view>
+                  <text>刻字信息:</text>
+                  <text style='margin-left:20rpx;font-size:14rpx;font-weight:normal;'>{{val.customized_data.jieduanyi.desc}}</text>
+                </view>
+              </view>
+              <view class='' data-url="/pages/customization/step1/index" style='width:58rpx;height:44rpx;background:#000;color:#fff;text-align:center;line-height:44rpx;font-size:16rpx;' data-xiugaiid="{{val.customized_data.jieduanyi.imgcod}}" data-id="{{val.id}}" data-str="{{val.customized_data.jieduanyi.desc}}" data-goodsid="{{val.goodsid}}" bindtap='toCustom'>修改</view>
+            </view>
+            <view style='display:flex;align-items:center;margin-bottom:10rpx;' wx:if="{{val.choosekapian}}">
+              <view style='width:230rpx;height:38rpx;border:1px solid #f0f0f0;font-size:16rpx;line-height:1.4;display:flex;align-items:center;font-weight:bold;color:#9b9b9b;'>
+                <view style='display:flex;align-items: center;'>
+                  <text>选择卡片:</text>
+                  <image  mode='widthFix' src='{{val.customized_data.jieduaner.url}}' style='width:48rpx;margin-left:10rpx'></image>
+                </view>
+              </view>
+              <view class='' data-url="/pages/customization/step2/index" style='width:58rpx;height:44rpx;background:#000;color:#fff;text-align:center;line-height:44rpx;font-size:16rpx;' data-id="{{val.id}}" data-str="{{val.customized_data.jieduaner.desc}}" data-goodsid="{{val.goodsid}}" bindtap='toCustom'   data-step1='{{val.customized_data.jieduanyi}}' data-step2='{{val.customized_data.jieduaner}}'>修改</view>
+            </view>
+            <view wx:if="{{val.choosefengtao}}" style='display:flex;align-items:center;margin-bottom:10rpx;'>
+              <view style=';width:230rpx;height:38rpx;border:1px solid #f0f0f0;font-size:16rpx;line-height:1.4;display:flex;align-items:center;font-weight:bold;color:#9b9b9b;'>
+                <view style='display:flex;flex-direction: row;align-items: center;'>
+                  <view>封套信息:</view>
+                  
+                </view>
+                <image mode="aspectFit" src='{{val.customized_data.fengtaoimg}}' style='width:50rpx;height:38rpx;margin-left:10rpx'></image>
+              </view>
+              <view class='' data-url="/pages/customization/step3/step3" style='width:58rpx;height:44rpx;background:#000;color:#fff;text-align:center;line-height:44rpx;font-size:16rpx;' data-id="{{val.id}}" data-goodsid="{{val.goodsid}}" bindtap='toCustom1' data-fengtaoid="{{val.customized_data.fengtaoid}}" data-step1='{{val.customized_data.jieduanyi}}' data-step2='{{val.customized_data.jieduaner}}'>修改</view>
+            </view> -->
+          </view>
+          <view class="price" style='width:auto;flex-direction:column;justify-content:space-between;align-items:flex-end;height:198rpx'>
+            <image data-action="delete" bindtap='edit' src='../../../static/images/icon_shanchu.png' data-id='{{val.id}}' data-index='{{index}}' style='width:30rpx;height:30rpx;'></image>
+            <text class="bigprice text-danger" style='font-size:28rpx;color:#000;font-weight:400'>￥ {{ val.marketprice }}</text>
+            <!-- <view class="fui-number small" style='border:none' bindtap='number' data-min="{{ val.minbuy }}" data-value="{{ val.total }}" data-max="{{ val.totalmaxbuy }}" data-id="{{ val.id }}" data-optionid="{{ val.optionid }}" data-index="{{index}}">
+              <view style='width:28rpx;height:28rpx;border:1px solid #000;text-align:center;line-height:26rpx;color:#000' class="minus {{ val.total<=1?'disabled':'' }}"  data-action="minus">-</view>
+              <input style='color:#000;width:58rpx;height:28rpx;text-align:center;line-height:28rpx;background:#F3F3F3;margin:0 8rpx;' class="num shownum" type="tel" name=""  value="{{ val.total }}" disabled/>
+              <view style='width:28rpx;height:28rpx;border:1px solid #000;text-align:center;line-height:26rpx;color:#000' class="plus {{ val.total>=val.totalmaxbuy?'disabled':'' }}" data-action="plus" >+</view>
+            </view> -->
+          </view>
+        </view>
+
+      </view>
+    </view>
+
+    <view class="center" wx:if="{{ empty }}">
+      <view class='empty'>
+        <image class='light' src="../../../static/images/kong.png" mode='widthFix'></image>
+        <!-- <view class='text-cancel'>您的购物车中没有商品哦！</view>
+        <navigator class='btn btn-danger-o' url="/pages/index/index" open-type="switchTab">去首页逛逛吧</navigator> -->
+      </view>
+    </view>
+
+    <view class="fui-footer" wx:if="{{ !empty }}" style='left:0'>
+      <view class="tool" style='color:#000;font-size:26rpx;background:#f4f4f4;padding-left:0'>
+        <view class="" style='display:flex;flex-direction: row;align-items: center'>
+           <image  wx:if="{{ !edit }}"  src='{{ ischeckall?"/static/images/cart_selected.png":"/static/images/cart_slect.png" }}'  bindtap="checkall" data-id="{{ val.id }}"  style='width:36rpx;height:36rpx;margin-right:31rpx;margin-left:31rpx'></image>
+          <!-- <label style='margin-right:20rpx;margin-left:24rpx' class='radiosel {{ ischeckall?"checked":"" }}' bindtap="checkall" wx:if="{{ !edit }}">
+            <radio  color="#ef4f4f" class="zoom-80" style="opacity:0" checked="{{ ischeckall?true:'' }}"></radio>
+          </label> -->
+          全选
+        </view>
+        <view class="text">
+          <block wx:if="{{ !edit }}">
+            <view class="title" style='text-align: center;font-size:24rpx;'>合计：
+              <text class="text-danger" style='font-size:28rpx;'>￥{{ totalprice }}元</text>
+            </view>
+            
+          </block>
+        </view>
+        <view class="btns" bindtap='edit' style='border:none;color:#fff;background:#EC51B1'>
+          <text class="btn btn-warning {{ editischecked?'':'disabled' }}" wx:if="{{ edit }}" data-action="move">移到关注</text>
+          <text class="btn btn-danger {{ editischecked?'':'disabled' }}" wx:if="{{ edit }}" data-action="delete">删除</text>
+
+          <text class='btn btn-danger {{ total?"":"disabled" }}' wx:if="{{ !edit }}" data-action="pay" style="font-size:26rpx;width:289rpx;background:#EC51B1;border:none">立即结算</text>
+        </view>
+      </view>
+    </view>
+
+    <!--公用底部菜单-->
+    <include src="/pages/common/menu.wxml" />
+  </view>
+</view>

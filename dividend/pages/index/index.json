@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "分红中心",
+  "usingComponents": {
+    "loading": "/components/loading"
+  }
+}

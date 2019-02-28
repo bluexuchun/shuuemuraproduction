@@ -1,0 +1,90 @@
+/* pages/makeCard/makeCard.wxss */
+page{
+  background: #D9A957;
+  background-image: url("https://yslvday.blob.core.chinacloudapi.cn/yslvday/colorpic1024.jpg");
+  background-size: cover;
+}
+.title{
+  text-align: center;
+  padding: 40rpx;
+  margin-top: 50rpx;
+}
+image{
+  width:100%;
+vertical-align:bottom;
+
+}
+video{
+  width: 100%;
+  height: 750rpx;
+  /* position: fixed; */
+  /* top: 50%; */
+  /* left: 0; */
+  /* transform: translateY(-50%); */
+  /* transform: scale3d(0.1,0.1,0.1); */
+}
+.cardImg{
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  /* margin-top: 138rpx; */
+  /* left: 0; */
+  transform: translateY(-50%);
+  /* border: 1px solid #c39a6c; */
+}
+
+
+.demo{
+  color: #fff;
+  width: 70%;
+  left: 15%;
+  position: absolute;
+  top: 25%;
+  text-align: center;
+  z-index: 999;
+}
+.demo text{
+  opacity: 1;
+  transition: all 3s linear;
+  color: #C5A87A;
+}
+.cardImg image{
+  /* transition:all 0.6s linear;
+  transform: scale3d(0.1,0.1,1); */
+}
+
+/* #ani{
+  transform: scale3d(1,1,1);
+} */
+
+#opac{
+  opacity: 1 !important;
+}
+.share{
+  width: 250rpx;
+  background: #000;
+  color: #c39a6c;
+  border-radius: 0;
+  margin-top: 30rpx;
+}/* pages/finishPuzzle/finishPuzzle.wxss */
+
+.bottomImg{
+  width: 750rpx;
+  margin: 30rpx auto 0;
+  /* position: absolute; */
+  /* bottom: 15rpx; */
+  /* left: 50%; */
+  /* transform: translateX(-50%); */
+}
+.bottomImg navigator{
+  display: inline;
+}
+.bottomImg image{
+  width: 300rpx;
+  margin-top: 50rpx;
+  margin-left: 50rpx;
+}
+.bottomImg image:last-of-type{
+  margin-left: 50rpx;
+}
+
