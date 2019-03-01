@@ -45,6 +45,9 @@ Page({
     });
     app.url(options);
   },
+  onPullDownRefresh: function () {
+    wx.stopPullDownRefresh()
+  },
   onShow: function () {
     this.get_cart();
     var $this = this;
@@ -61,6 +64,7 @@ Page({
       }
     })
   },
+  
   get_cart: function () {
     var $this = this, setData;
     let useropenid = 'sns_wa_' + app.getCache('userinfo_openid')

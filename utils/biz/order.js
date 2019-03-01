@@ -15,7 +15,7 @@ module.exports = {
             url: url
         })
     },
-    cancelArray: ['我不想买了', '信息填写错误，重新拍', '同城见面交易', '其他原因'],
+    cancelArray: ['我不想买了', '信息填写错误，重新拍', '其他原因'],
     order: [
         '确认要取消该订单吗?',
         '确认要删除该订单吗?',
@@ -48,10 +48,9 @@ module.exports = {
                 if (data.error == 0) {
                     if (typeof self != 'undefined'){
                         self.setData({
-                            page:1,
-                            list:[]
+                            page:1
                         });
-                        self.get_list()
+                        self.get_updata_list()
                     }else{
                         $this.url(url);
                     }

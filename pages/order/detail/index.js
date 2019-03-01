@@ -58,9 +58,15 @@ Page({
           core.get('order/detail', 
             { ...$this.data.options, sessionid: wx.getStorageSync("sessionid"), token: useropenid}
           , function (list) {
-            // if(list.error == '-7'){
-            //     core.toast(list.message, 'none');
-            // }
+            if(list.error == '-7'){
+                core.toast(list.message, 'none');
+                wx.clearStorage()
+                setTimeout(() => {
+                  wx.redirectTo({
+                    url: '/pages/message/auth/index'
+                  })
+                },1000)
+            }
             if (list.error>0){
               if (list.error != 50000) {
                 core.toast(list.message, 'loading');

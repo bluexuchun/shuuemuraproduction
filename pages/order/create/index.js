@@ -735,8 +735,19 @@ Page({
         submit: false
       });
       if (ret.error != 0) {
-        core.alert(ret.message);
-        return;
+        if(ret.error == 10010){
+          core.alert(ret.message, function(){
+            console.log('123')
+            wx.navigateTo({
+              url: '/member/pages/member/bind/index',
+            })
+          });
+          
+          return;
+        }else{
+          core.alert(ret.message);
+          return;
+        }
       } else {
         if (ret.wechat.success) {
           wx.showToast({

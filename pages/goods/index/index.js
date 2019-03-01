@@ -116,6 +116,9 @@ Page({
 
       wx.setStorageSync("cateid", null)
     },
+    onPullDownRefresh:function(){
+      wx.stopPullDownRefresh()
+    },
     onReachBottom:function(){
         if(this.data.loaded || this.data.list.length==this.data.total){
             return;

@@ -43,6 +43,15 @@ Page({
           let useropenid = wx.getStorageSync('tokenId') + app.getCache('userinfo_openid')
           core.get('order/get_list', { page: $this.data.page, status: $this.data.status, merchid: 0, sessionid: wx.getStorageSync('sessionid'), token: useropenid}, function (list) {
               console.log(list);
+                if (list.error == '-7') {
+                  core.toast(list.message, 'none');
+                  wx.clearStorage()
+                  setTimeout(() => {
+                    wx.redirectTo({
+                      url: '/pages/message/auth/index'
+                    })
+                  }, 1000)
+                }
                 if (list.error==0){
                     list.list.map((v,i) =>{
                       v.price = parseInt(v.price)
@@ -155,25 +164,15 @@ Page({
       console.log(payinfo)
       core.pay(payinfo, function (res) {
         if (res.errMsg == "requestPayment:ok") {
-          $this.get_updata_list(); //刷新页面
-          core.get('auth/get_token', {
-            sessionid: wx.getStorageSync("sessionid")
-          }, function (data) {
-            wx.setStorageSync("tokenId", data.token)
-            let useropenid = wx.getStorageSync('tokenId') + app.getCache('userinfo_openid')
-            core.get('order/detail',
-              { id:id, sessionid: wx.getStorageSync("sessionid"), token: useropenid }
-              , function (list) {
-                if (list.error == '-7') {
-                  core.toast(list.message, 'none');
-                }
-                if (list.error > 0) {
-                  if (list.error != 50000) {
-                    core.toast(list.message, 'loading');
-                  }
-                }
-            })
+          // 跳转订单详情
+          // wx.navigateTo({
+          //   url: '/pages/order/detail/index?id='+id,
+          // })
+          core.get('order/paysend',{id:id},function(res){
+            console.log(res)
           })
+          //刷新页面
+          $this.get_updata_list(); 
         }
       });
     }, true, true)

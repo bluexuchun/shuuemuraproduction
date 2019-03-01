@@ -319,18 +319,21 @@
 <!-- <button wx:if="{{customer==1}}" class="suspended-service" style='background-color:{{customercolor}}' open-type="contact" session-from="weapp" show-message-card="true">
   <text class="icox icox-customerservice"></text>
 </button> -->
-<view style="position:absolute;bottom:60rpx;width:100%;display:flex;flex-direction:column;align-items:center;">
-  <view style="display:flex;flex-direction:row;justify-content:center;align-items:center;font-size:24rpx;color:#000;margin-bottom:10rpx;">
-    <image src='https://www.shuuemura.com.cn/on/demandware.static/-/Sites-shubeauty-cn-Library/zh_CN/dw7bc07bd0/Footer/footer_gongshang.png' mode='widthFix' style="width:40rpx;"></image>
+<view style="width:100%;display:flex;flex-direction:column;align-items:center;position:absolute;bottom:20rpx;">
+<view style="display:flex;flex-direction:column;align-items:center;font-size:24rpx;margin:0 auto;">
+  <view style="display:flex;flex-direction:row;justify-content:space-between;align-items:center;font-size:16rpx;color:#8f8e8e;margin-bottom:10rpx;width:fit-content">
+    <image src='https://shuminiprogstorage.blob.core.chinacloudapi.cn/shuminiprogstorage/attachment/images/2/2019/03/BrF2rwd7F2frma6aFh4xwxXfXfr822.png' mode='widthFix' style="width:20rpx;height:20rpx;margin-right:8rpx;"></image>
     中国工商 沪ICP备08100043-7号
   </view>
-  <view style="display:flex;flex-direction:row;justify-content:center;align-items:center;font-size:24rpx;color:#000;">
-      <image mode='widthFix'src="https://www.shuuemura.com.cn/on/demandware.static/-/Sites-shubeauty-cn-Library/zh_CN/dw29c400bc/Footer/beian.png" style="width:40rpx;"/>
-      <view>
+  <view style="display:flex;flex-direction:row;justify-content:space-between;align-items:center;font-size:16rpx;color:#8f8e8e;width:100%">
+      <image mode='widthFix'src="https://shuminiprogstorage.blob.core.chinacloudapi.cn/shuminiprogstorage/attachment/images/2/2019/03/zCY4vi9X129UIVId4Gxq8gV85Vg2dZ.png" style="width:20rpx;height:20rpx;margin-right:8rpx;"/>
+      <view style="letter-spacing:.05em;">
           沪ICP备 31010602001532号
       </view>
   </view>
 </view>
+</view>
+
 <view class="phone" bindtap='phone' wx:if="{{phone==1}}" style='background-color:{{phonecolor}}'>
   <text class="icox icox-dianhua"></text>
 </view>

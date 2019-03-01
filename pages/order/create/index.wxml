@@ -146,10 +146,10 @@
           <image style='height:200rpx;width:200rpx;' src="{{ val.thumb }}"></image>
         </view>
         <view class="info" style='flex:1;min-height:158rpx;position:relative;'>
-          <view class="t" style='overflow:hidden;font-size:24rpx;color:#000;'>
-            <text class="name" style='display:block;float:left;width:300rpx;font-size:24rpx;font-weight:700;line-height:40rpx;'>{{ val.title }}   x{{ val.total }}</text>
+          <view class="t" style='overflow:hidden;font-size:24rpx;color:#111;'>
+            <text class="name" style='display:block;float:left;width:300rpx;font-size:24rpx;font-weight:bold;line-height:40rpx;'>{{ val.title }}   x{{ val.total }}</text>
             <!-- <text class="number" wx:if="{{number != undefined}}"></text> -->
-            <text class="number" style='display:block;float:right;text-align:right;font-size:28rpx;font-weight:700;'>￥{{ val.price }}</text>
+            <text class="number" style='display:block;float:right;text-align:right;font-size:28rpx;font-weight:bold;'>￥{{ val.price }}</text>
           </view>
           <view class='customItem-color' style='display:flex;justify-content:flex-start;margin-top:18rpx;' wx:if='{{val.spec_types.type == 2}}'>
             <view class="color-item">
@@ -231,13 +231,10 @@
 
     <!-- 植村秀的赠品专属 -->
     <view wx:if="{{zcxgiftlists.length > 0}}" class="gift-title extraGift" style='margin-top:57rpx;font-size:30rpx;text-align:center;height:auto;line-height:30rpx;border:none;'>尊享满额礼</view>
-    <view wx:if="{{zcxgiftlists.length > 0 && !zcxgifttips.ismax && ismin == 1}}" style="margin-top:13rpx;font-size:18rpx;line-height:18rpx;text-align:center;margin-bottom:20rpx;">
-      再购物满{{zcxgifttips.reduce}}元，臻享如下满额礼赠
+    <view wx:if="{{zcxgiftlists.length > 0 && !zcxgifttips.ismax && zcxgifttips.ismin == 1}}" style="margin-top:13rpx;font-size:18rpx;line-height:18rpx;text-align:center;margin-bottom:20rpx;">
+      再购物{{zcxgifttips.reduce}}元，臻享如下满额礼赠
     </view>
-    <view wx:if="{{zcxgiftlists.length > 0 && !zcxgifttips.ismax && ismin != 1}}" style="margin-top:13rpx;font-size:18rpx;line-height:18rpx;text-align:center;margin-bottom:20rpx;">
-      再加购{{zcxgifttips.reduce}}元，可获得{{zcxgifttips.number}}件体验礼
-    </view>
-    <view wx:if="{{zcxgiftlists.length > 0 && zcxgifttips.ismax && ismin != 1}}" style="margin-top:13rpx;font-size:18rpx;line-height:18rpx;text-align:center;margin-bottom:20rpx;">
+    <view wx:if="{{zcxgiftlists.length > 0 && zcxgifttips.ismax && zcxgifttips.ismin != 1}}" style="margin-top:13rpx;font-size:18rpx;line-height:18rpx;text-align:center;margin-bottom:20rpx;">
       已购物满{{zcxgifttips.memony}}元，臻享如下礼遇
     </view>
     <view wx:if="{{zcxgiftlists.length > 0}}" style='background:#f4f4f4;padding-bottom:14rpx'>

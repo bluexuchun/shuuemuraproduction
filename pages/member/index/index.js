@@ -56,7 +56,10 @@ Page({
         });
 
         // 店铺装修 会员中心
-        diypage.get(this, 'member', function (res) {});
+        // diypage.get(this, 'member', function (res) {});
+    },
+    onPullDownRefresh: function () {
+      wx.stopPullDownRefresh()
     },
     getInfo: function(){
         var $this = this;
@@ -66,6 +69,7 @@ Page({
           wx.setStorageSync("tokenId", data.token)
           let useropenid = wx.getStorageSync('tokenId') + app.getCache('userinfo_openid')
           core.get('member', {sessionid: wx.getStorageSync('sessionid'), token: useropenid}, function(result){
+            console.log(result)
             if (result.isblack == 1){
               wx.showModal({
                 title: '无法访问',
@@ -82,6 +86,7 @@ Page({
             }
             if(result.error!=0){
               // $this.setData({ modelShow: true });
+                wx.clearStorage()
                 wx.redirectTo({
                   url: '/pages/message/auth/index'
                 })

@@ -117,8 +117,9 @@ module.exports = {
             content: msg,
             showCancel: false,
             success: function (res) {
+                console.log(res)
                 if (res.confirm) {
-                    typeof(confirm) === 'function' && callback();
+                    callback();
                 }
             }
         })

@@ -69,6 +69,7 @@ App({
      * @author Vencenty
      */
     checkAuth: function () {
+      let that = this
       var url = '/pages/message/auth/index'
      
       var userinfo = this.getCache('userinfo')
@@ -76,44 +77,17 @@ App({
         wx.navigateTo({
           url: url
         })
-        console.log('11111111111111')
-        // wx.clearStorageSync()
-        // wx.redirectTo({
-        //   url: url
-        // })
       }else{
         wx.getSetting({
           success: function (settings) {
             if (!settings.authSetting['scope.userInfo']) {
-              console.log('2222222222222222')
               wx.navigateTo({
                 url: url
               })
-              // wx.clearStorageSync()
-              // wx.redirectTo({
-              //   url: url
-              // })
             }
           }
         })
       }
-
-      core.get('auth/get_token', {
-        sessionid: wx.getStorageSync("sessionid")
-      }, function (data) {
-        wx.setStorageSync("tokenId", data.token)
-        let useropenid = wx.getStorageSync('tokenId') + app.getCache('userinfo_openid')
-        core.get('member', { sessionid: wx.getStorageSync('sessionid'), token: useropenid}, function (ret) {
-          if (ret.error) {
-            wx.navigateTo({
-              url: url
-            })
-            // wx.redirectTo({
-            //   url: url,
-            // })
-          }
-        })
-      })
     },
     requirejs: function (jsname) {
         return require('utils/' + jsname + '.js');
