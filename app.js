@@ -339,7 +339,7 @@ App({
     },
      globalData: {
        appid: "wxf5b847b162d8fbf8",
-       api: "https://wechatstore.shuuemura.com.cn/test/app/arvato_shop_api.php?i=2",
+       api: "https://wechatstore.shuuemura.com.cn/app/arvato_shop_api.php?i=2",
        userInfo: ""
 
      }
