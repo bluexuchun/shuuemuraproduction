@@ -52,9 +52,6 @@ Page({
           let useropenid = wx.getStorageSync('tokenId') + app.getCache('userinfo_openid')
           core.get('order/get_list', { page: $this.data.page, status: $this.data.status, merchid: 0, sessionid: wx.getStorageSync('sessionid'), token: useropenid}, function (list) {
               console.log(list);
-                if (list.error == '-7') {
-                  $this.refreshPage()
-                }
                 if (list.error==0){
                     list.list.map((v,i) =>{
                       v.price = parseInt(v.price)

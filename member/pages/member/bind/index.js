@@ -40,9 +40,6 @@ Page({
             var data = { member: result.member, binded: result.binded, endtime: result.endtime, show: true, smsimgcode: result.smsimgcode, verifycode_img: result.verifycode_img};
             data.postData = {mobile: result.member.mobile, code: '', password: '', password1: ''};
             $this.setData(data);
-            if(result.endtime>0){
-                $this.endTime();
-            }
             if(result.binded){
                 title = "更换绑定手机号";
             }else{
