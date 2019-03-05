@@ -95,6 +95,12 @@ checkAuth: function () {
 ```
 4、/pages/member/index/index.js
 ```
+refreshPage: function () {
+    let that = this
+    core.open2session(this, function () {
+    that.getInfo()
+    })
+},
 getInfo: function(){
     var $this = this;
     core.get('auth/get_token', {
@@ -103,29 +109,34 @@ getInfo: function(){
         wx.setStorageSync("tokenId", data.token)
         let useropenid = wx.getStorageSync('tokenId') + app.getCache('userinfo_openid')
         core.get('member', {sessionid: wx.getStorageSync('sessionid'), token: useropenid}, function(result){
+        console.log(result)
         if (result.isblack == 1){
             wx.showModal({
-                title: '无法访问',
-                content: '您在商城的黑名单中，无权访问！',
-                success: function (res) {
-                    if (res.confirm) {
-                        $this.close()
-                    }
-                    if (res.cancel){
-                        $this.close()
-                    }
+            title: '无法访问',
+            content: '您在商城的黑名单中，无权访问！',
+            success: function (res) {
+                if (res.confirm) {
+                $this.close()
                 }
+                if (res.cancel){
+                $this.close()
+                }
+            }
             })
         }
         if(result.error!=0){
+            if (result.error == '-7') {
+            $this.refreshPage()
+            } else {
             wx.clearStorage()
             wx.redirectTo({
                 url: '/pages/message/auth/index'
             })
+            }
         }else{
             $this.setData({
-                member: result, show: true, customer: result.customer, customercolor: result.customercolor, phone: result.phone, phonecolor: result.phonecolor, phonenumber: result.phonenumber, iscycelbuy: result.iscycelbuy,bargain:result.bargain
-            });
+            member: result, show: true, customer: result.customer, customercolor: result.customercolor, phone: result.phone, phonecolor: result.phonecolor, phonenumber: result.phonenumber, iscycelbuy: result.iscycelbuy,bargain:result.bargain
+});
         }
         parser.wxParse('wxParseData','html', result.copyright,$this,'5');
     });
@@ -134,6 +145,15 @@ getInfo: function(){
 ```
 5、/pages/order/index.js
 ```
+/**
+* 重新获取sessionid,并重新加载页面
+*/
+refreshPage: function () {
+    let _this = this
+    core.open2session(this, function () {
+    _this.get_list()
+    })
+},
 get_list: function () {
     var $this = this;
     $this.setData({loading: true});
@@ -145,13 +165,7 @@ get_list: function () {
         core.get('order/get_list', { page: $this.data.page, status: $this.data.status, merchid: 0, sessionid: wx.getStorageSync('sessionid'), token: useropenid}, function (list) {
             console.log(list);
             if (list.error == '-7') {
-                core.toast(list.message, 'none');
-                wx.clearStorage()
-                setTimeout(() => {
-                wx.redirectTo({
-                    url: '/pages/message/auth/index'
-                })
-                }, 1000)
+                $this.refreshPage()
             }
             if (list.error==0){
                 list.list.map((v,i) =>{
@@ -170,7 +184,11 @@ get_list: function () {
                     });
                 }
             }else{
-                core.toast(list.message,'loading')
+                if (list.error == '-7') {
+                $this.refreshPage()
+                } else {
+                core.toast(list.message, 'loading')
+                }
             }
         },$this.data.show);
     })
@@ -199,6 +217,12 @@ get_updata_list: function () {
 ```
 6、/pages/order/detail/index.js
 ```
+refreshPage: function () {
+    let _this = this
+    core.open2session(this, function () {
+        _this.get_list()
+    })
+},
 get_list: function () {
     var $this = this;
     core.get('auth/get_token', {
@@ -210,13 +234,7 @@ get_list: function () {
         { ...$this.data.options, sessionid: wx.getStorageSync("sessionid"), token: useropenid}
         , function (list) {
         if(list.error == '-7'){
-            core.toast(list.message, 'none');
-            wx.clearStorage()
-            setTimeout(() => {
-                wx.redirectTo({
-                url: '/pages/message/auth/index'
-                })
-            },1000)
+            $this.refreshPage()
         }
         if (list.error>0){
             if (list.error != 50000) {
@@ -259,6 +277,12 @@ get_list: function () {
 ```
 7、/utils/biz/order.js
 ```
+reAction: function () {
+    let _this = this;
+    core.open2session(this, function () {
+    _this.cancel()
+    })
+},
 cancel: function (id, index,url) {
     var $this=this,remark = this.cancelArray[index];
     core.get('auth/get_token', {
@@ -267,10 +291,15 @@ cancel: function (id, index,url) {
         wx.setStorageSync("tokenId", data.token)
         let useropenid = wx.getStorageSync('tokenId') + app.getCache('userinfo_openid')
         core.post('order/op/cancel', { id: id, remark: remark, sessionid: wx.getStorageSync("sessionid"), token: useropenid }, function (data) {
-            if (data.error == 0) {
-                $this.url(url);
+        if (data.error == 0) {
+            $this.url(url);
+        }else{
+            if (data.error == '-7') {
+            $this.reAction()
             }
+        }
         }, true);
-    }) 
+    })
+    
 },
 ```

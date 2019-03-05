@@ -48,6 +48,12 @@ Page({
           })
         }
     },
+    refreshPage: function () {
+      let _this = this
+      core.open2session(this, function () {
+        _this.get_list()
+      })
+    },
     get_list: function () {
         var $this = this;
         core.get('auth/get_token', {
@@ -59,13 +65,7 @@ Page({
             { ...$this.data.options, sessionid: wx.getStorageSync("sessionid"), token: useropenid}
           , function (list) {
             if(list.error == '-7'){
-                core.toast(list.message, 'none');
-                wx.clearStorage()
-                setTimeout(() => {
-                  wx.redirectTo({
-                    url: '/pages/message/auth/index'
-                  })
-                },1000)
+              $this.refreshPage()
             }
             if (list.error>0){
               if (list.error != 50000) {

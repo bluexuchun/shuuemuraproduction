@@ -295,8 +295,21 @@ module.exports = {
       this.get('auth/get_token', {
         sessionid: wx.getStorageSync("sessionid")
       }, function (data) {
-        console.log(data)
         wx.setStorageSync("tokenId", data.token)
+      })
+    },
+
+    /**
+     * 通过openid去请求sessionid
+     */
+    open2session: function (page, callback) {
+      let _this = this
+      let app = getApp()
+      this.get('auth/get_sessionid', {
+        openId: app.getCache('userinfo_openid')
+      }, function (data) {
+        wx.setStorageSync('sessionid', data.sessionid)
+        callback()
       })
     }
 };

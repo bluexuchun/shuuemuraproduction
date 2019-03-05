@@ -9,7 +9,7 @@
 
   <!--快递配送-->
   <view>
-    <block wx:if="{{ list.showAddress && !list.isonlyverifygoods }}">
+    <block>
       <!--地址信息-->
       <view class="fui-cell-group" id='addressInfo' wx:if="{{ data.dispatchtype==0}}">
         <view class="fui-cell" style="padding:0;background:#f4f4f4" bindtap='selectAddress'  >

@@ -61,6 +61,12 @@ Page({
     onPullDownRefresh: function () {
       wx.stopPullDownRefresh()
     },
+    refreshPage: function () {
+      let that = this
+      core.open2session(this, function () {
+        that.getInfo()
+      })
+    },
     getInfo: function(){
         var $this = this;
         core.get('auth/get_token', {
@@ -85,11 +91,14 @@ Page({
               })
             }
             if(result.error!=0){
-              // $this.setData({ modelShow: true });
+              if (result.error == '-7') {
+                $this.refreshPage()
+              } else {
                 wx.clearStorage()
                 wx.redirectTo({
                   url: '/pages/message/auth/index'
                 })
+              }
             }else{
               $this.setData({
                 member: result, show: true, customer: result.customer, customercolor: result.customercolor, phone: result.phone, phonecolor: result.phonecolor, phonenumber: result.phonenumber, iscycelbuy: result.iscycelbuy,bargain:result.bargain
