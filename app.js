@@ -20,7 +20,7 @@ var util = require('./utils/util.js');
 
 App({
     onShow: function () {
-      this.onLaunch();
+      this.onLaunch()
     },
     globalData: {
       goodsType_for_switch_tab: ''
