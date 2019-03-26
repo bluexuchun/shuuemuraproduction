@@ -27,11 +27,7 @@ Page({
               wx.navigateBack({
                 
               })
-              // wx.reLaunch({
-              //   url: '/pages/index/index'
-              // })
               clearInterval(timer)
-            console.log(userInfo)
               $this.setData({ userInfo: userInfo})
             }
           }
@@ -41,7 +37,6 @@ Page({
 
   // 点击open-type="getUserInfo"时候的回调函数
   bindGetUserInfo: function (res) {
-    console.log(res)
     wx.login({
       success: function (ret) {
         // console.log(ret)
@@ -50,7 +45,6 @@ Page({
             core.alert('获取用户登录态失败:' + login_res.message);
             return;
           }
-          app.setCache('userinfo_openid', login_res.openid);
           // console.log(res, login_res)
           core.get('wxapp/auth', {
             data: res.detail.encryptedData,
@@ -74,14 +68,13 @@ Page({
             res.detail.userInfo.openid = auth_res.openId
             res.detail.userInfo.id = auth_res.id
             res.detail.userInfo.uniacid = auth_res.uniacid
-            wx.setStorageSync("sessionid",auth_res.sessionid)
-            core.getToken(this)
+            wx.setStorageSync("tokenid", auth_res.token)
 
             app.setCache('userinfo', res.detail.userInfo, 7200);
             app.setCache('userinfo_openid', res.detail.userInfo.openid);
             app.setCache('userinfo_id', auth_res.id);
             // wx.navigateBack({
-            //   delta:1
+            //   delta:2
             // })
             wx.reLaunch({
               url: '/pages/index/index',

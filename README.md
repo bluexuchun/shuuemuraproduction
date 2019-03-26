@@ -2,28 +2,106 @@
 1、/utils/core.js
 
 ```
+json: function (routes, args, callback, hasloading, ispost, session) {
+    let app = getApp(), 
+        userinfo_openid = app.getCache('userinfo_openid'),
+        usermid = app.getCache('usermid'),
+        authkey = app.getCache('authkey'),
+        $this = this,
+        token = wx.getStorageSync('tokenid'),
+        uid = app.getCache('userinfo').id
+
+    args = args || {};
+    args.comefrom = 'wxapp';
+    args.openid = 'sns_wa_' + userinfo_openid;
+
+    if (usermid) {
+        args.mid = usermid.mid;
+        args.merchid = args.merchid || usermid.merchid;
+    }
+    var self = this;
+    if (hasloading) {
+        self.loading();
+    }
+    if (args){
+        args.authkey = authkey || '';
+    }
+    var url = ispost ? this.getUrl(routes) : this.getUrl(routes, args);
+    var op = {
+        url: url + "&timestamp=" + (+new Date()),
+        method: ispost ? 'POST' : 'GET',
+        header: {
+            'Content-type': ispost ? 'application/x-www-form-urlencoded' : 'application/json',
+            'token': token ? token : null,
+            'uid':uid ? uid : null
+        }
+    };
+    if (!session) {
+        delete op.header.Cookie;
+    }
+    if (ispost) {
+        op.data = $.param(args);
+    }
+    if (callback) {
+        console.log(callback)
+        op.success = function (res) {
+        if (hasloading) {
+            self.hideLoading();
+        }
+        console.log('结果', res.data)
+        if (res.errMsg == 'request:ok')
+            if (typeof (callback) === 'function') {
+            app.setCache('authkey', res.data.authkey || '');
+            if (typeof (res.data.sysset) !== 'undefined') {
+                if (res.data.sysset.isclose == 1) {
+                wx.redirectTo({
+                    url: '/pages/message/auth/index?close=1&text=' + res.data.sysset.closetext
+                })
+                return;
+                }
+                app.setCache("sysset", res.data.sysset);
+            }
+            callback(res.data);
+            }
+        }
+    } 
+    op.fail = function (res) {
+        if (hasloading) {
+            self.hideLoading();
+        }
+        self.alert(res.errMsg);
+    }
+
+    wx.request(op);
+},
+post: function (routes, args, callback, hasloading, session) {
+    this.getToken(routes, args, callback, hasloading, true, session)
+    // this.json(routes, args, callback, hasloading, true, session)
+},
+get: function (routes, args, callback, hasloading, session) {
+    this.getToken(routes, args, callback, hasloading, true, session)
+    // this.json()
+},
 /**
-* 添加方法getToken
-**/
-getToken: function (page) {
-    this.get('auth/get_token', {
-        sessionid: wx.getStorageSync("sessionid")
-    }, function (data) {
-        console.log(data)
-        wx.setStorageSync("tokenId", data.token)
-    })
-}
-/**
-* 通过openid去请求sessionid
-*/
-open2session: function (page,callback) {
-    let _this = this
+    * 获取最新的token
+    */
+getToken: function (routes, args, callback, hasloading, session){
+    // console.log(getCurrentPages())
     let app = getApp()
-    this.get('auth/get_sessionid', {
-    openId: app.getCache('userinfo_openid')
-    }, function (data) {
-    wx.setStorageSync('sessionid', data.sessionid)
-    callback()
+    let uid = app.getCache('userinfo').id
+    let _this = this
+    
+    wx.request({
+        url: _this.getUrl(routes) + '&r=wxapp.get_token',
+        data: {
+            uid: uid
+        },
+        success: function (token_res) {
+            if (token_res.data.error == 0) {
+            wx.setStorageSync("tokenid", token_res.data.token)
+            _this.json(routes, args, callback, hasloading, true, session)
+            }
+        }
     })
 }
 ```
@@ -40,38 +118,43 @@ bindGetUserInfo: function (res) {
                     core.alert('获取用户登录态失败:' + login_res.message);
                     return;
                 }
+                // console.log(res, login_res)
                 core.get('wxapp/auth', {
-                data: res.detail.encryptedData,
+                    data: res.detail.encryptedData,
                     iv: res.detail.iv,
                     sessionKey: login_res.session_key
                 }, function (auth_res) {
-                    if (auth_res.isblack == 1) {
-                        wx.showModal({
+                if (auth_res.isblack == 1) {
+                    wx.showModal({
                         title: '无法访问',
                         content: '您在商城的黑名单中，无权访问！',
                         success: function (res) {
                             if (res.confirm) {
-                            app.close();
+                                app.close();
                             }
                             if (res.cancel) {
-                            app.close();
+                                app.close();
                             }
                         }
-                        })
-                    }
-                    res.detail.userInfo.openid = auth_res.openId
-                    res.detail.userInfo.id = auth_res.id
-                    res.detail.userInfo.uniacid = auth_res.uniacid
-                    wx.setStorageSync("sessionid",auth_res.sessionid)
-                    // 这一块需要新添加
-                    core.getToken(this)
-
-                    app.setCache('userinfo', res.detail.userInfo, 7200);
-                    app.setCache('userinfo_openid', res.detail.userInfo.openid);
-                    app.setCache('userinfo_id', auth_res.id);
-                    wx.reLaunch({
-                        url: '/pages/index/index',
                     })
+                }
+                res.detail.userInfo.openid = auth_res.openId
+                res.detail.userInfo.id = auth_res.id
+                res.detail.userInfo.uniacid = auth_res.uniacid
+                wx.setStorageSync("tokenid",auth_res.token)
+
+                app.setCache('userinfo', res.detail.userInfo, 7200);
+                app.setCache('userinfo_openid', res.detail.userInfo.openid);
+                app.setCache('userinfo_id', auth_res.id);
+                // wx.navigateBack({
+                //   delta:2
+                // })
+                wx.reLaunch({
+                    url: '/pages/index/index',
+                })
+                // wx.reLaunch({
+                //   url: '/pages/member/index/index'
+                // })
                 })
             })
         },
@@ -108,52 +191,31 @@ checkAuth: function () {
 ```
 4、/pages/member/index/index.js
 ```
-refreshPage: function () {
-    let that = this
-    core.open2session(this, function () {
-    that.getInfo()
-    })
-},
-getInfo: function(){
+getInfo: function () {
     var $this = this;
-    core.get('auth/get_token', {
-        sessionid: wx.getStorageSync("sessionid")
-    }, function (data) {
-        wx.setStorageSync("tokenId", data.token)
-        let useropenid = wx.getStorageSync('tokenId') + app.getCache('userinfo_openid')
-        core.get('member', {sessionid: wx.getStorageSync('sessionid'), token: useropenid}, function(result){
-        console.log(result)
-        if (result.isblack == 1){
-            wx.showModal({
-            title: '无法访问',
-            content: '您在商城的黑名单中，无权访问！',
-            success: function (res) {
-                if (res.confirm) {
-                $this.close()
-                }
-                if (res.cancel){
-                $this.close()
-                }
+    core.get('member', {}, function (result) {
+    console.log(result)
+    if (result.isblack == 1) {
+        wx.showModal({
+        title: '无法访问',
+        content: '您在商城的黑名单中，无权访问！',
+        success: function (res) {
+            if (res.confirm) {
+            $this.close()
             }
-            })
-        }
-        if(result.error!=0){
-            if (result.error == '-7') {
-            $this.refreshPage()
-            } else {
-            wx.clearStorage()
-            wx.redirectTo({
-                url: '/pages/message/auth/index'
-            })
+            if (res.cancel) {
+            $this.close()
             }
-        }else{
-            $this.setData({
-            member: result, show: true, customer: result.customer, customercolor: result.customercolor, phone: result.phone, phonecolor: result.phonecolor, phonenumber: result.phonenumber, iscycelbuy: result.iscycelbuy,bargain:result.bargain
-});
         }
-        parser.wxParse('wxParseData','html', result.copyright,$this,'5');
+        })
+    }
+    if (result.error == 0) {
+        $this.setData({
+        member: result, show: true, customer: result.customer, customercolor: result.customercolor, phone: result.phone, phonecolor: result.phonecolor, phonenumber: result.phonenumber, iscycelbuy: result.iscycelbuy, bargain: result.bargain
+        });
+    }
+    parser.wxParse('wxParseData', 'html', result.copyright, $this, '5');
     });
-    })
 },
 ```
 5、/pages/order/index.js
@@ -161,158 +223,102 @@ getInfo: function(){
 /**
 * 重新获取sessionid,并重新加载页面
 */
-refreshPage: function () {
-    let _this = this
-    core.open2session(this, function () {
-    _this.get_list()
-    })
-},
 get_list: function () {
     var $this = this;
     $this.setData({loading: true});
-    core.get('auth/get_token', {
-        sessionid: wx.getStorageSync("sessionid")
-    }, function (data) {
-        wx.setStorageSync("tokenId", data.token)
-        let useropenid = wx.getStorageSync('tokenId') + app.getCache('userinfo_openid')
-        core.get('order/get_list', { page: $this.data.page, status: $this.data.status, merchid: 0, sessionid: wx.getStorageSync('sessionid'), token: useropenid}, function (list) {
-            console.log(list);
-            if (list.error == '-7') {
-                $this.refreshPage()
-            }
-            if (list.error==0){
-                list.list.map((v,i) =>{
-                    v.price = parseInt(v.price)
-                })
-                $this.setData({loading:false,show:true,total:list.total,empty:true});
-                if(list.list.length>0){
-                    $this.setData({
-                        page: $this.data.page+1,
-                        list: $this.data.list.concat(list.list)
-                    });
-                }
-                if(list.list.length<list.pagesize) {
-                    $this.setData({
-                        loaded: true
-                    });
-                }
-            }else{
-                if (list.error == '-7') {
-                $this.refreshPage()
-                } else {
-                core.toast(list.message, 'loading')
-                }
-            }
-        },$this.data.show);
-    })
+    core.get('order/get_list', { page: $this.data.page, status: $this.data.status, merchid: 0}, function (list) {
+    console.log(list);
+        if (list.error==0){
+        list.list.map((v,i) =>{
+            v.price = parseInt(v.price)
+        })
+        $this.setData({loading:false,show:true,total:list.total,empty:true});
+        if(list.list.length>0){
+            $this.setData({
+            page: $this.data.page+1,
+            list: $this.data.list.concat(list.list)
+            });
+        }
+        if(list.list.length<list.pagesize) {
+            $this.setData({
+            loaded: true
+            });
+        }
+        }else{
+        core.toast(list.message, 'loading')
+        }
+    },$this.data.show);
 },
+
 get_updata_list: function () {
     var $this = this;
     $this.setData({ loading: true });
-    core.get('auth/get_token', {
-        sessionid: wx.getStorageSync("sessionid")
-    }, function (data) {
-        wx.setStorageSync("tokenId", data.token)
-        let useropenid = wx.getStorageSync('tokenId') + app.getCache('userinfo_openid')
-        core.get('order/get_list', { page: 1, status: $this.data.status, merchid: 0, sessionid: wx.getStorageSync('sessionid'), token: useropenid}, function (list) {
-            console.log(list);
-            if (list.error == 0) {
-            $this.setData({ loading: false, show: true, total: list.total, empty: true });
-                if (list.list.length > 0) {
-                    $this.setData({
-                        list: list.list
-                    });
-                }
-            }
+    core.get('order/get_list', { page: 1, status: $this.data.status, merchid: 0}, function (list) {
+    console.log(list);
+    if (list.error == 0) {
+        $this.setData({ loading: false, show: true, total: list.total, empty: true });
+        if (list.list.length > 0) {
+        $this.setData({
+            list: list.list
         });
-    })
+        }
+    }
+    });
 },
 ```
 6、/pages/order/detail/index.js
 ```
-refreshPage: function () {
-    let _this = this
-    core.open2session(this, function () {
-        _this.get_list()
-    })
-},
 get_list: function () {
     var $this = this;
-    core.get('auth/get_token', {
-        sessionid: wx.getStorageSync("sessionid")
-    }, function (data) {
-        wx.setStorageSync("tokenId", data.token)
-        let useropenid = wx.getStorageSync('tokenId') + app.getCache('userinfo_openid')
-        core.get('order/detail', 
-        { ...$this.data.options, sessionid: wx.getStorageSync("sessionid"), token: useropenid}
-        , function (list) {
-        if(list.error == '-7'){
-            $this.refreshPage()
+    core.get('order/detail', 
+    { ...$this.data.options}
+    , function (list) {
+    if (list.error>0){
+        if (list.error != 50000) {
+        core.toast(list.message, 'loading');
         }
-        if (list.error>0){
-            if (list.error != 50000) {
-            core.toast(list.message, 'loading');
-            }
-        }
-            if(list.nogift[0].fullbackgoods != undefined ){
-            var fullbackratio = list.nogift[0].fullbackgoods.fullbackratio;
-            var maxallfullbackallratio = list.nogift[0].fullbackgoods.maxallfullbackallratio;
-            var fullbackratio = Math.round(fullbackratio);
-            var maxallfullbackallratio = Math.round(maxallfullbackallratio);
-            }
-    
-            if (list.error==0){
-                $this.setData({
-                getOrder: JSON.stringify(list),
-                lists: list
-                })
-                list.show = true;
-                var ordervirtualtype = Array.isArray(list.ordervirtual);
-                list.goods.map((v,i) => {
-                v.price = parseInt(v.price)
-                })
-                list.order.price = parseInt(list.order.price)
-                list.order.goodsprice = parseInt(list.order.goodsprice)
-                $this.setData(list);
-                $this.setData({
-                ordervirtualtype: ordervirtualtype, fullbackgoods: list.nogift[0].fullbackgoods, maxallfullbackallratio: maxallfullbackallratio, fullbackratio: fullbackratio, invoice: list.order.invoicename, membercard_info: list.membercard_info ,
-                
-                })
-                if(list.sercharge){
-                $this.setData({
-                    sercharge:list.sercharge
-                })
-                }
-            }
+    }
+    if(list.nogift[0].fullbackgoods != undefined ){
+        var fullbackratio = list.nogift[0].fullbackgoods.fullbackratio;
+        var maxallfullbackallratio = list.nogift[0].fullbackgoods.maxallfullbackallratio;
+        var fullbackratio = Math.round(fullbackratio);
+        var maxallfullbackallratio = Math.round(maxallfullbackallratio);
+    }
+
+    if (list.error==0){
+        $this.setData({
+        getOrder: JSON.stringify(list),
+        lists: list
         })
-    });
+        list.show = true;
+        var ordervirtualtype = Array.isArray(list.ordervirtual);
+        list.goods.map((v,i) => {
+        v.price = parseInt(v.price)
+        })
+        list.order.price = parseInt(list.order.price)
+        list.order.goodsprice = parseInt(list.order.goodsprice)
+        $this.setData(list);
+        $this.setData({
+        ordervirtualtype: ordervirtualtype, fullbackgoods: list.nogift[0].fullbackgoods, maxallfullbackallratio: maxallfullbackallratio, fullbackratio: fullbackratio, invoice: list.order.invoicename, membercard_info: list.membercard_info ,
+        
+        })
+        if(list.sercharge){
+        $this.setData({
+            sercharge:list.sercharge
+        })
+        }
+    }
+    })
 },
 ```
 7、/utils/biz/order.js
 ```
-reAction: function () {
-    let _this = this;
-    core.open2session(this, function () {
-    _this.cancel()
-    })
-},
 cancel: function (id, index,url) {
     var $this=this,remark = this.cancelArray[index];
-    core.get('auth/get_token', {
-        sessionid: wx.getStorageSync("sessionid")
-    }, function (data) {
-        wx.setStorageSync("tokenId", data.token)
-        let useropenid = wx.getStorageSync('tokenId') + app.getCache('userinfo_openid')
-        core.post('order/op/cancel', { id: id, remark: remark, sessionid: wx.getStorageSync("sessionid"), token: useropenid }, function (data) {
-        if (data.error == 0) {
-            $this.url(url);
-        }else{
-            if (data.error == '-7') {
-            $this.reAction()
-            }
-        }
-        }, true);
-    })
-    
+    core.post('order/op/cancel', { id: id, remark: remark}, function (data) {
+    if (data.error == 0) {
+        $this.url(url);
+    }
+    }, true);
 },
 ```

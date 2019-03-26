@@ -13,9 +13,9 @@ module.exports = {
       $this.setData({
         customer: result.customer,
         phone: result.phone,
-        phonecolor: result.phonecolor,
-        phonenumber: result.phonenumber,
-        customercolor: result.customercolor
+        phonecolor: result.phonecolor || null,
+        phonenumber: result.phonenumber || null,
+        customercolor: result.customercolor || null
       })
       // var data = {loading: false,diypages: result.diypage, pages: result.diypage.page, usediypage: true,startadv: result.startadv};
       var data = { loading: false, pages: result.diypage.page, usediypage: true, startadv: result.startadv }

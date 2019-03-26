@@ -19,32 +19,39 @@ module.exports = {
         }
         return url
     },
-    json: function (routes, args, callback, hasloading, ispost, session) {
-        var app = getApp(), userinfo_openid = app.getCache('userinfo_openid'),usermid=app.getCache('usermid'),authkey = app.getCache('authkey'),$this=this;
+      json: function (routes, args, callback, hasloading, ispost, session) {
+        let app = getApp(),
+          userinfo_openid = app.getCache('userinfo_openid'),
+          usermid = app.getCache('usermid'),
+          authkey = app.getCache('authkey'),
+          $this = this,
+          token = wx.getStorageSync('tokenid'),
+          uid = app.getCache('userinfo').id
+
         args = args || {};
         args.comefrom = 'wxapp';
         args.openid = 'sns_wa_' + userinfo_openid;
-        
-        
+
         if (usermid) {
-            args.mid = usermid.mid;
-            args.merchid = args.merchid || usermid.merchid;
+          args.mid = usermid.mid;
+          args.merchid = args.merchid || usermid.merchid;
         }
         var self = this;
         if (hasloading) {
-            self.loading();
+          self.loading();
         }
-        if (args){
-            args.authkey = authkey || '';
+        if (args) {
+          args.authkey = authkey || '';
         }
         var url = ispost ? this.getUrl(routes) : this.getUrl(routes, args);
         var op = {
-            url: url + "&timestamp=" + (+new Date()),
-            method: ispost ? 'POST' : 'GET',
-            header: {
-                'Content-type': ispost ? 'application/x-www-form-urlencoded' : 'application/json',
-                'Cookie': 'PHPSESSID=' + userinfo_openid
-            }
+          url: url + "&timestamp=" + (+new Date()),
+          method: ispost ? 'POST' : 'GET',
+          header: {
+            'Content-type': ispost ? 'application/x-www-form-urlencoded' : 'application/json',
+            'token': token ? token : null,
+            'uid': uid ? uid : null
+          }
         };
         if (!session) {
             delete op.header.Cookie;
@@ -58,13 +65,10 @@ module.exports = {
                 if (hasloading) {
                     self.hideLoading();
                 }
-                console.log('结果',res.data)
                 if (res.errMsg == 'request:ok')
                     if (typeof(callback) === 'function') {
                         app.setCache('authkey',res.data.authkey || '');
                         if (typeof (res.data.sysset) !== 'undefined') {
-                          console.log('授权',res.data.sysset.isclose)
-
                           if (res.data.sysset.isclose == 1) {
                             wx.redirectTo({
                               url: '/pages/message/auth/index?close=1&text=' + res.data.sysset.closetext
@@ -72,7 +76,6 @@ module.exports = {
                             return;
                           }
                           app.setCache("sysset", res.data.sysset);
-
                         }
                         callback(res.data);
                         
@@ -89,12 +92,12 @@ module.exports = {
         wx.request(op);
     },
     post: function (routes, args, callback, hasloading, session) {
-      console.log('post', routes, args)
-        this.json(routes, args, callback, hasloading, true, session)
+      this.getToken(routes, args, callback, hasloading, true, session)
+      // this.json(routes, args, callback, hasloading, true, session)
     },
     get: function (routes, args, callback, hasloading, session) {
-      console.log('get', routes, args)
-        this.json(routes, args, callback, hasloading, true, session)
+      this.getToken(routes, args, callback, hasloading, true, session)
+      // this.json()
     },
     getDistanceByLnglat: function (lng1, lat1, lng2, lat2) {
         function rad(d) {
@@ -289,27 +292,25 @@ module.exports = {
     },
 
     /**
-     * 获取token值
+     * 获取最新的token
      */
-    getToken: function (page) {
-      this.get('auth/get_token', {
-        sessionid: wx.getStorageSync("sessionid")
-      }, function (data) {
-        wx.setStorageSync("tokenId", data.token)
-      })
-    },
-
-    /**
-     * 通过openid去请求sessionid
-     */
-    open2session: function (page, callback) {
-      let _this = this
+    getToken: function (routes, args, callback, hasloading, session) {
       let app = getApp()
-      this.get('auth/get_sessionid', {
-        openId: app.getCache('userinfo_openid')
-      }, function (data) {
-        wx.setStorageSync('sessionid', data.sessionid)
-        callback()
+      let uid = app.getCache('userinfo').id
+      let _this = this
+
+      wx.request({
+        url: _this.getUrl(routes) + '&r=wxapp.get_token',
+        method:'POST',
+        data: {
+          uid: uid
+        },
+        success: function (token_res) {
+          if (token_res.data.error == 0) {
+            wx.setStorageSync("tokenid", token_res.data.token)
+            _this.json(routes, args, callback, hasloading, true, session)
+          }
+        }
       })
-    }
+   }
 };

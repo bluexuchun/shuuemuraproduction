@@ -33,77 +33,47 @@ Page({
         app.url(options);
         $this.get_list();
     },
-    /**
-     * 重新获取sessionid,并重新加载页面
-     */
-    refreshPage: function () {
-      let _this = this
-      core.open2session(this, function () {
-        _this.get_list()
-      })
-    },
     get_list: function () {
-        var $this = this;
-        $this.setData({loading: true});
-        core.get('auth/get_token', {
-          sessionid: wx.getStorageSync("sessionid")
-        }, function (data) {
-          wx.setStorageSync("tokenId", data.token)
-          let useropenid = wx.getStorageSync('tokenId') + app.getCache('userinfo_openid')
-          core.get('order/get_list', { page: $this.data.page, status: $this.data.status, merchid: 0, sessionid: wx.getStorageSync('sessionid'), token: useropenid}, function (list) {
-              console.log(list);
-                if (list.error==0){
-                    list.list.map((v,i) =>{
-                      v.price = parseInt(v.price)
-                    })
-                    $this.setData({loading:false,show:true,total:list.total,empty:true});
-                    if(list.list.length>0){
-                        $this.setData({
-                            page: $this.data.page+1,
-                            list: $this.data.list.concat(list.list)
-                        });
-                    }
-                    if(list.list.length<list.pagesize) {
-                        $this.setData({
-                            loaded: true
-                        });
-                    }
-                }else{
-                  if (list.error == '-7') {
-                    $this.refreshPage()
-                  } else {
-                    core.toast(list.message, 'loading')
-                  }
-                }
-            },$this.data.show);
-        })
+      var $this = this;
+      $this.setData({ loading: true });
+      core.get('order/get_list', { page: $this.data.page, status: $this.data.status, merchid: 0 }, function (list) {
+        console.log(list);
+        if (list.error == 0) {
+          list.list.map((v, i) => {
+            v.price = parseInt(v.price)
+          })
+          $this.setData({ loading: false, show: true, total: list.total, empty: true });
+          if (list.list.length > 0) {
+            $this.setData({
+              page: $this.data.page + 1,
+              list: $this.data.list.concat(list.list)
+            });
+          }
+          if (list.list.length < list.pagesize) {
+            $this.setData({
+              loaded: true
+            });
+          }
+        } else {
+          core.toast(list.message, 'loading')
+        }
+      }, $this.data.show);
     },
+
     get_updata_list: function () {
       var $this = this;
       $this.setData({ loading: true });
-      core.get('auth/get_token', {
-        sessionid: wx.getStorageSync("sessionid")
-      }, function (data) {
-        wx.setStorageSync("tokenId", data.token)
-        let useropenid = wx.getStorageSync('tokenId') + app.getCache('userinfo_openid')
-        core.get('order/get_list', { 
-          page: 1, 
-          status: $this.data.status, 
-          merchid: 0, 
-          sessionid: wx.getStorageSync('sessionid'),
-          token: useropenid
-        }, function (list) {
-          console.log(list);
-          if (list.error == 0) {
-            $this.setData({ loading: false, show: true, total: list.total, empty: true });
-            if (list.list.length > 0) {
-              $this.setData({
-                list: list.list
-              });
-            }
+      core.get('order/get_list', { page: 1, status: $this.data.status, merchid: 0 }, function (list) {
+        console.log(list);
+        if (list.error == 0) {
+          $this.setData({ loading: false, show: true, total: list.total, empty: true });
+          if (list.list.length > 0) {
+            $this.setData({
+              list: list.list
+            });
           }
-        });
-      })
+        }
+      });
     },
     selected: function (e) {
         var status = core.data(e).type;

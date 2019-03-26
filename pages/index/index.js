@@ -105,7 +105,6 @@ Page({
     },
 
   iChange:function(e){
-    console.log(e);
     var value = e.detail.value;
     this.setData({
       searchValue:value
@@ -113,7 +112,6 @@ Page({
     
   },
   searchBtn:function(e){
-    console.log(e)
     var that=this;
     let keyword = e.currentTarget.dataset.value
     let keywords
@@ -131,7 +129,6 @@ Page({
     })
     core.get('goods/getlistbySearch', { keywords: keywords},function(res){
       wx.hideLoading();
-       console.log(res);
 
       if (res.total>0){
         wx.navigateTo({
@@ -167,7 +164,6 @@ Page({
     getShop: function () {
         var $this = this;
         core.get('shop/get_shopindex', {}, function (result) {
-          console.log(result);
             parser.wxParse('wxParseData','html', result.copyright,$this,'5');
             $this.setData({shop: result});
         });

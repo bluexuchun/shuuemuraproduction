@@ -48,20 +48,21 @@ App({
           that.globalData.hh = hh;
         }
       });
-        this.getConfig();
-        var userinfo = '';
-        if (userinfo == '' || userinfo.needauth) {
-            this.getUserInfo(function (res) {
-            }, function (text, close) {
-                var close = close ? 1 : 0, text = text ? text : '';
+      //   this.getConfig();
+      //   var userinfo = '';
+      //   if (userinfo == '' || userinfo.needauth) {
+      //       // this.getUserInfo(function (res) {
+      //       // }, function (text, close) {
+      //       //     var close = close ? 1 : 0, text = text ? text : '';
                
-                if (close) {
-                    wx.redirectTo({
-                        url: '/pages/message/auth/index?close=' + close + '&text=' + text
-                    })
-                }
-            });
-       }
+      //       //     if (close) {
+                    
+      //       //     }
+      //       // });
+      //     wx.redirectTo({
+      //       url: '/pages/message/auth/index'
+      //     })
+      //  }
     },
     /**
      * 小程序如果没有授权或者没有数据缓存重新跳转到会员中心请求缓存
@@ -77,16 +78,6 @@ App({
         wx.navigateTo({
           url: url
         })
-      }else{
-        wx.getSetting({
-          success: function (settings) {
-            if (!settings.authSetting['scope.userInfo']) {
-              wx.navigateTo({
-                url: url
-              })
-            }
-          }
-        })
       }
     },
     requirejs: function (jsname) {
@@ -101,7 +92,6 @@ App({
             };
         }
         var ext = wx.getExtConfigSync();
-        console.log(ext);
         this.globalData.api = ext.config.api;
         this.globalData.approot = ext.config.approot;
         this.globalData.appid = ext.config.appid;
@@ -113,12 +103,7 @@ App({
         time = parseInt(time);
         try {
             data = wx.getStorageSync(key + this.globalData.appid);
-            if (data.expire > time || data.expire == 0) {
-                data = data.value;
-            } else {
-                data = '';
-                this.removeCache(key);
-            }
+            data = data.value;
         } catch (e) {
             data = typeof (defaultValue) === 'undefined' ? '' : defaultValue;
         }
@@ -284,7 +269,6 @@ App({
         mid = options.mid || '';
         merchid = options.merchid || '';
         if (user != '') {
-            // console.log('---')
             if (user.mid == '' || typeof user.mid == 'undefined') {
                 arg.mid = mid;
                 arg.merchid = user.merchid;
@@ -339,7 +323,7 @@ App({
     },
      globalData: {
        appid: "wxf5b847b162d8fbf8",
-       api: "https://wechatstore.shuuemura.com.cn/app/arvato_shop_api.php?i=2",
+       api: "https://test.shu.widiazine.cn/app/arvato_shop_api.php?i=2",
        userInfo: ""
 
      }

@@ -17,7 +17,6 @@ Page({
    */
   onLoad: function (options) {
     let userInfo = app.getCache("userinfo")
-    console.log(userInfo)
     let url = ''
     if(!userInfo || userInfo.needauth == 1){
       url = '/pages/message/auth/index'

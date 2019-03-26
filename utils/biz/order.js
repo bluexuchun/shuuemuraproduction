@@ -24,30 +24,13 @@ module.exports = {
         '确认已收到货了吗?',
         '确定您要取消申请?'
     ],
-    reAction: function () {
-      let _this = this;
-      core.open2session(this, function () {
-        _this.cancel()
-      })
-    },
-    cancel: function (id, index,url) {
-        var $this=this,remark = this.cancelArray[index];
-        core.get('auth/get_token', {
-          sessionid: wx.getStorageSync("sessionid")
-        }, function (data) {
-          wx.setStorageSync("tokenId", data.token)
-          let useropenid = wx.getStorageSync('tokenId') + app.getCache('userinfo_openid')
-          core.post('order/op/cancel', { id: id, remark: remark, sessionid: wx.getStorageSync("sessionid"), token: useropenid }, function (data) {
-            if (data.error == 0) {
-              $this.url(url);
-            }else{
-              if (data.error == '-7') {
-                $this.reAction()
-              }
-            }
-          }, true);
-        })
-        
+    cancel: function (id, index, url) {
+      var $this = this, remark = this.cancelArray[index];
+      core.post('order/op/cancel', { id: id, remark: remark }, function (data) {
+        if (data.error == 0) {
+          $this.url(url);
+        }
+      }, true);
     },
     delete: function (id, userdeleted,url,self) {
         console.log('123')

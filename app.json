@@ -2,7 +2,6 @@
   "pages": [
     "pages/authloading/authloading",
     "pages/index/index",
-    
     "pages/member/index/index",
     "pages/member/cart/index",
     "pages/friendPuzzle/friendPuzzle",
@@ -14,9 +13,6 @@
     "pages/makeCard/makeCard",
     "pages/custom/index",
     "pages/customCard/customCard",
-    "pages/creditshop/detail/index",
-    "pages/creditshop/comment/index",
-    "pages/creditshop/express/index",
     "pages/customization/step1/index",
     "pages/shop/notice/index/index",
     "pages/shop/notice/detail/detail",
@@ -49,20 +45,12 @@
     "pages/map/index",
     "pages/order/pay/share/share",
     "pages/order/pay/coupons/coupons",
-    "pages/creditshop/log/index",
-    "pages/creditshop/log/detail/index",
-    "pages/creditshop/lists/index",
-    "pages/creditshop/creditlog/index",
-    "pages/creditshop/create/index",
-    "pages/creditshop/verify/index",
-    "pages/creditshop/index",
     "pages/order/cycle/index",
     "pages/order/cycle/address",
     "pages/order/cycle/order",
     "pages/order/express/number",
     "pages/quickbuy/index",
     "pages/finishPuzzle/finishPuzzle"
-    
   ],
   "subPackages": [
     {

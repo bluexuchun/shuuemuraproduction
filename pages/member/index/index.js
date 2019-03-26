@@ -61,52 +61,30 @@ Page({
     onPullDownRefresh: function () {
       wx.stopPullDownRefresh()
     },
-    refreshPage: function () {
-      let that = this
-      core.open2session(this, function () {
-        that.getInfo()
-      })
-    },
-    getInfo: function(){
-        var $this = this;
-        core.get('auth/get_token', {
-          sessionid: wx.getStorageSync("sessionid")
-        }, function (data) {
-          wx.setStorageSync("tokenId", data.token)
-          let useropenid = wx.getStorageSync('tokenId') + app.getCache('userinfo_openid')
-          core.get('member', {sessionid: wx.getStorageSync('sessionid'), token: useropenid}, function(result){
-            console.log(result)
-            if (result.isblack == 1){
-              wx.showModal({
-                title: '无法访问',
-                content: '您在商城的黑名单中，无权访问！',
-                success: function (res) {
-                  if (res.confirm) {
-                    $this.close()
-                  }
-                  if (res.cancel){
-                    $this.close()
-                  }
-                }
-              })
-            }
-            if(result.error!=0){
-              if (result.error == '-7') {
-                $this.refreshPage()
-              } else {
-                wx.clearStorage()
-                wx.redirectTo({
-                  url: '/pages/message/auth/index'
-                })
+    getInfo: function () {
+      var $this = this;
+      core.get('member', {}, function (result) {
+        if (result.isblack == 1) {
+          wx.showModal({
+            title: '无法访问',
+            content: '您在商城的黑名单中，无权访问！',
+            success: function (res) {
+              if (res.confirm) {
+                $this.close()
               }
-            }else{
-              $this.setData({
-                member: result, show: true, customer: result.customer, customercolor: result.customercolor, phone: result.phone, phonecolor: result.phonecolor, phonenumber: result.phonenumber, iscycelbuy: result.iscycelbuy,bargain:result.bargain
-});
+              if (res.cancel) {
+                $this.close()
+              }
             }
-            parser.wxParse('wxParseData','html', result.copyright,$this,'5');
-        });
-      })
+          })
+        }
+        if (result.error == 0) {
+          $this.setData({
+            member: result, show: true, customer: result.customer, customercolor: result.customercolor || null, phone: result.phone, phonecolor: result.phonecolor || null, phonenumber: result.phonenumber || null, iscycelbuy: result.iscycelbuy, bargain: result.bargain
+          });
+        }
+        parser.wxParse('wxParseData', 'html', result.copyright, $this, '5');
+      });
     },
     service:function(e){
       wx.makePhoneCall({

@@ -31,7 +31,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 12,
+			"current": 13,
 			"list": [
 				{
 					"id": -1,
@@ -110,6 +110,12 @@
 					"name": "2",
 					"pathName": "pages/member/cart/index",
 					"query": "goodsid=301992",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "快递",
+					"pathName": "pages/order/express/index",
 					"scene": null
 				}
 			]

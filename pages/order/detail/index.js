@@ -48,62 +48,47 @@ Page({
           })
         }
     },
-    refreshPage: function () {
-      let _this = this
-      core.open2session(this, function () {
-        _this.get_list()
-      })
-    },
     get_list: function () {
-        var $this = this;
-        core.get('auth/get_token', {
-          sessionid: wx.getStorageSync("sessionid")
-        }, function (data) {
-          wx.setStorageSync("tokenId", data.token)
-          let useropenid = wx.getStorageSync('tokenId') + app.getCache('userinfo_openid')
-          core.get('order/detail', 
-            { ...$this.data.options, sessionid: wx.getStorageSync("sessionid"), token: useropenid}
-          , function (list) {
-            if(list.error == '-7'){
-              $this.refreshPage()
+      var $this = this;
+      core.get('order/detail',
+        { ...$this.data.options }
+        , function (list) {
+          if (list.error > 0) {
+            if (list.error != 50000) {
+              core.toast(list.message, 'loading');
             }
-            if (list.error>0){
-              if (list.error != 50000) {
-                core.toast(list.message, 'loading');
-              }
+          }
+          if (list.nogift[0].fullbackgoods != undefined) {
+            var fullbackratio = list.nogift[0].fullbackgoods.fullbackratio;
+            var maxallfullbackallratio = list.nogift[0].fullbackgoods.maxallfullbackallratio;
+            var fullbackratio = Math.round(fullbackratio);
+            var maxallfullbackallratio = Math.round(maxallfullbackallratio);
+          }
+
+          if (list.error == 0) {
+            $this.setData({
+              getOrder: JSON.stringify(list),
+              lists: list
+            })
+            list.show = true;
+            var ordervirtualtype = Array.isArray(list.ordervirtual);
+            list.goods.map((v, i) => {
+              v.price = parseInt(v.price)
+            })
+            list.order.price = parseInt(list.order.price)
+            list.order.goodsprice = parseInt(list.order.goodsprice)
+            $this.setData(list);
+            $this.setData({
+              ordervirtualtype: ordervirtualtype, fullbackgoods: list.nogift[0].fullbackgoods, maxallfullbackallratio: maxallfullbackallratio, fullbackratio: fullbackratio, invoice: list.order.invoicename, membercard_info: list.membercard_info,
+
+            })
+            if (list.sercharge) {
+              $this.setData({
+                sercharge: list.sercharge
+              })
             }
-              if(list.nogift[0].fullbackgoods != undefined ){
-                var fullbackratio = list.nogift[0].fullbackgoods.fullbackratio;
-              var maxallfullbackallratio = list.nogift[0].fullbackgoods.maxallfullbackallratio;
-              var fullbackratio = Math.round(fullbackratio);
-              var maxallfullbackallratio = Math.round(maxallfullbackallratio);
-              }
-        
-              if (list.error==0){
-                  $this.setData({
-                    getOrder: JSON.stringify(list),
-                    lists: list
-                  })
-                  list.show = true;
-                  var ordervirtualtype = Array.isArray(list.ordervirtual);
-                  list.goods.map((v,i) => {
-                    v.price = parseInt(v.price)
-                  })
-                  list.order.price = parseInt(list.order.price)
-                  list.order.goodsprice = parseInt(list.order.goodsprice)
-                  $this.setData(list);
-                  $this.setData({
-                    ordervirtualtype: ordervirtualtype, fullbackgoods: list.nogift[0].fullbackgoods, maxallfullbackallratio: maxallfullbackallratio, fullbackratio: fullbackratio, invoice: list.order.invoicename, membercard_info: list.membercard_info ,
-                    
-                    })
-                  if(list.sercharge){
-                    $this.setData({
-                      sercharge:list.sercharge
-                    })
-                  }
-              }
-          })
-        });
+          }
+        })
     },
     more:function(){
       this.setData({all:true})
