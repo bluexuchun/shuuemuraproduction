@@ -28,7 +28,7 @@ wx.getSystemInfo({
 /**
  * 主函数入口区
  **/
-function wxParse(bindName = 'wxParseData', type = 'html', data = '<div class="color:red;">数据不能为空</div>', target, imagePadding) {
+function wxParse(bindName = 'wxParseData', type = 'html', data = '<div class="color:red;"></div>', target, imagePadding) {
   if (!data || data == '') {
     return;
   }

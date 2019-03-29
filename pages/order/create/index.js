@@ -304,11 +304,13 @@ Page({
         goodslist = $this.getGoodsList(list.goods);
         var comboprice = ($this.data.originalprice - list.goodsprice).toFixed(2);
         let spegifts = []
-        Object.keys(list.boxgiftdata).forEach(function (key) {
-          spegifts.push({
-            ...list.boxgiftdata[key]
-          })
-        });
+        if(list.boxgiftdata){
+          Object.keys(list.boxgiftdata).forEach(function (key) {
+            spegifts.push({
+              ...list.boxgiftdata[key]
+            })
+          });
+        }
         $this.setData({
           list: list,
           goods: list,
