@@ -303,6 +303,12 @@ Page({
         }
         goodslist = $this.getGoodsList(list.goods);
         var comboprice = ($this.data.originalprice - list.goodsprice).toFixed(2);
+        let spegifts = []
+        Object.keys(list.boxgiftdata).forEach(function (key) {
+          spegifts.push({
+            ...list.boxgiftdata[key]
+          })
+        });
         $this.setData({
           list: list,
           goods: list,
@@ -327,6 +333,10 @@ Page({
           fromquick: list.fromquick,
           hasinvoice: list.hasinvoice,
           giftsuperlist: list.super,
+          /**
+           * 专享赠礼
+           */
+          spegifts: spegifts,
           courtesys: list.courtesys,
           // 独家礼遇
           /**
@@ -615,10 +625,19 @@ Page({
         })
       }
     }
-    
 
-
-
+    if (that.data.spegifts){
+      that.data.spegifts.map((v,i) =>{
+        console.log(v)
+        if(v){
+          if (v.num >= 1){
+            for(let i = 0;i < v.num;i++){
+              giftsuperlistid.push(v.id)
+            }
+          }
+        }
+      })
+    }
     // core.pay(wechat.payinfo, function (res) {
     //   if (res.errMsg == "requestPayment:ok") {
     //     $this.complete(type)

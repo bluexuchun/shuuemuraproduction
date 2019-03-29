@@ -20,6 +20,7 @@ module.exports = {
         return url
     },
       json: function (routes, args, callback, hasloading, ispost, session) {
+        
         let app = getApp(),
           userinfo_openid = app.getCache('userinfo_openid'),
           usermid = app.getCache('usermid'),
@@ -92,12 +93,18 @@ module.exports = {
         wx.request(op);
     },
     post: function (routes, args, callback, hasloading, session) {
-      this.getToken(routes, args, callback, hasloading, true, session)
-      // this.json(routes, args, callback, hasloading, true, session)
+      if(routes == 'wxapp/login' || routes == 'wxapp/auth'){
+        this.json(routes, args, callback, hasloading, true, session)
+      }else{
+        this.getToken(routes, args, callback, hasloading, true, session)
+      }
     },
     get: function (routes, args, callback, hasloading, session) {
-      this.getToken(routes, args, callback, hasloading, true, session)
-      // this.json()
+      if (routes == 'wxapp/login' || routes == 'wxapp/auth') {
+        this.json(routes, args, callback, hasloading, true, session)
+      } else {
+        this.getToken(routes, args, callback, hasloading, true, session)
+      }
     },
     getDistanceByLnglat: function (lng1, lat1, lng2, lat2) {
         function rad(d) {
@@ -297,13 +304,17 @@ module.exports = {
     getToken: function (routes, args, callback, hasloading, session) {
       let app = getApp()
       let uid = app.getCache('userinfo').id
+      let openid = app.getCache('userinfo_openid')
       let _this = this
+      let config = getApp().getConfig();
 
       wx.request({
-        url: _this.getUrl(routes) + '&r=wxapp.get_token',
+        url: config.api + '&r=wxapp.get_token',
         method:'POST',
+
         data: {
-          uid: uid
+          uid: uid,
+          openid: 'sns_wa_' + openid
         },
         success: function (token_res) {
           if (token_res.data.error == 0) {

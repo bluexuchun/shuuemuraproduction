@@ -198,7 +198,8 @@
 
 </view>
       
-        <view class="gift-title" style='text-align:center;height:110rpx;line-height:110rpx;'>开盒有礼</view>
+      <view class="gift-title" style='text-align:center;height:30rpx;line-height:30rpx;font-size:30rpx;border-top:none;margin-top:52rpx;margin-bottom:13rpx;'>开盒有礼</view>
+      <view class="gift-title" style='text-align:center;height:18rpx;line-height:18rpx;font-size:18rpx;border-top:none;margin-bottom:20rpx;'>下单即享惊喜</view>
      <!-- 独家礼运 -->
           <view class="extra-groups" wx:if="{{courtesys.length > 0}}" style="padding:0 30rpx;">
       <view  wx:for="{{courtesys}}" wx:for-item="gift" wx:key='index' wx:if='{{index ==0}}'>
@@ -212,7 +213,7 @@
                   <!-- <icon></icon> -->
                   <image class="detail-img" src='{{item.thumb}}' mode='widthFix' style="width:100%;height:150rpx;"></image>
                 </view>
-                <view class='bottom' style='margin:auto;width:127rpx;text-align:center;margin-top:20rpx;'>
+                <view class='bottom' style='margin:auto;width:127rpx;text-align:center;padding-top:0rpx;margin-top:20rpx'>
                   {{item.title}}
                 </view>
                  <view style='text-align:center;color:#666;font-size:18rpx;margin-top:14rpx'>{{item.subtitle}}</view>
@@ -229,24 +230,45 @@
          </view> -->
     </view> 
 
+    <!-- 专享赠礼 -->
+    <view class="gift-title" style='text-align:center;height:30rpx;line-height:30rpx;font-size:30rpx;border-top:none;margin-top:60rpx;margin-bottom:13rpx;'>专享赠礼</view>
+    <view class="gift-title" style='text-align:center;height:18rpx;line-height:18rpx;font-size:18rpx;border-top:none;margin-bottom:20rpx;'>购明星单品专享礼遇</view>
+    <view class="extra-groups" wx:if="{{spegifts.length > 0}}" style="padding:0 30rpx;">
+      <scroll-view  scroll-x="true"  style="background:#fff">
+        <view class="scroll-extra-gift" style='padding:0;height:auto;min-height:auto'>
+          <view class="extra-gifts-item gifts-items" wx:for="{{spegifts}}" wx:for-index="idx" wx:key="{{item.id}}" data-list-type="extraGiftList" style='margin-right:40rpx;padding:0 0 0rpx;height:auto'>
+            <view  style='width:150rpx;'>
+              <view class="top checkbox">
+                <image class="detail-img" src='{{item.thumb}}' mode='widthFix' style="width:100%;height:150rpx;"></image>
+              </view>
+              <view class='bottom' style='margin:auto;width:127rpx;text-align:center;padding-top:0rpx;margin-top:20rpx'>
+                {{item.title}} X{{item.num}}
+              </view>
+                <view style='text-align:center;color:#666;font-size:18rpx;margin-top:14rpx'>{{item.subtitle}}</view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
     <!-- 植村秀的赠品专属 -->
-    <view wx:if="{{zcxgiftlists.length > 0}}" class="gift-title extraGift" style='margin-top:57rpx;font-size:30rpx;text-align:center;height:auto;line-height:30rpx;border:none;'>尊享满额礼</view>
+    <view wx:if="{{zcxgiftlists.length > 0}}" class="gift-title extraGift" style='margin-top:60rpx;font-size:30rpx;text-align:center;height:auto;line-height:30rpx;border:none;'>尊享满额礼</view>
     <view wx:if="{{zcxgiftlists.length > 0 && !zcxgifttips.ismax && zcxgifttips.ismin == 1}}" style="margin-top:13rpx;font-size:18rpx;line-height:18rpx;text-align:center;margin-bottom:20rpx;">
       再购物{{zcxgifttips.reduce}}元，臻享如下满额礼赠
     </view>
     <view wx:if="{{zcxgiftlists.length > 0 && zcxgifttips.ismax && zcxgifttips.ismin != 1}}" style="margin-top:13rpx;font-size:18rpx;line-height:18rpx;text-align:center;margin-bottom:20rpx;">
       已购物满{{zcxgifttips.memony}}元，臻享如下礼遇
     </view>
-    <view wx:if="{{zcxgiftlists.length > 0}}" style='background:#f4f4f4;padding-bottom:14rpx'>
+    <view wx:if="{{zcxgiftlists.length > 0}}" style='background:#fff;padding-bottom:14rpx'>
       <scroll-view scroll-x="true"  style="margin-bottom:10px;">
         <view class="scroll-extra-gift" style='padding:0 30rpx 40rpx'>
-          <view class="extra-gifts-item gifts-items" wx:for="{{zcxgiftlists}}" wx:for-index="idx" wx:key="{{item.id}}" data-list-type="extraGiftList" data-idx="{{idx}}" style='margin-right:10rpx;padding:20rpx 0 20rpx;'>
+          <view class="extra-gifts-item gifts-items" wx:for="{{zcxgiftlists}}" wx:for-index="idx" wx:key="{{item.id}}" data-list-type="extraGiftList" data-idx="{{idx}}" style='margin-right:10rpx;padding:0rpx;'>
             <view wx:if="{{item.goods_number<=0}}" class="mask"></view>
             <view data-list-type="{{index}}" data-idx="{{idx}}" bindtap="selectPro" style='width:150rpx;height:150rpx;'>
               <view class="top checkbox" style="display:flex;flex-direction:column;justify-content:center;align-items:center;background:#fff;">
                 <image class="detail-img" src='{{item.thumb}}' mode='widthFix' style="width:100%;height:60px;"></image>
               </view>
-              <view class='bottom' style='margin:auto;width:127rpx;text-align:center;display:flex;align-items:center;justify-content:center'>
+              <view class='bottom' style='margin:auto;width:127rpx;text-align:center;display:flex;align-items:center;justify-content:center;padding-top:0rpx;margin-top:20rpx'>
                 {{item.title}}
               </view>
                 <view style='text-align:center;color:#666;font-size:18rpx;margin-top:10rpx'>{{item.subtitle}}</view>
@@ -578,14 +600,14 @@
       </view>
     </view> -->
 
-    <view class="totalMoney" style='color:#666666;padding:0 67rpx;background:#fff;font-weight:normal;height:195rpx;display:flex;flex-direction:column;justify-content:space-around;'>
-      <view>
+    <view class="totalMoney" style='color:#666666;padding:0 89rpx 0 68rpx;background:#fff;font-weight:normal;display:flex;flex-direction:column;justify-content:space-around;'>
+      <view style='margin-bottom:40rpx'>
         商品合计：
-        <text class='fr' style='float:right'>￥{{ispackage?originalprice: list.goodsprice }}</text>
+        <text class='fr' style='float:right;font-size:24rpx'>￥{{ispackage?originalprice: list.goodsprice }}</text>
       </view>
-      <view>
+      <view style='margin-bottom:50rpx'>
         运费：
-        <text class='fr' style='float:right'>￥{{ list.dispatch_price }}</text>
+        <text class='fr' style='float:right;font-size:24rpx'>￥{{ list.dispatch_price }}</text>
       </view>
       <!-- <view wx:if="{{isextra}}">
         刻字服务费：
@@ -594,7 +616,7 @@
       
     </view>
 
-<view class="l" style='color:#000;border-top:12rpx solid #F7F7F7;font-size:26rpx;padding:0rpx 68rpx;font-weight:normal;height:100rpx;display:flex;flex-direction:row;justify-content:space-between;align-items:center;'>应付金额：
+<view class="l" style='color:#000;border-top:6rpx solid #F7F7F7;font-size:26rpx;padding:0rpx 89rpx 0rpx 68rpx;font-weight:normal;height:108rpx;display:flex;flex-direction:row;justify-content:space-between;align-items:center;'>应付金额：
         <text class='fr' style='float:right'>￥{{ list.realprice }}</text>
       </view>
   </view>

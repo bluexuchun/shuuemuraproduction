@@ -322,8 +322,10 @@ App({
       flag: false,
     },
      globalData: {
-       appid: "wxf5b847b162d8fbf8",
-       api: "https://test.shu.widiazine.cn/app/arvato_shop_api.php?i=2",
+      //  appid: "wxf5b847b162d8fbf8",
+      //  api: "https://wechatstore.shuuemura.com.cn/app/arvato_shop_api.php?i=2",
+       appid: "wxc24fc85ae2f8f680",
+       api: "https://shuuemura.widiazine.cn/app/arvato_shop_api.php?i=2",
        userInfo: ""
 
      }

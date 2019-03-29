@@ -74,32 +74,44 @@ json: function (routes, args, callback, hasloading, ispost, session) {
 
     wx.request(op);
 },
+
 post: function (routes, args, callback, hasloading, session) {
-    this.getToken(routes, args, callback, hasloading, true, session)
-    // this.json(routes, args, callback, hasloading, true, session)
+    if(routes == 'wxapp/login' || routes == 'wxapp/auth'){
+        this.json(routes, args, callback, hasloading, true, session)
+    }else{
+        this.getToken(routes, args, callback, hasloading, true, session)
+    }
 },
 get: function (routes, args, callback, hasloading, session) {
-    this.getToken(routes, args, callback, hasloading, true, session)
-    // this.json()
+    if (routes == 'wxapp/login' || routes == 'wxapp/auth') {
+        this.json(routes, args, callback, hasloading, true, session)
+    } else {
+        this.getToken(routes, args, callback, hasloading, true, session)
+    }
 },
+
 /**
-    * 获取最新的token
-    */
-getToken: function (routes, args, callback, hasloading, session){
-    // console.log(getCurrentPages())
+* 获取最新的token
+*/
+getToken: function (routes, args, callback, hasloading, session) {
     let app = getApp()
     let uid = app.getCache('userinfo').id
+    let openid = app.getCache('userinfo_openid')
     let _this = this
-    
+    let config = getApp().getConfig();
+
     wx.request({
-        url: _this.getUrl(routes) + '&r=wxapp.get_token',
+        url: config.api + '&r=wxapp.get_token',
+        method:'POST',
+
         data: {
-            uid: uid
+            uid: uid,
+            openid: 'sns_wa_' + openid
         },
         success: function (token_res) {
             if (token_res.data.error == 0) {
-            wx.setStorageSync("tokenid", token_res.data.token)
-            _this.json(routes, args, callback, hasloading, true, session)
+                wx.setStorageSync("tokenid", token_res.data.token)
+                _this.json(routes, args, callback, hasloading, true, session)
             }
         }
     })
@@ -176,16 +188,6 @@ checkAuth: function () {
         wx.navigateTo({
             url: url
         })
-    }else{
-        wx.getSetting({
-            success: function (settings) {
-                if (!settings.authSetting['scope.userInfo']) {
-                    wx.navigateTo({
-                    url: url
-                    })
-                }
-            }
-        })
     }
 },
 ```
@@ -218,34 +220,31 @@ getInfo: function () {
     });
 },
 ```
+
 5、/pages/order/index.js
 ```
-/**
-* 重新获取sessionid,并重新加载页面
-*/
 get_list: function () {
     var $this = this;
     $this.setData({loading: true});
     core.get('order/get_list', { page: $this.data.page, status: $this.data.status, merchid: 0}, function (list) {
-    console.log(list);
         if (list.error==0){
-        list.list.map((v,i) =>{
-            v.price = parseInt(v.price)
-        })
-        $this.setData({loading:false,show:true,total:list.total,empty:true});
-        if(list.list.length>0){
-            $this.setData({
-            page: $this.data.page+1,
-            list: $this.data.list.concat(list.list)
-            });
-        }
-        if(list.list.length<list.pagesize) {
-            $this.setData({
-            loaded: true
-            });
-        }
+            list.list.map((v,i) =>{
+                v.price = parseInt(v.price)
+            })
+            $this.setData({loading:false,show:true,total:list.total,empty:true});
+            if(list.list.length>0){
+                $this.setData({
+                    page: $this.data.page+1,
+                    list: $this.data.list.concat(list.list)
+                });
+            }
+            if(list.list.length<list.pagesize) {
+                $this.setData({
+                    loaded: true
+                });
+            }
         }else{
-        core.toast(list.message, 'loading')
+            core.toast(list.message, 'loading')
         }
     },$this.data.show);
 },
@@ -258,9 +257,9 @@ get_updata_list: function () {
     if (list.error == 0) {
         $this.setData({ loading: false, show: true, total: list.total, empty: true });
         if (list.list.length > 0) {
-        $this.setData({
-            list: list.list
-        });
+            $this.setData({
+                list: list.list
+            });
         }
     }
     });
@@ -273,41 +272,40 @@ get_list: function () {
     core.get('order/detail', 
     { ...$this.data.options}
     , function (list) {
-    if (list.error>0){
-        if (list.error != 50000) {
-        core.toast(list.message, 'loading');
+        if (list.error>0){
+            if (list.error != 50000) {
+                core.toast(list.message, 'loading');
+            }
         }
-    }
-    if(list.nogift[0].fullbackgoods != undefined ){
-        var fullbackratio = list.nogift[0].fullbackgoods.fullbackratio;
-        var maxallfullbackallratio = list.nogift[0].fullbackgoods.maxallfullbackallratio;
-        var fullbackratio = Math.round(fullbackratio);
-        var maxallfullbackallratio = Math.round(maxallfullbackallratio);
-    }
+        if(list.nogift[0].fullbackgoods != undefined ){
+            var fullbackratio = list.nogift[0].fullbackgoods.fullbackratio;
+            var maxallfullbackallratio = list.nogift[0].fullbackgoods.maxallfullbackallratio;
+            var fullbackratio = Math.round(fullbackratio);
+            var maxallfullbackallratio = Math.round(maxallfullbackallratio);
+        }
 
-    if (list.error==0){
-        $this.setData({
-        getOrder: JSON.stringify(list),
-        lists: list
-        })
-        list.show = true;
-        var ordervirtualtype = Array.isArray(list.ordervirtual);
-        list.goods.map((v,i) => {
-        v.price = parseInt(v.price)
-        })
-        list.order.price = parseInt(list.order.price)
-        list.order.goodsprice = parseInt(list.order.goodsprice)
-        $this.setData(list);
-        $this.setData({
-        ordervirtualtype: ordervirtualtype, fullbackgoods: list.nogift[0].fullbackgoods, maxallfullbackallratio: maxallfullbackallratio, fullbackratio: fullbackratio, invoice: list.order.invoicename, membercard_info: list.membercard_info ,
-        
-        })
-        if(list.sercharge){
-        $this.setData({
-            sercharge:list.sercharge
-        })
+        if (list.error==0){
+            $this.setData({
+                getOrder: JSON.stringify(list),
+                lists: list
+            })
+            list.show = true;
+            var ordervirtualtype = Array.isArray(list.ordervirtual);
+            list.goods.map((v,i) => {
+                v.price = parseInt(v.price)
+            })
+            list.order.price = parseInt(list.order.price)
+            list.order.goodsprice = parseInt(list.order.goodsprice)
+            $this.setData(list);
+            $this.setData({
+            ordervirtualtype: ordervirtualtype, fullbackgoods: list.nogift[0].fullbackgoods, maxallfullbackallratio: maxallfullbackallratio, fullbackratio: fullbackratio, invoice: list.order.invoicename, membercard_info: list.membercard_info ,
+            })
+            if(list.sercharge){
+                $this.setData({
+                    sercharge:list.sercharge
+                })
+            }
         }
-    }
     })
 },
 ```

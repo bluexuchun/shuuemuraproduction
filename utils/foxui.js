@@ -19,7 +19,8 @@ module.exports.number = function(page,e){
         if(value<max||max==0){
             value++;
         }else {
-          this.toast(page, '最多购买' + max+'件')
+          // this.toast(page, '最多购买' + max+'件')
+          this.toast(page,'库存不足')
         }
     }
     return value;
