@@ -62,7 +62,20 @@ Page({
     isextra: true
   },
   onLoad: function(options) {
-    console.log(options)
+    let _this = this
+    core.isToken(function (istoken) {
+      let tokenData = istoken.data.token
+      if (tokenData == 1) {
+        _this.initFunction(options)
+      } else {
+        core.getToken(function (getToken) {
+          _this.initFunction(options)
+        })
+      }
+    })
+  },
+
+  initFunction: function(options){
     // 页面初始化 options为页面跳转所带来的参数
     var $this = this,
       goodslist = [];
@@ -90,7 +103,7 @@ Page({
     data = Crypto.CryptoJS.encrypt(jsonData, Crypto.keyCrypto.key, Crypto.keyCrypto.iv)
 
 
-    core.get('order/create', { crydata: data}, function(list) {
+    core.get('order/create', { crydata: data }, function (list) {
       console.log(list);
       /**
        * 判断刻字服务费
@@ -123,24 +136,19 @@ Page({
 
 
       if (list.error == 0) {
-        console.log('list',list)
+        console.log('list', list)
 
         // 植村秀赠品专属
-        core.get('order/create/gifts',{
-          goodsprice:list.realprice
-        },function(gift){
+        core.get('order/create/gifts', {
+          goodsprice: list.goodsprice
+        }, function (gift) {
           console.log(gift)
           $this.setData({
-            zcxgifttips:gift.full,
-            zcxgiftlists:gift.gift_list,
+            zcxgifttips: gift.full,
+            zcxgiftlists: gift.gift_list,
           })
         })
 
-
-
-
-
-        // 循环尊享体验礼
         // 循环尊享体验礼
         list.super.map((v, k) => {
           // 动态渲染富文本
@@ -296,7 +304,7 @@ Page({
         })
 
         let addressDetail = wx.getStorageSync("address")
-        if(addressDetail){
+        if (addressDetail) {
           $this.setData({
             addressDetail
           })
@@ -304,7 +312,7 @@ Page({
         goodslist = $this.getGoodsList(list.goods);
         var comboprice = ($this.data.originalprice - list.goodsprice).toFixed(2);
         let spegifts = []
-        if(list.boxgiftdata){
+        if (list.boxgiftdata) {
           Object.keys(list.boxgiftdata).forEach(function (key) {
             spegifts.push({
               ...list.boxgiftdata[key]
@@ -357,7 +365,7 @@ Page({
 
       } else {
         core.toast(list.message, 'loading');
-        setTimeout(function() {
+        setTimeout(function () {
           wx.navigateBack();
         }, 1000);
       }
@@ -383,14 +391,12 @@ Page({
 
     this.getQuickAddressDetail();
     app.setCache("coupon", '');
-    setTimeout(function() {
+    setTimeout(function () {
       $this.setData({
         areas: app.getCache("cacheset").areas
       })
     }, 3000)
-
   },
-
 
   show_cycelbuydate: function() {
     var $this = this;
@@ -744,61 +750,123 @@ Page({
       ...subdata,
       'openid': useropenid
     }
+    console.log(newdata)
     let jsonData = JSON.stringify(newdata)
     newdata = Crypto.CryptoJS.encrypt(jsonData, Crypto.keyCrypto.key, Crypto.keyCrypto.iv)
 
-    core.post('order/create/submit', { crydata: newdata}, function(ret) {
+    core.isToken(function (istoken) {
+      let tokenData = istoken.data.token
+      if (tokenData == 1) {
+        core.post('order/create/submit', { crydata: newdata }, function (ret) {
 
-      let addressInfo = wx.getStorageSync("address")
-      let newGoods = that.data.goods;
-      console.log($this.data.goodslist,newGoods,'newGoodsnewGoodsnewGoodsnewGoods')
-      $this.setData({
-        submit: false
-      });
-      if (ret.error != 0) {
-        if(ret.error == 10010){
-          core.alert(ret.message, function(){
-            console.log('123')
-            wx.navigateTo({
-              url: '/member/pages/member/bind/index',
-            })
-          });
-          
-          return;
-        }else{
-          core.alert(ret.message);
-          return;
-        }
-      } else {
-        if (ret.wechat.success) {
-          wx.showToast({
-            title: '下单成功',
-            icon: 'success',
-            duration: 1000
-          })
           let addressInfo = wx.getStorageSync("address")
-          setTimeout(() => {
-            core.pay(ret.wechat.payinfo, function(res) {
-              console.log('$this.data.goodslist$this.data.goodslist', $this.data.goodslist)
-
-              if (res.errMsg == "requestPayment:ok") {
-                $this.data.goodslist.forEach((item, index) => {
-                  console.log(index, item)
-                });
+          let newGoods = that.data.goods;
+          console.log($this.data.goodslist, newGoods, 'newGoodsnewGoodsnewGoodsnewGoods')
+          $this.setData({
+            submit: false
+          });
+          if (ret.error != 0) {
+            if (ret.error == 10010) {
+              core.alert(ret.message, function () {
+                console.log('123')
                 wx.navigateTo({
-                  url: '/pages/order/detail/index?id=' + ret.orderid
-                });
-              }
-            }, function() {
-              wx.navigateTo({
-                url: '/pages/order/detail/index?id=' + ret.orderid
+                  url: '/member/pages/member/bind/index',
+                })
               });
+
+              return;
+            } else {
+              core.alert(ret.message);
+              return;
+            }
+          } else {
+            if (ret.wechat.success) {
+              wx.showToast({
+                title: '下单成功',
+                icon: 'success',
+                duration: 1000
+              })
+              let addressInfo = wx.getStorageSync("address")
+              setTimeout(() => {
+                core.pay(ret.wechat.payinfo, function (res) {
+                  console.log('$this.data.goodslist$this.data.goodslist', $this.data.goodslist)
+
+                  if (res.errMsg == "requestPayment:ok") {
+                    $this.data.goodslist.forEach((item, index) => {
+                      console.log(index, item)
+                    });
+                    wx.navigateTo({
+                      url: '/pages/order/detail/index?id=' + ret.orderid
+                    });
+                  }
+                }, function () {
+                  wx.navigateTo({
+                    url: '/pages/order/detail/index?id=' + ret.orderid
+                  });
+                });
+              }, 1000)
+            }
+
+          }
+
+        })
+      } else {
+        core.getToken(function (getToken) {
+          core.post('order/create/submit', { crydata: newdata }, function (ret) {
+
+            let addressInfo = wx.getStorageSync("address")
+            let newGoods = that.data.goods;
+            console.log($this.data.goodslist, newGoods, 'newGoodsnewGoodsnewGoodsnewGoods')
+            $this.setData({
+              submit: false
             });
-          },1000)
-        }
+            if (ret.error != 0) {
+              if (ret.error == 10010) {
+                core.alert(ret.message, function () {
+                  console.log('123')
+                  wx.navigateTo({
+                    url: '/member/pages/member/bind/index',
+                  })
+                });
 
+                return;
+              } else {
+                core.alert(ret.message);
+                return;
+              }
+            } else {
+              if (ret.wechat.success) {
+                wx.showToast({
+                  title: '下单成功',
+                  icon: 'success',
+                  duration: 1000
+                })
+                let addressInfo = wx.getStorageSync("address")
+                setTimeout(() => {
+                  core.pay(ret.wechat.payinfo, function (res) {
+                    console.log('$this.data.goodslist$this.data.goodslist', $this.data.goodslist)
+
+                    if (res.errMsg == "requestPayment:ok") {
+                      $this.data.goodslist.forEach((item, index) => {
+                        console.log(index, item)
+                      });
+                      wx.navigateTo({
+                        url: '/pages/order/detail/index?id=' + ret.orderid
+                      });
+                    }
+                  }, function () {
+                    wx.navigateTo({
+                      url: '/pages/order/detail/index?id=' + ret.orderid
+                    });
+                  });
+                }, 1000)
+              }
+
+            }
+
+          })
+        })
       }
-
     })
   },
   dataChange: function(e) {

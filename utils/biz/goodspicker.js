@@ -45,126 +45,243 @@ module.exports = {
   },
   //立即购买
   buyNow: function (event,$this,page) {
+    core.isToken(function (istoken) {
+      let tokenData = istoken.data.token
+      if (tokenData == 1) {
+        var optionid = $this.data.optionid;
+        var hasOption = $this.data.goods.hasoption;
+        var diydata = $this.data.diyform;
+        var giftid = $this.data.giftid;
 
-    var optionid = $this.data.optionid;
-    var hasOption = $this.data.goods.hasoption;
-    console.log(hasOption);
-    var diydata = $this.data.diyform;
-    var giftid = $this.data.giftid;
-    
-    //判断周期购
-    if($this.data.goods.type == 9){
-      var selectDate = $this.data.checkedDate / 1000;
-    }
+        //判断周期购
+        if ($this.data.goods.type == 9) {
+          var selectDate = $this.data.checkedDate / 1000;
+        }
 
-    //是否有规格
-    if (hasOption > 0 && !optionid) {
-      console.log(hasOption," 0"+ optionid);
-      foxui.toast($this, "请选择规格");
-      return;
-    }
-    console.log(optionid);
-    //是否存在自定义表单
-    if (diydata && diydata.fields.length > 0) {
-  
-      var verify = diyform.verify($this,diydata);
-      if (!verify){
-        return;
-      } else {
-        console.log(diydata.f_data)
-        core.post('order/create/diyform',{
-          id: $this.data.id,
-          diyformdata: diydata.f_data
-        },function (ret) {
-          if ($this.data.goods.isgift == 0 || page!='goods_detail') {
-            wx.redirectTo({
-              url: '/pages/order/create/index?id=' + $this.data.id + '&total=' + $this.data.total + '&optionid=' + optionid + '&gdid=' + ret.gdid + '&selectDate=' + selectDate,
+        //是否有规格
+        if (hasOption > 0 && !optionid) {
+          console.log(hasOption, " 0" + optionid);
+          foxui.toast($this, "请选择规格");
+          return;
+        }
+        console.log(optionid);
+        //是否存在自定义表单
+        if (diydata && diydata.fields.length > 0) {
+
+          var verify = diyform.verify($this, diydata);
+          if (!verify) {
+            return;
+          } else {
+            console.log(diydata.f_data)
+            core.post('order/create/diyform', {
+              id: $this.data.id,
+              diyformdata: diydata.f_data
+            }, function (ret) {
+              if ($this.data.goods.isgift == 0 || page != 'goods_detail') {
+                wx.redirectTo({
+                  url: '/pages/order/create/index?id=' + $this.data.id + '&total=' + $this.data.total + '&optionid=' + optionid + '&gdid=' + ret.gdid + '&selectDate=' + selectDate,
+                });
+              } else {
+                if (giftid != "" || $this.data.goods.gifts.length == 1) {//如果选择了赠品或者赠品只有一个
+                  if ($this.data.goods.gifts.length == 1) {
+                    giftid = $this.data.goods.gifts[0].id//如果赠品只有一个  赋值giftid
+                  }
+                  wx.redirectTo({
+                    url: '/pages/order/create/index?id=' + $this.data.id + '&total=' + $this.data.total + '&optionid=' + optionid + '&gdid=' + ret.gdid + '&giftid=' + giftid,
+                  });
+                } else {
+                  foxui.toast($this, "请选择赠品");
+                }
+              }
+            });
+          }
+        } else {
+
+          if ($this.data.goods.isgift == 0 || page != 'goods_detail') {
+            wx.navigateTo({
+              url: '/pages/order/create/index?id=' + $this.data.id + '&total=' + $this.data.total + '&optionid=' + optionid + '&selectDate=' + selectDate,
             });
           } else {
-              if (giftid != "" || $this.data.goods.gifts.length == 1) {//如果选择了赠品或者赠品只有一个
-                if ($this.data.goods.gifts.length == 1) {
-                  giftid = $this.data.goods.gifts[0].id//如果赠品只有一个  赋值giftid
+            if (giftid != "" || $this.data.goods.gifts.length == 1) {
+              if ($this.data.goods.gifts.length == 1) {
+                giftid = $this.data.goods.gifts[0].id
+              }
+              wx.navigateTo({
+                url: '/pages/order/create/index?id=' + $this.data.id + '&total=' + $this.data.total + '&optionid=' + optionid + '&giftid=' + giftid,
+              });
+            } else {
+              foxui.toast($this, "请选择赠品");
+            }
+          }
+        }
+      } else {
+        core.getToken(function (getToken) {
+          var optionid = $this.data.optionid;
+          var hasOption = $this.data.goods.hasoption;
+          var diydata = $this.data.diyform;
+          var giftid = $this.data.giftid;
+
+          //判断周期购
+          if ($this.data.goods.type == 9) {
+            var selectDate = $this.data.checkedDate / 1000;
+          }
+
+          //是否有规格
+          if (hasOption > 0 && !optionid) {
+            console.log(hasOption, " 0" + optionid);
+            foxui.toast($this, "请选择规格");
+            return;
+          }
+          console.log(optionid);
+          //是否存在自定义表单
+          if (diydata && diydata.fields.length > 0) {
+
+            var verify = diyform.verify($this, diydata);
+            if (!verify) {
+              return;
+            } else {
+              console.log(diydata.f_data)
+              core.post('order/create/diyform', {
+                id: $this.data.id,
+                diyformdata: diydata.f_data
+              }, function (ret) {
+                if ($this.data.goods.isgift == 0 || page != 'goods_detail') {
+                  wx.redirectTo({
+                    url: '/pages/order/create/index?id=' + $this.data.id + '&total=' + $this.data.total + '&optionid=' + optionid + '&gdid=' + ret.gdid + '&selectDate=' + selectDate,
+                  });
+                } else {
+                  if (giftid != "" || $this.data.goods.gifts.length == 1) {//如果选择了赠品或者赠品只有一个
+                    if ($this.data.goods.gifts.length == 1) {
+                      giftid = $this.data.goods.gifts[0].id//如果赠品只有一个  赋值giftid
+                    }
+                    wx.redirectTo({
+                      url: '/pages/order/create/index?id=' + $this.data.id + '&total=' + $this.data.total + '&optionid=' + optionid + '&gdid=' + ret.gdid + '&giftid=' + giftid,
+                    });
+                  } else {
+                    foxui.toast($this, "请选择赠品");
+                  }
                 }
-                wx.redirectTo({
-                  url: '/pages/order/create/index?id=' + $this.data.id + '&total=' + $this.data.total + '&optionid=' + optionid + '&gdid=' + ret.gdid + '&giftid=' + giftid,
+              });
+            }
+          } else {
+
+            if ($this.data.goods.isgift == 0 || page != 'goods_detail') {
+              wx.navigateTo({
+                url: '/pages/order/create/index?id=' + $this.data.id + '&total=' + $this.data.total + '&optionid=' + optionid + '&selectDate=' + selectDate,
+              });
+            } else {
+              if (giftid != "" || $this.data.goods.gifts.length == 1) {
+                if ($this.data.goods.gifts.length == 1) {
+                  giftid = $this.data.goods.gifts[0].id
+                }
+                wx.navigateTo({
+                  url: '/pages/order/create/index?id=' + $this.data.id + '&total=' + $this.data.total + '&optionid=' + optionid + '&giftid=' + giftid,
                 });
-              }else{
+              } else {
                 foxui.toast($this, "请选择赠品");
               }
+            }
           }
-        });
+        })
       }
-    } else {
-      
-      if ($this.data.goods.isgift == 0 || page != 'goods_detail'){
-        wx.navigateTo({
-          url: '/pages/order/create/index?id=' + $this.data.id + '&total=' + $this.data.total + '&optionid=' + optionid + '&selectDate=' + selectDate,
-        });
-      }else{
-        if (giftid != "" || $this.data.goods.gifts.length == 1) {
-          if ($this.data.goods.gifts.length == 1) {
-            giftid = $this.data.goods.gifts[0].id
-          }
-          wx.navigateTo({
-            url: '/pages/order/create/index?id=' + $this.data.id + '&total=' + $this.data.total + '&optionid=' + optionid + '&giftid=' + giftid,
-          });
-        } else {
-          foxui.toast($this, "请选择赠品");
-        }
-      }
-    }
+    })
   },
   // //加入购物车
   getCart: function (event,$this){
-    var optionid = $this.data.optionid;
-    console.log($this.data, 'eventeventeventeventeventevent', event);
-    
-    var hasOption = $this.data.goods.hasoption;
-    var diydata = $this.data.diyform;
+    core.isToken(function (istoken) {
+      let tokenData = istoken.data.token
+      if (tokenData == 1) {
+        var optionid = $this.data.optionid;
+        console.log($this.data, 'eventeventeventeventeventevent', event);
+
+        var hasOption = $this.data.goods.hasoption;
+        var diydata = $this.data.diyform;
 
 
-    //是否有规格
-    if (hasOption > 0 && !optionid) {
-      foxui.toast($this, "请选择规格");
-      return;
-    }
-    if ($this.data.quickbuy) {
-      console.log('quickbuy');
-      
-      
-      //是否存在自定义表单
-      if (diydata && diydata.fields.length > 0) {
-        var verify = diyform.verify($this, diydata);
-        if (!verify) {
+        //是否有规格
+        if (hasOption > 0 && !optionid) {
+          foxui.toast($this, "请选择规格");
           return;
-        } else {
-          // 设置值存储自定义表单
-          $this.setData({
-            formdataval: {
-              diyformdata: diydata.f_data
-            }
-          })
-          console.log($this.data.formdataval)
         }
-      }
+        if ($this.data.quickbuy) {
+          console.log('quickbuy');
 
 
-      $this.addCartquick(optionid, $this.data.total)
-      
-    } else {
-      
-      //是否存在自定义表单
-      if (diydata && diydata.fields.length > 0) {
-        var verify = diyform.verify($this, diydata);
-        if (!verify) {
-          return;
+          //是否存在自定义表单
+          if (diydata && diydata.fields.length > 0) {
+            var verify = diyform.verify($this, diydata);
+            if (!verify) {
+              return;
+            } else {
+              // 设置值存储自定义表单
+              $this.setData({
+                formdataval: {
+                  diyformdata: diydata.f_data
+                }
+              })
+              console.log($this.data.formdataval)
+            }
+          }
+
+
+          $this.addCartquick(optionid, $this.data.total)
+
         } else {
-          // 先提交至diyform_temp
-          core.post('order/create/diyform', {
-            id: $this.data.id,
-            diyformdata: diydata.f_data
-          }, function (ret) {
-            console.log($this.data,'ret',ret)
+
+          //是否存在自定义表单
+          if (diydata && diydata.fields.length > 0) {
+            var verify = diyform.verify($this, diydata);
+            if (!verify) {
+              return;
+            } else {
+              // 先提交至diyform_temp
+              core.post('order/create/diyform', {
+                id: $this.data.id,
+                diyformdata: diydata.f_data
+              }, function (ret) {
+                console.log($this.data, 'ret', ret)
+                let useropenid = 'sns_wa_' + app.getCache('userinfo_openid')
+                let data = {
+                  id: $this.data.id,
+                  total: $this.data.total,
+                  optionid: optionid,
+                  diyformdata: diydata.f_data,
+                  openid: useropenid
+                }
+                let jsonData = JSON.stringify(data)
+                data = Crypto.CryptoJS.encrypt(jsonData, Crypto.keyCrypto.key, Crypto.keyCrypto.iv)
+
+
+                core.post('member/cart/add', {
+                  crydata: data
+                }, function (ret) {
+                  // app.sensors.track('SubmitToCart', {
+                  //   product_id: $this.data.id,
+                  //   submit_type: "direct",
+                  //   goods_name: ""
+                  // });
+                  if (ret.error == 0) {
+                    $this.setData({
+                      'goods.carttotal': ret.carttotal,
+                      active: '',
+                      slider: 'out',
+                      isSelected: true,
+                      tempname: ''
+                    });
+                    // foxui.toast($this, "添加成功");
+                    wx.showToast({
+                      icon: 'success',
+                      title: '添加购物车成功'
+                    });
+                  } else {
+                    foxui.toast($this, ret.message);
+                    return;
+                  }
+                });
+              });
+            }
+          } else {
+            console.log('添加')
             let useropenid = 'sns_wa_' + app.getCache('userinfo_openid')
             let data = {
               id: $this.data.id,
@@ -176,86 +293,179 @@ module.exports = {
             let jsonData = JSON.stringify(data)
             data = Crypto.CryptoJS.encrypt(jsonData, Crypto.keyCrypto.key, Crypto.keyCrypto.iv)
 
-
             core.post('member/cart/add', {
               crydata: data
             }, function (ret) {
-                // app.sensors.track('SubmitToCart', {
-                //   product_id: $this.data.id,
-                //   submit_type: "direct",
-                //   goods_name: ""
-                // });
+              // app.sensors.track('SubmitToCart', {
+              //   product_id: $this.data.id,
+              //   submit_type: "direct",
+              //   goods_name: ""
+              // });
+
               if (ret.error == 0) {
+                console.log(ret)
+                // foxui.toast($this, "添加成功");
+                wx.showToast({
+                  icon: 'success',
+                  title: '添加购物车成功',
+                });
+                var tempdata = $this.data.goods;
                 $this.setData({
                   'goods.carttotal': ret.carttotal,
                   active: '',
                   slider: 'out',
                   isSelected: true,
-                  tempname: ''
+                  tempname: '',
+                  goods: tempdata,
+                  cartcount: ret.cartcount
                 });
-                // foxui.toast($this, "添加成功");
-                wx.showToast({
-                  icon: 'success',
-                  title: '添加购物车成功'
-                });
-              }else{
+              } else {
                 foxui.toast($this, ret.message);
                 return;
               }
             });
-          });
+          }
         }
       } else {
-        console.log('添加')
-        let useropenid = 'sns_wa_' + app.getCache('userinfo_openid')
-        let data = {
-          id: $this.data.id,
-          total: $this.data.total,
-          optionid: optionid,
-          diyformdata: diydata.f_data,
-          openid: useropenid
-        }
-        let jsonData = JSON.stringify(data)
-        data = Crypto.CryptoJS.encrypt(jsonData, Crypto.keyCrypto.key, Crypto.keyCrypto.iv)
+        core.getToken(function (getToken) {
+          var optionid = $this.data.optionid;
+          console.log($this.data, 'eventeventeventeventeventevent', event);
 
-        core.post('member/cart/add', {
-          crydata: data
-        }, function (ret) {
-          // app.sensors.track('SubmitToCart', {
-          //   product_id: $this.data.id,
-          //   submit_type: "direct",
-          //   goods_name: ""
-          // });
+          var hasOption = $this.data.goods.hasoption;
+          var diydata = $this.data.diyform;
 
-          if (ret.error == 0) {
-            console.log(ret)
-            // foxui.toast($this, "添加成功");
-            wx.showToast({
-              icon: 'success',
-              title: '添加购物车成功',
-            });
-            var tempdata = $this.data.goods;
-            $this.setData({ 
-              'goods.carttotal': ret.carttotal, 
-              active: '', 
-              slider: 'out', 
-              isSelected: true, 
-              tempname: '',
-              goods: tempdata,
-              cartcount: ret.cartcount
-            });
-          }else{
-            foxui.toast($this, ret.message);
+
+          //是否有规格
+          if (hasOption > 0 && !optionid) {
+            foxui.toast($this, "请选择规格");
             return;
           }
-        });
+          if ($this.data.quickbuy) {
+            console.log('quickbuy');
+
+
+            //是否存在自定义表单
+            if (diydata && diydata.fields.length > 0) {
+              var verify = diyform.verify($this, diydata);
+              if (!verify) {
+                return;
+              } else {
+                // 设置值存储自定义表单
+                $this.setData({
+                  formdataval: {
+                    diyformdata: diydata.f_data
+                  }
+                })
+                console.log($this.data.formdataval)
+              }
+            }
+
+
+            $this.addCartquick(optionid, $this.data.total)
+
+          } else {
+
+            //是否存在自定义表单
+            if (diydata && diydata.fields.length > 0) {
+              var verify = diyform.verify($this, diydata);
+              if (!verify) {
+                return;
+              } else {
+                // 先提交至diyform_temp
+                core.post('order/create/diyform', {
+                  id: $this.data.id,
+                  diyformdata: diydata.f_data
+                }, function (ret) {
+                  console.log($this.data, 'ret', ret)
+                  let useropenid = 'sns_wa_' + app.getCache('userinfo_openid')
+                  let data = {
+                    id: $this.data.id,
+                    total: $this.data.total,
+                    optionid: optionid,
+                    diyformdata: diydata.f_data,
+                    openid: useropenid
+                  }
+                  let jsonData = JSON.stringify(data)
+                  data = Crypto.CryptoJS.encrypt(jsonData, Crypto.keyCrypto.key, Crypto.keyCrypto.iv)
+
+
+                  core.post('member/cart/add', {
+                    crydata: data
+                  }, function (ret) {
+                    // app.sensors.track('SubmitToCart', {
+                    //   product_id: $this.data.id,
+                    //   submit_type: "direct",
+                    //   goods_name: ""
+                    // });
+                    if (ret.error == 0) {
+                      $this.setData({
+                        'goods.carttotal': ret.carttotal,
+                        active: '',
+                        slider: 'out',
+                        isSelected: true,
+                        tempname: ''
+                      });
+                      // foxui.toast($this, "添加成功");
+                      wx.showToast({
+                        icon: 'success',
+                        title: '添加购物车成功'
+                      });
+                    } else {
+                      foxui.toast($this, ret.message);
+                      return;
+                    }
+                  });
+                });
+              }
+            } else {
+              console.log('添加')
+              let useropenid = 'sns_wa_' + app.getCache('userinfo_openid')
+              let data = {
+                id: $this.data.id,
+                total: $this.data.total,
+                optionid: optionid,
+                diyformdata: diydata.f_data,
+                openid: useropenid
+              }
+              let jsonData = JSON.stringify(data)
+              data = Crypto.CryptoJS.encrypt(jsonData, Crypto.keyCrypto.key, Crypto.keyCrypto.iv)
+
+              core.post('member/cart/add', {
+                crydata: data
+              }, function (ret) {
+                // app.sensors.track('SubmitToCart', {
+                //   product_id: $this.data.id,
+                //   submit_type: "direct",
+                //   goods_name: ""
+                // });
+
+                if (ret.error == 0) {
+                  console.log(ret)
+                  // foxui.toast($this, "添加成功");
+                  wx.showToast({
+                    icon: 'success',
+                    title: '添加购物车成功',
+                  });
+                  var tempdata = $this.data.goods;
+                  $this.setData({
+                    'goods.carttotal': ret.carttotal,
+                    active: '',
+                    slider: 'out',
+                    isSelected: true,
+                    tempname: '',
+                    goods: tempdata,
+                    cartcount: ret.cartcount
+                  });
+                } else {
+                  foxui.toast($this, ret.message);
+                  return;
+                }
+              });
+            }
+          }
+        })
       }
-    }
-    
-
-
-
-    
+    })
   },
   selectpicker: function (e, $this, page, modeltakeout) {
     var that=this;

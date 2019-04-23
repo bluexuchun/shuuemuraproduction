@@ -73,8 +73,22 @@ Page({
             app.setCache('userinfo', res.detail.userInfo, 7200);
             app.setCache('userinfo_openid', res.detail.userInfo.openid);
             app.setCache('userinfo_id', auth_res.id);
+            // let pages = getCurrentPages()
+            // console.log(pages[pages.length - 1])
+            // let currentPage = pages[pages.length-1].route
+            // if(currentPage == 'pages/message/auth/index'){
+            //   console.log('currentPage:'+currentPage)
+            //   wx.reLaunch({
+            //     url: '/pages/index/index',
+            //   })
+            // }else{
+            //   console.log('返回')
+            //   wx.navigateBack({
+            //     delta:1
+            //   })
+            // }
             // wx.navigateBack({
-            //   delta:2
+            //   delta:1
             // })
             wx.reLaunch({
               url: '/pages/index/index',

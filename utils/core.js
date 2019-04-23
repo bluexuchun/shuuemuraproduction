@@ -69,15 +69,15 @@ module.exports = {
                 if (res.errMsg == 'request:ok')
                     if (typeof(callback) === 'function') {
                         app.setCache('authkey',res.data.authkey || '');
-                        if (typeof (res.data.sysset) !== 'undefined') {
-                          if (res.data.sysset.isclose == 1) {
-                            wx.redirectTo({
-                              url: '/pages/message/auth/index?close=1&text=' + res.data.sysset.closetext
-                            })
-                            return;
-                          }
-                          app.setCache("sysset", res.data.sysset);
-                        }
+                        // if (typeof (res.data.sysset) !== 'undefined') {
+                        //   if (res.data.sysset.isclose == 1) {
+                        //     wx.redirectTo({
+                        //       url: '/pages/message/auth/index?close=1&text=' + res.data.sysset.closetext
+                        //     })
+                        //     return;
+                        //   }
+                        //   app.setCache("sysset", res.data.sysset);
+                        // }
                         callback(res.data);
                         
                     }
@@ -93,18 +93,10 @@ module.exports = {
         wx.request(op);
     },
     post: function (routes, args, callback, hasloading, session) {
-      if(routes == 'wxapp/login' || routes == 'wxapp/auth'){
-        this.json(routes, args, callback, hasloading, true, session)
-      }else{
-        this.getToken(routes, args, callback, hasloading, true, session)
-      }
+      this.json(routes, args, callback, hasloading, true, session)
     },
     get: function (routes, args, callback, hasloading, session) {
-      if (routes == 'wxapp/login' || routes == 'wxapp/auth') {
-        this.json(routes, args, callback, hasloading, true, session)
-      } else {
-        this.getToken(routes, args, callback, hasloading, true, session)
-      }
+      this.json(routes, args, callback, hasloading, true, session)
     },
     getDistanceByLnglat: function (lng1, lat1, lng2, lat2) {
         function rad(d) {
@@ -299,9 +291,31 @@ module.exports = {
     },
 
     /**
+     * 校验token是否失效
+     */
+    isToken: function(callback){
+      let app = getApp()
+      let uid = app.getCache('userinfo').id
+      let openid = app.getCache('userinfo_openid')
+      let _this = this
+      let config = getApp().getConfig();
+      
+      wx.request({
+        url: config.api + '&r=wxapp.get_token_check',
+        method:'POST',
+        data:{
+          uid:uid,
+          openid: 'sns_wa_' + openid
+        },
+        success:function(res_result){
+          callback(res_result)
+        }
+      })
+    },
+    /**
      * 获取最新的token
      */
-    getToken: function (routes, args, callback, hasloading, session) {
+    getToken: function (callback) {
       let app = getApp()
       let uid = app.getCache('userinfo').id
       let openid = app.getCache('userinfo_openid')
@@ -319,7 +333,7 @@ module.exports = {
         success: function (token_res) {
           if (token_res.data.error == 0) {
             wx.setStorageSync("tokenid", token_res.data.token)
-            _this.json(routes, args, callback, hasloading, true, session)
+            callback(token_res)
           }
         }
       })

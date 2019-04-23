@@ -27,28 +27,25 @@ Page({
   onLoad: function (options) {
     app.checkAuth();
     var $this = this;
-    core.get('black', {}, function (res) {
-      if (res.isblack) {
-        wx.showModal({
-          title: '无法访问',
-          content: '您在商城的黑名单中，无权访问！',
-          success: function (res) {
-            if (res.confirm) {
-              $this.close()
-            }
-            if (res.cancel) {
-              $this.close()
-            }
-          }
-        })
-      }
-    });
     app.url(options);
   },
   onPullDownRefresh: function () {
     wx.stopPullDownRefresh()
   },
-  onShow: function () {
+  onShow: function (){
+    let _this = this
+    core.isToken(function (istoken) {
+      let tokenData = istoken.data.token
+      if (tokenData == 1) {
+        _this.initFunction()
+      } else {
+        core.getToken(function (getToken) {
+          _this.initFunction()
+        })
+      }
+    }) 
+  },
+  initFunction(){
     this.get_cart();
     var $this = this;
     $this.setData({
@@ -124,17 +121,20 @@ Page({
         if (!$.isEmptyObject(ids)) {
           console.log()
           core.confirm('是否确认删除该商品?', function () {
-            core.post('member/cart/remove', { ids: [ids] }, function (data) {
-              $this.get_cart();
-            });
-
-            // app.sensors.track('CartManipulated', {
-            //   product_id: ids,
-            //   goods_name: $this.data.list[index].title,
-            //   submit_type: "addGoods",
-
-            // });
-
+            core.isToken(function (istoken) {
+              let tokenData = istoken.data.token
+              if (tokenData == 1) {
+                core.post('member/cart/remove', { ids: [ids] }, function (data) {
+                  $this.get_cart();
+                });
+              } else {
+                core.getToken(function (getToken) {
+                  core.post('member/cart/remove', { ids: [ids] }, function (data) {
+                    $this.get_cart();
+                  });
+                })
+              }
+            })
           });
         } break;
       case 'pay':
@@ -167,25 +167,42 @@ Page({
     if ((val == 1 && dataset.value == 1 && e.target.dataset.action == 'minus') || (dataset.value == dataset.max && e.target.dataset.action == 'plus')) {
       return;
     }
-    core.post('member/cart/update', { id: id, optionid: optionid, total: val }, function (data) {
-      $this.get_cart();
-    });
-    // app.sensors.track('CartManipulated', {
-    //   product_id: id,
-    //   goods_name: $this.data.list[index].title,
-    //   submit_type: "addGoods",
-
-    // });
+    core.isToken(function (istoken) {
+      let tokenData = istoken.data.token
+      if (tokenData == 1) {
+        core.post('member/cart/update', { id: id, optionid: optionid, total: val }, function (data) {
+          $this.get_cart();
+        });
+      } else {
+        core.getToken(function (getToken) {
+          core.post('member/cart/update', { id: id, optionid: optionid, total: val }, function (data) {
+            $this.get_cart();
+          });
+        })
+      }
+    })
+    
   },
   selected: function (e) {
     core.loading();
     console.log(e.target);
     var $this = this, dataset = core.pdata(e), id = dataset.id, select = dataset.select == 1 ? 0 : 1;
-    core.post('member/cart/select', { id: id, select: select }, function (data) {
-      $this.get_cart();
-      core.hideLoading();
-    });
-
+    core.isToken(function (istoken) {
+      let tokenData = istoken.data.token
+      if (tokenData == 1) {
+        core.post('member/cart/select', { id: id, select: select }, function (data) {
+          $this.get_cart();
+          core.hideLoading();
+        });
+      } else {
+        core.getToken(function (getToken) {
+          core.post('member/cart/select', { id: id, select: select }, function (data) {
+            $this.get_cart();
+            core.hideLoading();
+          });
+        })
+      }
+    })
   },
   allgoods: function (check) {
     var edit_list = this.data.edit_list;

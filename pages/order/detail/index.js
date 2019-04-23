@@ -31,22 +31,35 @@ Page({
         app.url(options);
     },
     onShow:function () {
-        var $this = this;
-        $this.get_list();
-        var isIpx = app.getCache('isIpx');
-        if (isIpx) {
-          $this.setData({
-            isIpx: true,
-            iphonexnavbar: 'fui-iphonex-navbar',
-            paddingb: 'padding-b'
-          })
+      var $this = this;
+      core.isToken(function (istoken) {
+        let tokenData = istoken.data.token
+        if (tokenData == 1) {
+          $this.initFunction()
         } else {
-          $this.setData({
-            isIpx: false,
-            iphonexnavbar: '',
-            paddingb: ''
+          core.getToken(function (getToken) {
+            $this.initFunction()
           })
         }
+      })
+    },
+    initFunction:function(){
+      var $this = this;
+      $this.get_list();
+      var isIpx = app.getCache('isIpx');
+      if (isIpx) {
+        $this.setData({
+          isIpx: true,
+          iphonexnavbar: 'fui-iphonex-navbar',
+          paddingb: 'padding-b'
+        })
+      } else {
+        $this.setData({
+          isIpx: false,
+          iphonexnavbar: '',
+          paddingb: ''
+        })
+      }
     },
     get_list: function () {
       var $this = this;
@@ -127,26 +140,17 @@ Page({
         core.phone(e);
     },
     cancel:function (e) {
-        order.cancel(this.data.options.id,e.detail.value,'/pages/order/detail/index?id='+this.data.options.id);
-      // var goodsList = new Array();
-      // this.data.list.forEach((item) => {
-      //   goodsList.push(item.goodsSn);
-      // })
-      // app.sensors.track('OrderCancel', {
-      //   order_id: this.data.nogift[0].id,
-      //   product_id_list: "",
-      //   order_name: this.data.nogift[0].title,
-      //   order_phone: this.data.address.mobile,
-      //   order_province: this.data.address.province,
-      //   order_city: this.data.address.city,
-      //   order_district: this.data.address.area,
-      //   order_address: this.data.address.address,
-      //   order_price: this.data.order.price,
-      //   transp_cost: this.data.order.dispatchprice,
-      //   service_cost: this.data.sercharge,
-      // });
-
-
+      let _this = this
+      core.isToken(function (istoken) {
+        let tokenData = istoken.data.token
+        if (tokenData == 1) {
+          order.cancel(_this.data.options.id, e.detail.value, '/pages/order/detail/index?id=' + _this.data.options.id);
+        } else {
+          core.getToken(function (getToken) {
+            order.cancel(_this.data.options.id, e.detail.value, '/pages/order/detail/index?id=' + _this.data.options.id);
+          })
+        }
+      })  
     },
     delete:function (e) {
         var type = core.data(e).type;
@@ -167,19 +171,40 @@ Page({
     pay: function (e) {
       var $this = this;
       let id =  e.currentTarget.dataset.id;
-      core.post('order/pay/checkstock', { id: id }, function (check_json) {
-        if (check_json.error != 0) {
-          foxui.toast($this, check_json.message);
-          return;
-        }
-        console.log($this.data.lists.payinfo.payinfo)
-        core.pay($this.data.lists.payinfo.payinfo, function (res) {
-          if (res.errMsg == "requestPayment:ok") {
-            $this.get_list()
-          }
-        });
+      core.isToken(function (istoken) {
+        let tokenData = istoken.data.token
+        if (tokenData == 1) {
+          core.post('order/pay/checkstock', { id: id }, function (check_json) {
+            if (check_json.error != 0) {
+              foxui.toast($this, check_json.message);
+              return;
+            }
+            console.log($this.data.lists.payinfo.payinfo)
+            core.pay($this.data.lists.payinfo.payinfo, function (res) {
+              if (res.errMsg == "requestPayment:ok") {
+                $this.get_list()
+              }
+            });
 
-      }, true, true)
+          }, true, true)
+        } else {
+          core.getToken(function (getToken) {
+            core.post('order/pay/checkstock', { id: id }, function (check_json) {
+              if (check_json.error != 0) {
+                foxui.toast($this, check_json.message);
+                return;
+              }
+              console.log($this.data.lists.payinfo.payinfo)
+              core.pay($this.data.lists.payinfo.payinfo, function (res) {
+                if (res.errMsg == "requestPayment:ok") {
+                  $this.get_list()
+                }
+              });
+
+            }, true, true)
+          })
+        }
+      })
     },
 
     checkexpress: function (e) {

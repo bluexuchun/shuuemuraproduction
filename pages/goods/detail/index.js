@@ -1083,10 +1083,24 @@ Page({
     });
   },
   onLoad: function(options) {
+    let _this = this
+    core.isToken(function (istoken) {
+      let tokenData = istoken.data.token
+      if (tokenData == 1) {
+        _this.initFunction(options)
+      } else {
+        core.getToken(function (getToken) {
+          console.log('123123')
+          _this.initFunction(options)
+        })
+      }
+    })
+  },
+  initFunction(options){
     var $this = this;
-    if(options.optionid){
+    if (options.optionid) {
       this.setData({
-        searchid:options.optionid
+        searchid: options.optionid
       })
     }
     var goodslist = 'goodsdetail';
@@ -1094,32 +1108,17 @@ Page({
       id: options.id,
       buytype: 'select'
     }
-    setTimeout(function(){
-      goodspicker.selectpicker(obj, $this, goodslist)
-    },300)
-    
+
+
     $this.setData({
       imgUrl: app.globalData.approot
     });
 
-    core.get('black', {}, function(res) {
-      if (res.isblack) {
-        wx.showModal({
-          title: '无法访问',
-          content: '您在商城的黑名单中，无权访问！',
-          success: function(res) {
-            if (res.confirm) {
-              this.close()
-            }
-            if (res.cancel) {
-              this.close()
-            }
-          }
-        })
-      }
-    });
+    setTimeout(function () {
+      goodspicker.selectpicker(obj, $this, goodslist)
+    }, 300)
 
-    diypage.get(this, 'goodsdetail', function(res) {
+    diypage.get(this, 'goodsdetail', function (res) {
       var diypage = res.diypage.items;
       for (var i in diypage) {
         if (diypage[i].id == 'copyright') {
@@ -1145,7 +1144,7 @@ Page({
     });
     app.url(options);
     wx.getSystemInfo({
-      success: function(result) {
+      success: function (result) {
         $this.setData({
           windowWidth: result.windowWidth,
           windowHeight: result.windowHeight
@@ -1156,14 +1155,14 @@ Page({
       uid: options.id
     })
 
-    
-    var userinfo = app.getUserInfo(function() {
+
+    var userinfo = app.getUserInfo(function () {
       $this.setData({
         options: options
       });
       //轮播适配高度
       wx.getSystemInfo({
-        success: function(result) {
+        success: function (result) {
           $this.setData({
             advWidth: result.windowWidth
           });
@@ -1176,18 +1175,17 @@ Page({
         showvideo: true
       });
       $this.getDetail(options);
-      setTimeout(function() {
+      setTimeout(function () {
         $this.setData({
           areas: app.getCache("cacheset").areas
         });
       }, 3000)
-    }, function() {
+    }, function () {
       wx.redirectTo({
         url: '/pages/message/auth/index'
       })
     });
   },
-
   show_cycelbuydate: function() {
     var $this = this;
     /*周期购时间选择器初始化*/

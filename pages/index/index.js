@@ -16,18 +16,7 @@ var goodspicker = app.requirejs('biz/goodspicker');
 var foxui = app.requirejs('foxui');
 var $ = app.requirejs('jquery');
 Page({
-    onPullDownRefresh: function (){
-     
-      var $this = this
-      diypage.get(this, 'home', function (res) {
-        $this.getDiypage(res)
-        if(res.error==0){
-          wx.stopPullDownRefresh()
-        } 
-      })
-
-    },
-    data: {
+  data: {
     	imgUrls: [
 	      'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1509963648306&di=1194f5980cccf9e5ad558dfb18e895ab&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F9c16fdfaaf51f3de87bbdad39ceef01f3a29797f.jpg',
 	      'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1509963737453&di=b1472a710a2c9ba30808fd6823b16feb&imgtype=0&src=http%3A%2F%2Fwww.qqzhi.com%2Fwenwen%2Fuploads%2Fpic.wenwen.soso.com%2Fp%2F20160830%2F20160830220016-586751007.jpg',
@@ -127,27 +116,50 @@ Page({
     wx.showLoading({
       title: '搜索中',
     })
-    core.get('goods/getlistbySearch', { keywords: keywords},function(res){
-      wx.hideLoading();
+    core.isToken(function (istoken) {
+      let tokenData = istoken.data.token
+      if (tokenData == 1) {
+        core.get('goods/getlistbySearch', { keywords: keywords }, function (res) {
+          wx.hideLoading();
 
-      if (res.total>0){
-        wx.navigateTo({
-          url: '/pages/goods/searchlist/searchlist?value='+that.data.searchValue,
+          if (res.total > 0) {
+            wx.navigateTo({
+              url: '/pages/goods/searchlist/searchlist?value=' + that.data.searchValue,
+            })
+          } else {
+            wx.showToast({
+              title: '暂无搜索结果',
+              icon: 'none',
+              image: '/static/images/icon_error.png',
+              duration: 2000
+            })
+          }
         })
-        }else{
-        wx.showToast({
-          title: '暂无搜索结果',
-          icon: 'none',
-          image:'/static/images/icon_error.png',
-          duration: 2000
+      } else {
+        core.getToken(function (getToken) {
+          core.get('goods/getlistbySearch', { keywords: keywords }, function (res) {
+            wx.hideLoading();
+
+            if (res.total > 0) {
+              wx.navigateTo({
+                url: '/pages/goods/searchlist/searchlist?value=' + that.data.searchValue,
+              })
+            } else {
+              wx.showToast({
+                title: '暂无搜索结果',
+                icon: 'none',
+                image: '/static/images/icon_error.png',
+                duration: 2000
+              })
+            }
+          })
         })
-        }
+      }
     })
+    
     var arr1 = [{ a: 1, b: 2 }];
     arr1= JSON.stringify(arr1);
     var that=this;
-   
-
   },
 
   // dingzhifuwu:function(e){
@@ -205,119 +217,35 @@ Page({
         });
     },
     onLoad: function (options) {
-      console.log(JSON.stringify(options.value));
-      
-      // if (app.globalDataClose.flag) {//如果flag为true，退出 
-      //   wx.navigateBack({
-      //     delta: 1
-      //   })
-      // } 
-
       options = options || {};
     	var $this = this;
       $this.setData({ imgUrl: app.globalData.approot});
-
-      core.get('black', {}, function (res) {
-        console.log(res);
-        if (res.isblack) {
-          wx.showModal({
-            title: '无法访问',
-            content: '您在商城的黑名单中，无权访问！',
-            success: function (res) {
-              if (res.confirm) {
-                $this.close()
-              }
-              if (res.cancel) {
-                $this.close()
-              }
-            }
+      // 处理扫码scene
+      var scene = decodeURIComponent(options.scene);
+      if (!options.id && scene) {
+        var sceneObj = core.str2Obj(scene);
+        options.id = sceneObj.id;
+        if(sceneObj.mid){
+          options.mid = sceneObj.mid;
+            app.setCache('usermid', sceneObj)
+        }
+      }
+      setTimeout(function () {
+        $this.setData({ areas: app.getCache("cacheset").areas });
+      }, 3000)
+      app.url(options);
+      $this.setData({
+        cover: true,
+        showvideo:false
+      });
+      wx.getSystemInfo({
+        success: function (res) {
+          var swiperheight = res.windowWidth/ 1.7
+          $this.setData({
+            swiperheight:swiperheight
           })
         }
       });
-
-        // 处理扫码scene
-        var scene = decodeURIComponent(options.scene);
-        if (!options.id && scene) {
-          var sceneObj = core.str2Obj(scene);
-          options.id = sceneObj.id;
-          if(sceneObj.mid){
-            options.mid = sceneObj.mid;
-             app.setCache('usermid', sceneObj)
-          }
-        }
-        setTimeout(function () {
-          $this.setData({ areas: app.getCache("cacheset").areas });
-        }, 3000)
-        app.url(options);
-        diypage.get(this,'home', function(res){
-          $this.getDiypage(res)
-        	/*启动广告*/
-          if ($this.data.startadv == undefined || $this.data.startadv == ''){
-        		return
-        	}
-        	if($this.data.startadv.status == 0 || $this.data.startadv == ''){
-        		wx.getSetting({
-		    		success: function(res) {
-		    			var limits = res.authSetting['scope.userInfo'];
-		    			if(limits){
-		        			$this.get_nopayorder();
-		        			return
-		        		}
-		    	  	}
-		    	})
-        	}
-        	
-          var params = $this.data.startadv.params;
-          if( params.style == 'default'){
-            var timer = params.autoclose;
-          function count_down(that) {
-            $this.setData({clock: timer});
-            if (timer <= 0) {
-              $this.setData({adveradmin: false});
-              return;
-            }
-            setTimeout(function () {
-              timer -= 1;
-              count_down(that);
-            }, 1000)
-          }
-              count_down($this);
-          } 
-	    	
-          if(params.showtype == 1){
-            var showtime = params.showtime;
-            var countdown = showtime*1000*60;
-            var startadvtime = app.getCache('startadvtime');
-            var nowtime = + new Date();
-            var adveradmin = true;
-            $this.setData({adveradmin: true})
-            if(startadvtime){
-              if((nowtime - startadvtime) < countdown){
-                adveradmin = false;
-              }
-            }
-            $this.setData({adveradmin: adveradmin});
-            if(adveradmin){
-              app.setCache('startadvtime', nowtime);
-            }
-          }
-	    	  var advstatus = $this.data.startadv.status;
-       
-       });
-        $this.setData({
-          cover: true,
-          showvideo:false
-        });
-        wx.getSystemInfo({
-          success: function (res) {
-            var swiperheight = res.windowWidth/ 1.7
-            $this.setData({
-              swiperheight:swiperheight
-            })
-          }
-        });
-        //获取未支付订单信息
-        //$this.get_nopayorder();
     },
     
     onHide: function(){
@@ -325,41 +253,133 @@ Page({
     },
     
     onShow: function () {
-    	var $this = this;
-      	var res = wx.getSystemInfoSync()
-        var sysset = app.getCache('sysset');
-        $this.getShop();
-        $this.getRecommand();
-        getApp().checkAuth();
-        $this.get_hasnewcoupon();
-        $this.get_cpinfos();
-        wx.getSetting({
-            success: function(res) {
-               console.log('授权',res)
-              var limits = res.authSetting['scope.userInfo'];
-              $this.setData({ limits: limits })	
+      let _this = this
+    	core.isToken(function(istoken){
+        let tokenData = istoken.data.token
+        if(tokenData == 1){
+          _this.initFunction()
+        }else{
+          core.getToken(function(getToken){
+            _this.initFunction()
+          })
+        }
+      })
+    },
+
+    onPullDownRefresh: function () {
+      var $this = this
+      core.isToken(function (istoken) {
+        let tokenData = istoken.data.token
+        if (tokenData == 1) {
+          diypage.get($this, 'home', function (res) {
+            $this.getDiypage(res)
+            if (res.error == 0) {
+              wx.stopPullDownRefresh()
             }
           })
-		
-        var pagetitle = sysset.shopname || '商城首页';
-        if ($this.data.pages){
-          if($this.data.pages.title!=''){
-            pagetitle = $this.data.diytitle;
+        } else {
+          core.getToken(function (getToken) {
+            diypage.get($this, 'home', function (res) {
+              $this.getDiypage(res)
+              if (res.error == 0) {
+                wx.stopPullDownRefresh()
+              }
+            })
+          })
+        }
+      })
+    },
+
+    initFunction:function(){
+      var $this = this;
+      var res = wx.getSystemInfoSync()
+      var sysset = app.getCache('sysset');
+      $this.getShop();
+      $this.getRecommand();
+      getApp().checkAuth();
+      $this.get_hasnewcoupon();
+      $this.get_cpinfos();
+      diypage.get(this, 'home', function (res) {
+        $this.getDiypage(res)
+        /*启动广告*/
+        if ($this.data.startadv == undefined || $this.data.startadv == '') {
+          return
+        }
+        if ($this.data.startadv.status == 0 || $this.data.startadv == '') {
+          wx.getSetting({
+            success: function (res) {
+              var limits = res.authSetting['scope.userInfo'];
+              if (limits) {
+                $this.get_nopayorder();
+                return
+              }
+            }
+          })
+        }
+
+        var params = $this.data.startadv.params;
+        if (params.style == 'default') {
+          var timer = params.autoclose;
+          function count_down(that) {
+            $this.setData({ clock: timer });
+            if (timer <= 0) {
+              $this.setData({ adveradmin: false });
+              return;
+            }
+            setTimeout(function () {
+              timer -= 1;
+              count_down(that);
+            }, 1000)
+          }
+          count_down($this);
+        }
+
+        if (params.showtype == 1) {
+          var showtime = params.showtime;
+          var countdown = showtime * 1000 * 60;
+          var startadvtime = app.getCache('startadvtime');
+          var nowtime = + new Date();
+          var adveradmin = true;
+          $this.setData({ adveradmin: true })
+          if (startadvtime) {
+            if ((nowtime - startadvtime) < countdown) {
+              adveradmin = false;
+            }
+          }
+          $this.setData({ adveradmin: adveradmin });
+          if (adveradmin) {
+            app.setCache('startadvtime', nowtime);
           }
         }
-        wx.setNavigationBarTitle({
-          title: pagetitle
-        });
-        if($this.data.pages){
-            wx.setNavigationBarColor({
-            frontColor: $this.data.pages.titlebarcolor,
-            backgroundColor: $this.data.pages.titlebarbg
-          });
-        } 
-        $this.setData({
-          screenWidth: res.windowWidth
-        });
+        var advstatus = $this.data.startadv.status;
 
+      });
+      wx.getSetting({
+        success: function (res) {
+          console.log('授权', res)
+          var limits = res.authSetting['scope.userInfo'];
+          $this.setData({ limits: limits })
+        }
+      })
+
+      var pagetitle = sysset.shopname || '商城首页';
+      if ($this.data.pages) {
+        if ($this.data.pages.title != '') {
+          pagetitle = $this.data.diytitle;
+        }
+      }
+      wx.setNavigationBarTitle({
+        title: pagetitle
+      });
+      if ($this.data.pages) {
+        wx.setNavigationBarColor({
+          frontColor: $this.data.pages.titlebarcolor,
+          backgroundColor: $this.data.pages.titlebarbg
+        });
+      }
+      $this.setData({
+        screenWidth: res.windowWidth
+      });
     },
     goodsicon:function(e){
       this.setData({

@@ -92,23 +92,36 @@ Page({
       })
     },
     onShow: function(){
-        this.getInfo();
-        var $this = this;
-        $this.setData({
-          imgUrl: app.globalData.approot
-        });
-        wx.getSetting({
-    		success: function(res) {
-    			var limits = res.authSetting['scope.userInfo'];
-    			$this.setData({limits: limits})
-    			if(!limits) {
-    				// $this.setData({modelShow: true})
+      let _this = this
+      core.isToken(function (istoken) {
+        let tokenData = istoken.data.token
+        if (tokenData == 1) {
+          _this.initFunction()
+        } else {
+          core.getToken(function (getToken) {
+            _this.initFunction()
+          })
+        }
+      })
+    },
+    initFunction:function(){
+      this.getInfo();
+      var $this = this;
+      $this.setData({
+        imgUrl: app.globalData.approot
+      });
+      wx.getSetting({
+        success: function (res) {
+          var limits = res.authSetting['scope.userInfo'];
+          $this.setData({ limits: limits })
+          if (!limits) {
+            // $this.setData({modelShow: true})
             wx.redirectTo({
               url: '/pages/message/auth/index'
             })
-    			}
-    		}
-    	})
+          }
+        }
+      })
     },
     onShareAppMessage: function () {
         return core.onShareAppMessage();

@@ -26,9 +26,22 @@ Page({
         verifycode_img:''
     },
     onLoad: function (options) {
-        app.url(options);
-        core.loading();
-        this.getInfo();
+      let _this = this
+      core.isToken(function (istoken) {
+        let tokenData = istoken.data.token
+        if (tokenData == 1) {
+          _this.initFunction(options)
+        } else {
+          core.getToken(function (getToken) {
+            _this.initFunction(options)
+          })
+        }
+      })
+    },
+    initFunction:function(options){
+      app.url(options);
+      core.loading();
+      this.getInfo();
     },
     getInfo: function () {
         var $this = this,title;
@@ -85,17 +98,34 @@ Page({
           }
 
         }
-
-        core.get('sms/changemobile', { mobile: mobile, verifyImgCode: verifyImg, smsimgcode: $this.data.smsimgcode}, function(result){
-            if(result.error!=0){
+        core.isToken(function (istoken) {
+          let tokenData = istoken.data.token
+          if (tokenData == 1) {
+            core.get('sms/changemobile', { mobile: mobile, verifyImgCode: verifyImg, smsimgcode: $this.data.smsimgcode }, function (result) {
+              if (result.error != 0) {
                 foxui.toast($this, result.message);
                 return;
-            }
-            foxui.toast($this, "短信发送成功");
-            $this.setData({endtime: 60});
-            $this.endTime();
-            return;
-        }, true, true, true);
+              }
+              foxui.toast($this, "短信发送成功");
+              $this.setData({ endtime: 60 });
+              $this.endTime();
+              return;
+            }, true, true, true);
+          } else {
+            core.getToken(function (getToken) {
+              core.get('sms/changemobile', { mobile: mobile, verifyImgCode: verifyImg, smsimgcode: $this.data.smsimgcode }, function (result) {
+                if (result.error != 0) {
+                  foxui.toast($this, result.message);
+                  return;
+                }
+                foxui.toast($this, "短信发送成功");
+                $this.setData({ endtime: 60 });
+                $this.endTime();
+                return;
+              }, true, true, true);
+            })
+          }
+        })
     },
     submit: function (event) {
         if(this.data.submit){
@@ -133,32 +163,64 @@ Page({
       let jsonData = JSON.stringify(data)
       data = Crypto.CryptoJS.encrypt(jsonData, Crypto.keyCrypto.key, Crypto.keyCrypto.iv)
 
+      core.isToken(function (istoken) {
+        let tokenData = istoken.data.token
+        if (tokenData == 1) {
+          core.post('member/bind/submit', { crydata: data }, function (ret) {
+            // app.sensors.track('PhoneBinded', {
 
-      core.post('member/bind/submit', { crydata: data}, function(ret){
-          // app.sensors.track('PhoneBinded', {
-
-          // });
-            if(ret.error==92001||ret.error==92002){
-                core.confirm(ret.message, function () {
-                    postData.confirm = 1;
-                    core.post('member/bind/submit', postData, function(ret2){
-                        if(ret2.error>0){
-                            foxui.toast($this, ret2.message);
-                        }else{
-                            wx.navigateBack();
-                        }
-                        $this.setData({submit: false, subtext: "立即绑定", "postData.confirm": 0});
-                    }, true, true, true);
-                })
-                return;
+            // });
+            if (ret.error == 92001 || ret.error == 92002) {
+              core.confirm(ret.message, function () {
+                postData.confirm = 1;
+                core.post('member/bind/submit', postData, function (ret2) {
+                  if (ret2.error > 0) {
+                    foxui.toast($this, ret2.message);
+                  } else {
+                    wx.navigateBack();
+                  }
+                  $this.setData({ submit: false, subtext: "立即绑定", "postData.confirm": 0 });
+                }, true, true, true);
+              })
+              return;
             }
-            else if(ret.error!=0){
-                foxui.toast($this, ret.message);
-                $this.setData({submit: false, subtext: "立即绑定"});
-                return;
+            else if (ret.error != 0) {
+              foxui.toast($this, ret.message);
+              $this.setData({ submit: false, subtext: "立即绑定" });
+              return;
             }
             wx.navigateBack();
-        }, true, true, true);
+          }, true, true, true);
+        } else {
+          core.getToken(function (getToken) {
+            core.post('member/bind/submit', { crydata: data }, function (ret) {
+              // app.sensors.track('PhoneBinded', {
+
+              // });
+              if (ret.error == 92001 || ret.error == 92002) {
+                core.confirm(ret.message, function () {
+                  postData.confirm = 1;
+                  core.post('member/bind/submit', postData, function (ret2) {
+                    if (ret2.error > 0) {
+                      foxui.toast($this, ret2.message);
+                    } else {
+                      wx.navigateBack();
+                    }
+                    $this.setData({ submit: false, subtext: "立即绑定", "postData.confirm": 0 });
+                  }, true, true, true);
+                })
+                return;
+              }
+              else if (ret.error != 0) {
+                foxui.toast($this, ret.message);
+                $this.setData({ submit: false, subtext: "立即绑定" });
+                return;
+              }
+              wx.navigateBack();
+            }, true, true, true);
+          })
+        }
+      })
     },
     imageChange:function(){
       var $this = this;
